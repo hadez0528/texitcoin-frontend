@@ -20,12 +20,12 @@ export type ConfigValue = {
 
 export const CONFIG: ConfigValue = {
   site: {
-    name: 'Limelite',
+    name: 'Texitcoin',
     basePath: import.meta.env.VITE_BASE_PATH ?? '',
     version: packageJson.version,
   },
   SERVER_URL: import.meta.env.VITE_SERVER_URL ?? '',
   ASSET_URL: import.meta.env.VITE_ASSET_URL ?? '',
-  redirectPath: paths.dashboard.root,
+  redirectPath: paths.statistics.root,
   storageTokenKey: 'token',
 };
