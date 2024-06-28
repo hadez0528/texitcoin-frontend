@@ -2,12 +2,14 @@ import type { NavSectionProps } from 'src/components/nav-section';
 
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
+import LoadingButton from '@mui/lab/LoadingButton';
+
+import { paths } from 'src/routes/paths';
 
 import { Logo } from 'src/components/logo';
 
 import { HeaderSection } from './header-section';
 import { MenuButton } from '../components/menu-button';
-import { AccountDrawer } from '../components/account-drawer';
 import { SettingsButton } from '../components/settings-button';
 
 import type { HeaderSectionProps } from './header-section';
@@ -91,8 +93,19 @@ export function HeaderBase({
               {/* -- Settings button -- */}
               {settings && <SettingsButton data-slot="settings" />}
 
-              {/* -- Account drawer -- */}
-              {account && <AccountDrawer data-slot="account" data={data?.account} />}
+              {/* -- Login button -- */}
+              {settings && (
+                <LoadingButton
+                  color="inherit"
+                  size="medium"
+                  type="submit"
+                  href={paths.signIn}
+                  variant="contained"
+                  data-slot="login"
+                >
+                  Login
+                </LoadingButton>
+              )}
             </Box>
 
             {slots?.rightAreaEnd}

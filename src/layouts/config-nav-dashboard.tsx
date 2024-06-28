@@ -22,10 +22,7 @@ export const navData = [
    * Overview
    */
   {
-    subheader: 'Limelite Administration',
-    items: [
-      { title: 'User', path: paths.dashboard.user.root, icon: ICONS.user },
-      { title: 'Organization', path: paths.dashboard.org.root, icon: ICONS.school },
-    ],
+    subheader: 'Texitcoin Administration',
+    items: [{ title: 'User', path: paths.dashboard.user.root, icon: ICONS.user }],
   },
 ];

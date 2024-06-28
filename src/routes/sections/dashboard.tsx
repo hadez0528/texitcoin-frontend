@@ -46,23 +46,6 @@ export const dashboardRoutes = [
           },
         ],
       },
-      // {
-      //   path: 'organizations',
-      //   children: [
-      //     { index: true, element: <OrganizationListPage /> },
-      //     { path: 'new', element: <OrganizationCreatePage /> },
-      //     {
-      //       path: ':id',
-      //       children: [
-      //         { index: true, element: <Navigate to="general" replace /> },
-      //         {
-      //           path: ':tab',
-      //           element: <OrganizationEditPage />,
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // },
     ],
   },
 ];
