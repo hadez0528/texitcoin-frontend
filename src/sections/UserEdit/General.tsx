@@ -1,32 +1,27 @@
 import type { User } from 'src/__generated__/graphql';
 
 import { z as zod } from 'zod';
+import { useMemo } from 'react';
 import isEqual from 'lodash/isEqual';
 import { useForm } from 'react-hook-form';
-import { useMemo, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ApolloError, useMutation } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { useBoolean } from 'src/hooks/useBoolean';
-
 import { fDateTime } from 'src/utils/format-time';
-import { uploadFile } from 'src/utils/uploadFile';
 
 import { gql } from 'src/__generated__/gql';
 
 import { Label } from 'src/components/Label';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
-import { ConfirmDialog } from 'src/components/Dialog';
 
 // ----------------------------------------------------------------------
 
@@ -41,42 +36,37 @@ const UPDATE_USER = gql(/* GraphQL */ `
   mutation UpdateUser($data: UpdateUserInput!) {
     updateUser(data: $data) {
       id
-      name
+      username
       email
-      avatar {
-        url
-      }
-      isApUser
-      isBackOfficeUser
-      isEmailVerified
-      isSuperAdmin
+      isAdmin
+      createdAt
     }
   }
 `);
 
-const RESET_PASSWORD = gql(/* GraphQL */ `
-  mutation ResetPassword($data: EntityID!) {
-    resetPassword(data: $data) {
-      success
-    }
-  }
-`);
+// const RESET_PASSWORD = gql(/* GraphQL */ `
+//   mutation ResetPassword($data: EntityID!) {
+//     resetPassword(data: $data) {
+//       success
+//     }
+//   }
+// `);
 
-const DEACTIVATE_USER = gql(/* GraphQL */ `
-  mutation DeactivateUser($data: EntityID!) {
-    deactivateUser(data: $data) {
-      success
-    }
-  }
-`);
+// const DEACTIVATE_USER = gql(/* GraphQL */ `
+//   mutation DeactivateUser($data: EntityID!) {
+//     deactivateUser(data: $data) {
+//       success
+//     }
+//   }
+// `);
 
-const ACTIVATE_USER = gql(/* GraphQL */ `
-  mutation ActivateUser($data: EntityID!) {
-    activateUser(data: $data) {
-      success
-    }
-  }
-`);
+// const ACTIVATE_USER = gql(/* GraphQL */ `
+//   mutation ActivateUser($data: EntityID!) {
+//     activateUser(data: $data) {
+//       success
+//     }
+//   }
+// `);
 
 // ----------------------------------------------------------------------
 export type UserGeneralSchemaType = zod.infer<typeof UserGeneralSchema>;
@@ -94,18 +84,15 @@ const UserGeneralSchema = zod.object({
 });
 
 export default function UserGeneral({ currentUser, refetchUser }: Props) {
-  const passwordConfirm = useBoolean();
-  const deactivateConfirm = useBoolean();
-
   const [submit, { loading }] = useMutation(UPDATE_USER);
-  const [resetPasswordMutation, { loading: isResettingPassword }] = useMutation(RESET_PASSWORD);
-  const [deactivateUserMutation, { loading: isDeactivating }] = useMutation(DEACTIVATE_USER);
-  const [activateUserMutation, { loading: isActivating }] = useMutation(ACTIVATE_USER);
+  // const [resetPasswordMutation, { loading: isResettingPassword }] = useMutation(RESET_PASSWORD);
+  // const [deactivateUserMutation, { loading: isDeactivating }] = useMutation(DEACTIVATE_USER);
+  // const [activateUserMutation, { loading: isActivating }] = useMutation(ACTIVATE_USER);
 
   const defaultValues = useMemo(() => {
     const { data } = UserGeneralSchema.safeParse(currentUser);
     return data
-      ? { ...data, avatarUrl: currentUser.avatar?.url || null }
+      ? { ...data, avatarUrl: currentUser.username || null }
       : ({} as UserGeneralSchemaType);
   }, [currentUser]);
 
@@ -123,19 +110,12 @@ export default function UserGeneral({ currentUser, refetchUser }: Props) {
         return;
       }
 
-      let newAvatarFileId;
-      if ((newUser.avatarUrl as unknown) instanceof File) {
-        const uploadRes = await uploadFile(newUser.avatarUrl as unknown as File);
-        newAvatarFileId = uploadRes.file.id;
-        delete newUser.avatarUrl;
-      }
-
       await submit({
         variables: {
           data: {
             ...newUser,
             id: currentUser.id,
-            avatarFileId: newAvatarFileId,
+            username: currentUser.username,
           },
         },
       });
@@ -151,32 +131,32 @@ export default function UserGeneral({ currentUser, refetchUser }: Props) {
     }
   });
 
-  const resetPassword = useCallback(
-    async (id: string) => {
-      passwordConfirm.onFalse();
-      await resetPasswordMutation({ variables: { data: { id } } });
-      toast.success('Reset password success!');
-    },
-    [resetPasswordMutation, passwordConfirm]
-  );
+  // const resetPassword = useCallback(
+  //   async (id: string) => {
+  //     passwordConfirm.onFalse();
+  //     await resetPasswordMutation({ variables: { data: { id } } });
+  //     toast.success('Reset password success!');
+  //   },
+  //   [resetPasswordMutation, passwordConfirm]
+  // );
 
-  const deactivateUser = useCallback(
-    async (id: string) => {
-      deactivateConfirm.onFalse();
-      await deactivateUserMutation({ variables: { data: { id } } });
-      await refetchUser();
-      toast.success('Deactivate success!');
-    },
-    [deactivateUserMutation, deactivateConfirm, refetchUser]
-  );
-  const activateUser = useCallback(
-    async (id: string) => {
-      await activateUserMutation({ variables: { data: { id } } });
-      await refetchUser();
-      toast.success('Activate success!');
-    },
-    [activateUserMutation, refetchUser]
-  );
+  // const deactivateUser = useCallback(
+  //   async (id: string) => {
+  //     deactivateConfirm.onFalse();
+  //     await deactivateUserMutation({ variables: { data: { id } } });
+  //     await refetchUser();
+  //     toast.success('Deactivate success!');
+  //   },
+  //   [deactivateUserMutation, deactivateConfirm, refetchUser]
+  // );
+  // const activateUser = useCallback(
+  //   async (id: string) => {
+  //     await activateUserMutation({ variables: { data: { id } } });
+  //     await refetchUser();
+  //     toast.success('Activate success!');
+  //   },
+  //   [activateUserMutation, refetchUser]
+  // );
 
   return (
     <>
@@ -215,7 +195,7 @@ export default function UserGeneral({ currentUser, refetchUser }: Props) {
                 />
               </Box>
 
-              <Stack
+              {/* <Stack
                 direction="row"
                 spacing={2}
                 justifyContent="center"
@@ -251,7 +231,7 @@ export default function UserGeneral({ currentUser, refetchUser }: Props) {
                     Deactivate account
                   </LoadingButton>
                 )}
-              </Stack>
+              </Stack> */}
             </Card>
           </Grid>
 
@@ -350,7 +330,7 @@ export default function UserGeneral({ currentUser, refetchUser }: Props) {
         </Grid>
       </Form>
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={deactivateConfirm.value}
         onClose={deactivateConfirm.onFalse}
         title="Deactivate user?"
@@ -394,7 +374,7 @@ export default function UserGeneral({ currentUser, refetchUser }: Props) {
             Confirm
           </Button>
         }
-      />
+      /> */}
     </>
   );
 }

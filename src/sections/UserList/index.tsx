@@ -55,7 +55,7 @@ const STATUS_OPTIONS: { value: UserRole; label: string; color: LabelColor }[] = 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', sortable: true },
   { id: 'organizations', label: 'Organization', width: 220 },
-  { id: 'isSuperAdmin', label: 'Admin', width: 130, sortable: true },
+  { id: 'isAdmin', label: 'Admin', width: 130, sortable: true },
   { id: 'isApUser', label: 'AP user', width: 130, sortable: true },
   { id: 'createdAt', label: 'Created At', width: 140, sortable: true },
   { id: 'updatedAt', label: 'Updated At', width: 140, sortable: true },
@@ -96,38 +96,12 @@ const FETCH_USERS_QUERY = gql(/* GraphQL */ `
     users(page: $page, filter: $filter, sort: $sort) {
       users {
         id
-        name
+        username
         email
-        avatar {
-          url
-        }
-        isSuperAdmin
-        isApUser
+        isAdmin
         createdAt
         updatedAt
         deletedAt
-        userGroups {
-          id
-          name
-          permissions {
-            Account
-            ApprovalAmount
-            BankAccount
-            BatchUpload
-            CreditCard
-            Customer
-            Report
-            Vendor
-          }
-          organization {
-            id
-            name
-            slug
-            avatar {
-              url
-            }
-          }
-        }
       }
       total
     }
@@ -153,11 +127,7 @@ export default function UserListView() {
     }
 
     if (filter.status === 'admin') {
-      filterObj.isSuperAdmin = true;
-    }
-
-    if (filter.status === 'ap') {
-      filterObj.isApUser = true;
+      filterObj.isAdmin = true;
     }
 
     if (filter.status === 'inactive') {
@@ -181,8 +151,7 @@ export default function UserListView() {
 
   const { data: statsData } = useGraphQuery(FETCH_USER_STATS_QUERY, {
     variables: {
-      adminFilter: { isSuperAdmin: true },
-      apFilter: { isApUser: true },
+      adminFilter: { isAdmin: true },
       inactiveFilter: { deletedAt: { not: null } },
     },
   });

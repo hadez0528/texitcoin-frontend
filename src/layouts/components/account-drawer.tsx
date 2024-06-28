@@ -13,12 +13,9 @@ import IconButton from '@mui/material/IconButton';
 import { paths } from 'src/routes/paths';
 import { useRouter, usePathname } from 'src/routes/hooks';
 
-import { varAlpha } from 'src/theme/styles';
-
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
-import { AnimateAvatar } from 'src/components/animate';
 
 import { useAuthContext } from 'src/auth/hooks';
 
@@ -63,29 +60,13 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
     [handleCloseDrawer, router]
   );
 
-  const renderAvatar = (
-    <AnimateAvatar
-      width={96}
-      slotProps={{
-        avatar: { src: user?.avatar?.url ?? undefined, alt: user?.name },
-        overlay: {
-          border: 2,
-          spacing: 3,
-          color: `linear-gradient(135deg, ${varAlpha(theme.vars.palette.primary.mainChannel, 0)} 25%, ${theme.vars.palette.primary.main} 100%)`,
-        },
-      }}
-    >
-      {user?.name?.charAt(0).toUpperCase()}
-    </AnimateAvatar>
-  );
-
   return (
     <>
       <AccountButton
         open={open}
         onClick={handleOpenDrawer}
-        photoURL={user?.avatar?.url ?? ''}
-        displayName={user?.name ?? ''}
+        photoURL={user?.username ?? ''}
+        displayName={user?.username ?? ''}
         sx={sx}
         {...other}
       />
@@ -106,10 +87,8 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
 
         <ScrollBar>
           <Stack alignItems="center" sx={{ pt: 8 }}>
-            {renderAvatar}
-
             <Typography variant="subtitle1" noWrap sx={{ mt: 2 }}>
-              {user?.name}
+              {user?.username}
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }} noWrap>
