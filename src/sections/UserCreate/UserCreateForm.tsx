@@ -14,8 +14,6 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { uploadFile } from 'src/utils/uploadFile';
-
 import { gql } from 'src/__generated__/gql';
 
 import { toast } from 'src/components/SnackBar';
@@ -27,15 +25,9 @@ const CREATE_USER = gql(/* GraphQL */ `
   mutation CreateUser($data: CreateUserInput!) {
     createUser(data: $data) {
       id
-      name
+      username
       email
-      avatar {
-        url
-      }
-      isSuperAdmin
-      isApUser
-      isBackOfficeUser
-      isEmailVerified
+      isAdmin
       createdAt
     }
   }
@@ -83,13 +75,15 @@ export default function UserCreateForm() {
 
   const onSubmit = handleSubmit(async ({ avatarUrl, ...data }) => {
     try {
-      let newAvatarFileId;
-      if ((avatarUrl as unknown) instanceof File) {
-        const uploadRes = await uploadFile(avatarUrl as unknown as File);
-        newAvatarFileId = uploadRes.file.id;
-      }
-
-      await submit({ variables: { data: { ...data, avatarFileId: newAvatarFileId } } });
+      await submit({
+        variables: {
+          data: {
+            ...data,
+            username: '',
+            password: '',
+          },
+        },
+      });
       reset();
       toast.success('Create success!');
       router.push(paths.dashboard.user.root);

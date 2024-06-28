@@ -1,13 +1,11 @@
 import type { User } from 'src/__generated__/graphql';
 
-import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
-import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -33,18 +31,7 @@ export default function UserTableRow({
 }: Props) {
   const router = useRouter();
 
-  const {
-    id,
-    name,
-    avatar,
-    email,
-    isSuperAdmin,
-    isApUser,
-    createdAt,
-    updatedAt,
-    deletedAt,
-    userGroups,
-  } = row;
+  const { id, username, email, isAdmin, createdAt, updatedAt, deletedAt } = row;
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -62,10 +49,8 @@ export default function UserTableRow({
           router.push(paths.dashboard.user.edit(id));
         }}
       >
-        <Avatar alt={name} src={avatar?.url ?? undefined} sx={{ mr: 2 }} />
-
         <ListItemText
-          primary={name}
+          primary={username}
           secondary={email}
           primaryTypographyProps={{ typography: 'body2' }}
           secondaryTypographyProps={{
@@ -76,43 +61,9 @@ export default function UserTableRow({
       </TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        <AvatarGroup
-          sx={{
-            [`& .${avatarGroupClasses.avatar}`]: {
-              width: 24,
-              height: 24,
-            },
-          }}
-          total={userGroups?.length}
-          max={6}
-        >
-          {userGroups?.slice(0, 6).map(
-            ({ organization }) =>
-              organization && (
-                <Tooltip title={organization.name}>
-                  <Avatar
-                    key={organization.id}
-                    alt={organization.name}
-                    src={organization.avatar?.url ?? undefined}
-                  />
-                </Tooltip>
-              )
-          )}
-        </AvatarGroup>
-      </TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {isSuperAdmin && (
+        {isAdmin && (
           <Label variant="soft" color="secondary">
             Admin
-          </Label>
-        )}
-      </TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {isApUser && (
-          <Label variant="soft" color="info">
-            AP user
           </Label>
         )}
       </TableCell>

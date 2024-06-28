@@ -9,7 +9,6 @@ export type IUserTableFilters = {
 
 export type IUserPrismaFilter = {
   OR?: any;
-  isSuperAdmin?: boolean;
-  isApUser?: boolean;
+  isAdmin?: boolean;
   deletedAt?: any;
 };
