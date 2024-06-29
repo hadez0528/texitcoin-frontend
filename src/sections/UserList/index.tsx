@@ -48,15 +48,12 @@ import type { UserRole, IUserPrismaFilter, IUserTableFilters } from './types';
 const STATUS_OPTIONS: { value: UserRole; label: string; color: LabelColor }[] = [
   { value: 'all', label: 'All', color: 'info' },
   { value: 'admin', label: 'Admin', color: 'success' },
-  { value: 'ap', label: 'AP user', color: 'secondary' },
   { value: 'inactive', label: 'Inactive', color: 'error' },
 ];
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', sortable: true },
-  { id: 'organizations', label: 'Organization', width: 220 },
   { id: 'isAdmin', label: 'Admin', width: 130, sortable: true },
-  { id: 'isApUser', label: 'AP user', width: 130, sortable: true },
   { id: 'createdAt', label: 'Created At', width: 140, sortable: true },
   { id: 'updatedAt', label: 'Updated At', width: 140, sortable: true },
   { id: 'deletedAt', label: 'Status', width: 95, sortable: true },
