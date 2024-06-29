@@ -4,6 +4,7 @@ const ROOTS = {
   SIGN_IN: '/sign-in',
   DASHBOARD: '/dashboard',
   STATISTICS: '/statistics',
+  USERS: '/users',
 };
 
 // ----------------------------------------------------------------------
@@ -17,11 +18,14 @@ export const paths = {
 
   // DASHBOARD
   dashboard: {
-    root: ROOTS.DASHBOARD,
+    root: '/',
     user: {
-      root: `${ROOTS.DASHBOARD}/users`,
-      edit: (id: string) => `${ROOTS.DASHBOARD}/users/${id}`,
-      new: `${ROOTS.DASHBOARD}/users/new`,
+      root: ROOTS.USERS,
+      edit: (id: string) => `${ROOTS.USERS}/${id}`,
+      new: `${ROOTS.USERS}/new`,
+    },
+    history: {
+      root: ROOTS.DASHBOARD,
     },
   },
   notFound: '/404',

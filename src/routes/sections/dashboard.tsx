@@ -15,9 +15,13 @@ const UserCreatePage = lazy(() => import('src/pages/User/Create'));
 const UserEditPage = lazy(() => import('src/pages/User/Edit'));
 // ----------------------------------------------------------------------
 
+// ----------------------------------------------------------------------
+const DashboardPage = lazy(() => import('src/pages/Dashboard'));
+// ----------------------------------------------------------------------
+
 export const dashboardRoutes = [
   {
-    path: 'dashboard',
+    path: '',
     element: (
       <AuthGuard>
         <DashboardLayout>
@@ -28,7 +32,11 @@ export const dashboardRoutes = [
       </AuthGuard>
     ),
     children: [
-      { element: <Navigate to={paths.dashboard.user.root} replace />, index: true },
+      { element: <Navigate to={paths.dashboard.root} replace />, index: true },
+      {
+        path: 'dashboard',
+        children: [{ index: true, element: <DashboardPage /> }],
+      },
       {
         path: 'users',
         children: [
