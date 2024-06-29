@@ -67,3 +67,31 @@ export const FETCH_STATISTICS_QUERY = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
+  query TXCMemberStatistics($page: String, $filter: JSONObject, $sort: String) {
+    memberStatistics(page: $page, filter: $filter, sort: $sort) {
+      memberStatistics {
+        id
+        hashPower
+        txcShared
+        issuedAt
+        percent
+        createdAt
+        updatedAt
+        deletedAt
+        member {
+          username
+          txcCold
+          email
+          assetId
+        }
+        statistics {
+          newBlocks
+          status
+        }
+      }
+      total
+    }
+  }
+`);
