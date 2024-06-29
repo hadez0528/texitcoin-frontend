@@ -21,6 +21,23 @@ type Props = CardProps & {
     }[];
     options?: ChartOptions;
   };
+  type?:
+    | 'line'
+    | 'area'
+    | 'bar'
+    | 'pie'
+    | 'donut'
+    | 'radialBar'
+    | 'scatter'
+    | 'bubble'
+    | 'heatmap'
+    | 'candlestick'
+    | 'boxPlot'
+    | 'radar'
+    | 'polarArea'
+    | 'rangeBar'
+    | 'rangeArea'
+    | 'treemap';
 };
 
 export default function ChartWidget({ title, subheader, chart, ...other }: Props) {
