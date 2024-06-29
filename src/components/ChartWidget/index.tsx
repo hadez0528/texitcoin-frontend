@@ -40,7 +40,7 @@ type Props = CardProps & {
     | 'treemap';
 };
 
-export default function ChartWidget({ title, subheader, chart, ...other }: Props) {
+export default function ChartWidget({ title, subheader, chart, type, ...other }: Props) {
   const theme = useTheme();
 
   const chartColors = chart.colors ?? [theme.palette.primary.main, theme.palette.warning.main];
@@ -58,7 +58,7 @@ export default function ChartWidget({ title, subheader, chart, ...other }: Props
       <CardHeader title={title} subheader={subheader} />
 
       <Chart
-        type="area"
+        type={type ?? 'area'}
         series={currentSeries}
         options={chartOptions}
         height={320}
