@@ -1,0 +1,62 @@
+import { gql } from 'src/__generated__/gql';
+
+export const FETCH_MEMBER_STATS_QUERY = gql(/* GraphQL */ `
+  query FetchMemberStats($inactiveFilter: JSONObject) {
+    all: members {
+      total
+    }
+    inactive: members(filter: $inactiveFilter) {
+      total
+    }
+  }
+`);
+
+export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
+  query FetchMembers($page: String, $filter: JSONObject, $sort: String) {
+    members(page: $page, filter: $filter, sort: $sort) {
+      members {
+        id
+        username
+        fullName
+        email
+        address
+        assetId
+        mobile
+        txcPayout
+        txcCold
+        createdAt
+        updatedAt
+        deletedAt
+      }
+      total
+    }
+  }
+`);
+
+export const CREATE_MEMBER = gql(/* GraphQL */ `
+  mutation CreateMember($data: CreateMemberInput!) {
+    createMember(data: $data) {
+      username
+      fullName
+      email
+      mobile
+      address
+      assetId
+      txcCold
+      txcPayout
+    }
+  }
+`);
+
+export const FETCH_MEMBER = gql(/* GraphQL */ `
+  query FetchMember($filter: JSONObject) {
+    members(filter: $filter) {
+      members {
+        id
+        username
+        email
+        deletedAt
+      }
+    }
+  }
+`);

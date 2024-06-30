@@ -54,13 +54,9 @@ export type CreateMemberInput = {
   assetId: Scalars['String']['input'];
   email: Scalars['String']['input'];
   fullName: Scalars['String']['input'];
-  introducerFullName: Scalars['String']['input'];
   mobile: Scalars['String']['input'];
-  password: Scalars['String']['input'];
-  sponsorName: Scalars['String']['input'];
   txcCold: Scalars['String']['input'];
   txcPayout: Scalars['String']['input'];
-  userId: Scalars['Float']['input'];
   username: Scalars['String']['input'];
 };
 
@@ -73,14 +69,22 @@ export type CreateMemberStatisticsInput = {
   txcShared: Scalars['Float']['input'];
 };
 
-export type CreateSaleInput = {
+export type CreatePackageInput = {
   amount: Scalars['Float']['input'];
+  date: Scalars['DateTimeISO']['input'];
+  productName: Scalars['String']['input'];
+  status: Scalars['Boolean']['input'];
+  token: Scalars['Float']['input'];
+};
+
+export type CreateSaleInput = {
   hashPower: Scalars['Float']['input'];
   invoiceNo: Scalars['Float']['input'];
   memberId: Scalars['ID']['input'];
   orderedAt: Scalars['DateTimeISO']['input'];
+  packageId: Scalars['String']['input'];
   paymentMethod: Scalars['String']['input'];
-  productName: Scalars['String']['input'];
+  status: Scalars['Boolean']['input'];
 };
 
 export type CreateStatisticsInput = {
@@ -147,6 +151,30 @@ export type Member = {
   username: Scalars['String']['output'];
 };
 
+export type MemberDailyReward = {
+  __typename?: 'MemberDailyReward';
+  hashPower: Scalars['Float']['output'];
+  issuedAt: Scalars['DateTimeISO']['output'];
+  txcShared: Scalars['Float']['output'];
+};
+
+export type MemberDailyRewardsInput = {
+  endDate?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  startDate?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MemberOverview = {
+  __typename?: 'MemberOverview';
+  joinDate: Scalars['DateTimeISO']['output'];
+  totalHashPower: Scalars['Float']['output'];
+  totalTXCShared: Scalars['Float']['output'];
+};
+
+export type MemberOverviewInput = {
+  id: Scalars['ID']['input'];
+};
+
 export type MemberStatistics = {
   __typename?: 'MemberStatistics';
   createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
@@ -181,12 +209,14 @@ export type Mutation = {
   createBlock: Block;
   createMember: Member;
   createMemberStatistics: MemberStatistics;
+  createPackage: Package;
   createSale: Sale;
   createStatistics: Statistics;
   createUser: User;
   login: LoginResponse;
   updateMember: Member;
   updatePassword: User;
+  updateSale: Sale;
   updateUser: User;
 };
 
@@ -208,6 +238,11 @@ export type MutationCreateMemberArgs = {
 
 export type MutationCreateMemberStatisticsArgs = {
   data: CreateMemberStatisticsInput;
+};
+
+
+export type MutationCreatePackageArgs = {
+  data: CreatePackageInput;
 };
 
 
@@ -241,8 +276,33 @@ export type MutationUpdatePasswordArgs = {
 };
 
 
+export type MutationUpdateSaleArgs = {
+  data: UpdateSaleInput;
+};
+
+
 export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
+};
+
+export type Package = {
+  __typename?: 'Package';
+  amount: Scalars['Float']['output'];
+  createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  date: Scalars['DateTimeISO']['output'];
+  deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  id: Scalars['ID']['output'];
+  productName: Scalars['String']['output'];
+  sales?: Maybe<Array<Maybe<Sale>>>;
+  status: Scalars['Boolean']['output'];
+  token: Scalars['Float']['output'];
+  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+};
+
+export type PackageResponse = {
+  __typename?: 'PackageResponse';
+  packages?: Maybe<Array<Maybe<Package>>>;
+  total?: Maybe<Scalars['Int']['output']>;
 };
 
 export type PendingStatistics = {
@@ -263,8 +323,11 @@ export type Query = {
   liveMiningStats: EntityStats;
   liveUserStats: EntityStats;
   me: User;
+  memberDailyReward: Array<MemberDailyReward>;
+  memberOverview: MemberOverview;
   memberStatistics: MemberStatisticsResponse;
   members: MembersResponse;
+  packages: PackageResponse;
   pendingStatistics: PendingStatisticsResponse;
   sales: SalesResponse;
   statistics: StatisticsResponse;
@@ -289,6 +352,16 @@ export type QueryLiveUserStatsArgs = {
 };
 
 
+export type QueryMemberDailyRewardArgs = {
+  data: MemberDailyRewardsInput;
+};
+
+
+export type QueryMemberOverviewArgs = {
+  data: MemberOverviewInput;
+};
+
+
 export type QueryMemberStatisticsArgs = {
   filter?: InputMaybe<Scalars['JSONObject']['input']>;
   page?: InputMaybe<Scalars['String']['input']>;
@@ -297,6 +370,13 @@ export type QueryMemberStatisticsArgs = {
 
 
 export type QueryMembersArgs = {
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+  page?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryPackagesArgs = {
   filter?: InputMaybe<Scalars['JSONObject']['input']>;
   page?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -332,7 +412,6 @@ export type QueryUsersArgs = {
 
 export type Sale = {
   __typename?: 'Sale';
-  amount: Scalars['Float']['output'];
   createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
   deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   hashPower: Scalars['Float']['output'];
@@ -341,8 +420,10 @@ export type Sale = {
   member?: Maybe<Member>;
   memberId: Scalars['ID']['output'];
   orderedAt: Scalars['DateTimeISO']['output'];
+  package?: Maybe<Package>;
+  packageId: Scalars['ID']['output'];
   paymentMethod: Scalars['String']['output'];
-  productName: Scalars['String']['output'];
+  status: Scalars['Boolean']['output'];
   updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
 };
 
@@ -381,15 +462,27 @@ export type Status = {
 };
 
 export type UpdateMemberInput = {
-  email: Scalars['String']['input'];
+  address?: InputMaybe<Scalars['String']['input']>;
+  assertId?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
-  username: Scalars['String']['input'];
+  mobile?: InputMaybe<Scalars['String']['input']>;
+  txcPayout?: InputMaybe<Scalars['String']['input']>;
+  txtCode?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdatePasswordInput = {
   id: Scalars['ID']['input'];
   newPassword: Scalars['String']['input'];
   oldPassword: Scalars['String']['input'];
+};
+
+export type UpdateSaleInput = {
+  hashPower?: InputMaybe<Scalars['Float']['input']>;
+  id: Scalars['ID']['input'];
+  orderedAt?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  packageId?: InputMaybe<Scalars['ID']['input']>;
+  paymentMethod?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UpdateUserInput = {
@@ -420,6 +513,36 @@ export type FetchMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FetchMeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, username: string, email: string, isAdmin: boolean } };
+
+export type FetchMemberStatsQueryVariables = Exact<{
+  inactiveFilter?: InputMaybe<Scalars['JSONObject']['input']>;
+}>;
+
+
+export type FetchMemberStatsQuery = { __typename?: 'Query', all: { __typename?: 'MembersResponse', total?: number | null }, inactive: { __typename?: 'MembersResponse', total?: number | null } };
+
+export type FetchMembersQueryVariables = Exact<{
+  page?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type FetchMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersResponse', total?: number | null, members?: Array<{ __typename?: 'Member', id: string, username: string, fullName: string, email: string, address: string, assetId: string, mobile: string, txcPayout: string, txcCold: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null> | null } };
+
+export type CreateMemberMutationVariables = Exact<{
+  data: CreateMemberInput;
+}>;
+
+
+export type CreateMemberMutation = { __typename?: 'Mutation', createMember: { __typename?: 'Member', username: string, fullName: string, email: string, mobile: string, address: string, assetId: string, txcCold: string, txcPayout: string } };
+
+export type FetchMemberQueryVariables = Exact<{
+  filter?: InputMaybe<Scalars['JSONObject']['input']>;
+}>;
+
+
+export type FetchMemberQuery = { __typename?: 'Query', members: { __typename?: 'MembersResponse', members?: Array<{ __typename?: 'Member', id: string, username: string, email: string, deletedAt?: any | null } | null> | null } };
 
 export type LoginMutationVariables = Exact<{
   data: LoginInput;
@@ -512,6 +635,10 @@ export type HistoryStatisticsQuery = { __typename?: 'Query', statistics: { __typ
 
 
 export const FetchMeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchMe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"isAdmin"}}]}}]}}]} as unknown as DocumentNode<FetchMeQuery, FetchMeQueryVariables>;
+export const FetchMemberStatsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchMemberStats"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"inactiveFilter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"all"},"name":{"kind":"Name","value":"members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}}]}},{"kind":"Field","alias":{"kind":"Name","value":"inactive"},"name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"inactiveFilter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode<FetchMemberStatsQuery, FetchMemberStatsQueryVariables>;
+export const FetchMembersDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchMembers"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"assetId"}},{"kind":"Field","name":{"kind":"Name","value":"mobile"}},{"kind":"Field","name":{"kind":"Name","value":"txcPayout"}},{"kind":"Field","name":{"kind":"Name","value":"txcCold"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode<FetchMembersQuery, FetchMembersQueryVariables>;
+export const CreateMemberDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateMember"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateMemberInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createMember"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"mobile"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"assetId"}},{"kind":"Field","name":{"kind":"Name","value":"txcCold"}},{"kind":"Field","name":{"kind":"Name","value":"txcPayout"}}]}}]}}]} as unknown as DocumentNode<CreateMemberMutation, CreateMemberMutationVariables>;
+export const FetchMemberDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchMember"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}}]}}]}}]} as unknown as DocumentNode<FetchMemberQuery, FetchMemberQueryVariables>;
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accessToken"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const QueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Query"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LiveStatsArgs"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"liveBlockStats"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"dailyData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"field"}}]}},{"kind":"Field","name":{"kind":"Name","value":"meta"}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}},{"kind":"Field","name":{"kind":"Name","value":"liveMiningStats"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"dailyData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"field"}}]}},{"kind":"Field","name":{"kind":"Name","value":"meta"}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}},{"kind":"Field","name":{"kind":"Name","value":"liveUserStats"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"dailyData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}},{"kind":"Field","name":{"kind":"Name","value":"field"}}]}},{"kind":"Field","name":{"kind":"Name","value":"meta"}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode<QueryQuery, QueryQueryVariables>;
 export const BlocksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Blocks"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"page"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filter"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"JSONObject"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sort"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"blocks"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"page"},"value":{"kind":"Variable","name":{"kind":"Name","value":"page"}}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filter"}}},{"kind":"Argument","name":{"kind":"Name","value":"sort"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sort"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"blocks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"blockNo"}},{"kind":"Field","name":{"kind":"Name","value":"hashRate"}},{"kind":"Field","name":{"kind":"Name","value":"difficulty"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"total"}}]}}]}}]} as unknown as DocumentNode<BlocksQuery, BlocksQueryVariables>;

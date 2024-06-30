@@ -46,7 +46,7 @@ export function AuthProvider({ children }: Props) {
       setSession(newToken);
       setToken(newToken);
       toast.success('Successfully logged in');
-      router.push(paths.dashboard.user.root);
+      router.push(paths.dashboard.history.root);
     },
     [router]
   );

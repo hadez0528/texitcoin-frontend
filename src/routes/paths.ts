@@ -4,6 +4,7 @@ const ROOTS = {
   SIGN_IN: '/sign-in',
   DASHBOARD: '/dashboard',
   STATISTICS: '/statistics',
+  MEMBERS: '/members',
   USERS: '/users',
 };
 
@@ -26,6 +27,11 @@ export const paths = {
     },
     history: {
       root: ROOTS.DASHBOARD,
+    },
+    members: {
+      root: ROOTS.MEMBERS,
+      edit: (id: string) => `${ROOTS.MEMBERS}/${id}`,
+      new: `${ROOTS.MEMBERS}/new`,
     },
   },
   notFound: '/404',
