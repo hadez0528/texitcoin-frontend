@@ -16,6 +16,12 @@ const UserEditPage = lazy(() => import('src/pages/User/Edit'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const MemberListPage = lazy(() => import('src/pages/Member/List'));
+const MemberCreatePage = lazy(() => import('src/pages/Member/Create'));
+const MemberEditPage = lazy(() => import('src/pages/Member/Edit'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const DashboardPage = lazy(() => import('src/pages/Dashboard'));
 // ----------------------------------------------------------------------
 
@@ -36,6 +42,14 @@ export const dashboardRoutes = [
       {
         path: 'dashboard',
         children: [{ index: true, element: <DashboardPage /> }],
+      },
+      {
+        path: 'members',
+        children: [
+          { index: true, element: <MemberListPage /> },
+          { path: 'new', element: <MemberCreatePage /> },
+          { path: ':id', element: <MemberEditPage /> },
+        ],
       },
       {
         path: 'users',

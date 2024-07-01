@@ -54,9 +54,28 @@ export const FETCH_MEMBER = gql(/* GraphQL */ `
       members {
         id
         username
+        fullName
         email
+        mobile
+        address
+        assetId
+        txcCold
+        txcPayout
         deletedAt
       }
+    }
+  }
+`);
+
+export const UPDATE_MEMBER = gql(/* GraphQL */ `
+  mutation UpdateMember($data: UpdateMemberInput!) {
+    updateMember(data: $data) {
+      id
+      mobile
+      address
+      txcPayout
+      txcCold
+      assetId
     }
   }
 `);
