@@ -3,11 +3,7 @@ import { useLazyQuery } from '@apollo/client';
 import { Navigate, useParams } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 
-import Button from '@mui/material/Button';
-
 import { paths } from 'src/routes/paths';
-
-import { useBoolean } from 'src/hooks/useBoolean';
 
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -19,13 +15,11 @@ import MemberGeneral from './General';
 import { FETCH_MEMBER } from '../query';
 
 // ----------------------------------------------------------------------
-export default function OrganizationEditView() {
+export default function MemberEditView() {
   // Loading state including first initial render
   const [isLoading, setIsLoading] = useState(true);
 
   const params = useParams();
-
-  const drawerState = useBoolean();
 
   const [fetchMemberQuery, { loading, data, called }] = useLazyQuery(FETCH_MEMBER);
 
@@ -68,11 +62,6 @@ export default function OrganizationEditView() {
           sx={{
             mb: { xs: 3, md: 5 },
           }}
-          action={
-            <Button variant="contained" onClick={drawerState.onTrue}>
-              Manage organizations
-            </Button>
-          }
         />
         <MemberGeneral currentMember={member} refetchMember={fetchMember} />
       </DashboardContent>

@@ -109,11 +109,21 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
 
       {action && (
         <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="View" placement="top" arrow>
+          <Tooltip title="Edit" placement="top" arrow>
             <IconButton
               color="default"
               onClick={() => {
                 router.push(paths.dashboard.members.edit(id));
+              }}
+            >
+              <Iconify icon="solar:pen-2-bold" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="View" placement="top" arrow>
+            <IconButton
+              color="default"
+              onClick={() => {
+                router.push(`${paths.dashboard.members.edit(id)}/history`);
               }}
             >
               <Iconify icon="solar:eye-bold" />

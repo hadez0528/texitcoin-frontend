@@ -60,7 +60,7 @@ const TABLE_HEAD = [
   { id: 'txcCold', label: 'TXC Cold', width: 130, sortable: true },
   { id: 'createdAt', label: 'Created At', width: 140, sortable: true },
   { id: 'deletedAt', label: 'Status', width: 95, sortable: true },
-  { id: '', width: 50 },
+  { id: 'action', label: 'Action', width: 50 },
 ];
 
 const defaultFilter: IMemberTableFilters = {

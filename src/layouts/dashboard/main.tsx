@@ -47,14 +47,14 @@ export function DashboardContent({
   sx,
   children,
   disablePadding,
-  maxWidth = 'lg',
+  maxWidth = 'xl',
   ...other
 }: DashboardContentProps) {
   const theme = useTheme();
 
   const settings = useSettingsContext();
 
-  const layoutQuery: Breakpoint = 'lg';
+  const layoutQuery: Breakpoint = 'xl';
 
   return (
     <Container

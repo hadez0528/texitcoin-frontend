@@ -158,29 +158,6 @@ export default function MemberGeneral({ currentMember, refetchMember }: Props) {
             Confirm
           </Button>
         }
-      />
-
-      <ConfirmDialog
-        open={passwordConfirm.value}
-        onClose={passwordConfirm.onFalse}
-        title="Reset password?"
-        content={
-          <>
-            This will reset the password and send reset password email to the member. Original
-            password will be no longer available.
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              resetPassword(currentMember.id);
-            }}
-          >
-            Confirm
-          </Button>
-        }
       /> */}
     </>
   );
