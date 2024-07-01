@@ -19,6 +19,8 @@ const documents = {
     "\n  mutation CreateMember($data: CreateMemberInput!) {\n    createMember(data: $data) {\n      username\n      fullName\n      email\n      mobile\n      address\n      assetId\n      txcCold\n      txcPayout\n    }\n  }\n": types.CreateMemberDocument,
     "\n  query FetchMember($filter: JSONObject) {\n    members(filter: $filter) {\n      members {\n        id\n        username\n        fullName\n        email\n        mobile\n        address\n        assetId\n        txcCold\n        txcPayout\n        deletedAt\n      }\n    }\n  }\n": types.FetchMemberDocument,
     "\n  mutation UpdateMember($data: UpdateMemberInput!) {\n    updateMember(data: $data) {\n      id\n      mobile\n      address\n      txcPayout\n      txcCold\n      assetId\n    }\n  }\n": types.UpdateMemberDocument,
+    "\n  query MemberOverview($data: MemberOverviewInput!) {\n    memberOverview(data: $data) {\n      totalHashPower\n      totalTXCShared\n      joinDate\n    }\n  }\n": types.MemberOverviewDocument,
+    "\n  query MemberDailyReward($data: MemberDailyRewardsInput!) {\n    memberDailyReward(data: $data) {\n      hashPower\n      issuedAt\n      txcShared\n    }\n  }\n": types.MemberDailyRewardDocument,
     "\n  query FetchSales($sort: String, $page: String, $filter: JSONObject) {\n    sales(sort: $sort, page: $page, filter: $filter) {\n      sales {\n        id\n        invoiceNo\n        memberId\n        packageId\n        member {\n          id\n          username\n          fullName\n          email\n          mobile\n          assetId\n          address\n          txcPayout\n          txcCold\n        }\n        package {\n          id\n          productName\n          amount\n          date\n          token\n          status\n        }\n        paymentMethod\n        hashPower\n        orderedAt\n        status\n      }\n      total\n    }\n  }\n": types.FetchSalesDocument,
     "\n  query FetchSaleStats($inactiveFilter: JSONObject) {\n    all: sales {\n      total\n    }\n    inactive: sales(filter: $inactiveFilter) {\n      total\n    }\n  }\n": types.FetchSaleStatsDocument,
     "\n  mutation CreateSale($data: CreateSaleInput!) {\n    createSale(data: $data) {\n      invoiceNo\n      hashPower\n      orderedAt\n      memberId\n      paymentMethod\n      packageId\n      status\n    }\n  }\n": types.CreateSaleDocument,
@@ -74,6 +76,14 @@ export function gql(source: "\n  query FetchMember($filter: JSONObject) {\n    m
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation UpdateMember($data: UpdateMemberInput!) {\n    updateMember(data: $data) {\n      id\n      mobile\n      address\n      txcPayout\n      txcCold\n      assetId\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateMember($data: UpdateMemberInput!) {\n    updateMember(data: $data) {\n      id\n      mobile\n      address\n      txcPayout\n      txcCold\n      assetId\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query MemberOverview($data: MemberOverviewInput!) {\n    memberOverview(data: $data) {\n      totalHashPower\n      totalTXCShared\n      joinDate\n    }\n  }\n"): (typeof documents)["\n  query MemberOverview($data: MemberOverviewInput!) {\n    memberOverview(data: $data) {\n      totalHashPower\n      totalTXCShared\n      joinDate\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query MemberDailyReward($data: MemberDailyRewardsInput!) {\n    memberDailyReward(data: $data) {\n      hashPower\n      issuedAt\n      txcShared\n    }\n  }\n"): (typeof documents)["\n  query MemberDailyReward($data: MemberDailyRewardsInput!) {\n    memberDailyReward(data: $data) {\n      hashPower\n      issuedAt\n      txcShared\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

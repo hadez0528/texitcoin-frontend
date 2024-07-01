@@ -79,3 +79,23 @@ export const UPDATE_MEMBER = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const FETCH_MEMBER_HISTORY = gql(/* GraphQL */ `
+  query MemberOverview($data: MemberOverviewInput!) {
+    memberOverview(data: $data) {
+      totalHashPower
+      totalTXCShared
+      joinDate
+    }
+  }
+`);
+
+export const FETCH_MEMBER_REWARD = gql(/* GraphQL */ `
+  query MemberDailyReward($data: MemberDailyRewardsInput!) {
+    memberDailyReward(data: $data) {
+      hashPower
+      issuedAt
+      txcShared
+    }
+  }
+`);

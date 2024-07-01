@@ -33,6 +33,7 @@ export const paths = {
       root: ROOTS.MEMBERS,
       edit: (id: string) => `${ROOTS.MEMBERS}/${id}`,
       new: `${ROOTS.MEMBERS}/new`,
+      history: (id: string) => `${ROOTS.MEMBERS}/${id}/history`,
     },
     sales: {
       root: ROOTS.SALES,
