@@ -1,54 +1,39 @@
-import type { LabelColor } from 'src/components/Label';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
-import { useMemo, useCallback } from 'react';
+import { useMemo } from 'react';
 import { useQuery as useGraphQuery } from '@apollo/client';
 
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import { alpha } from '@mui/material/styles';
+import Stack from '@mui/material/Stack';
+import Drawer from '@mui/material/Drawer';
 import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import LoadingButton from '@mui/lab/LoadingButton';
 import TableContainer from '@mui/material/TableContainer';
 
-import { paths } from 'src/routes/paths';
 import { useQuery } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
 
-import { useBoolean } from 'src/hooks/useBoolean';
-
-import { DashboardContent } from 'src/layouts/dashboard';
-
-import { Label } from 'src/components/Label';
-import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
-import { SearchInput } from 'src/components/SearchInput';
-import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/Table';
 
-import MemberTableRow from './MemberTableRow';
-import MemberTableFiltersResult from './MemberTableFiltersResult';
-import { FETCH_MEMBERS_QUERY, FETCH_MEMBER_STATS_QUERY } from '../query';
+import { FETCH_MEMBERS_QUERY } from '../../Members/query';
+import MemberTableRow from '../../Members/List/MemberTableRow';
+// import MemberTableFiltersResult from '../../Members/List/MemberTableFiltersResult';
 
-import type { MemberRole, IMemberPrismaFilter, IMemberTableFilters } from './types';
+import type { IMemberPrismaFilter, IMemberTableFilters } from '../../Members/List/types';
 
-// ----------------------------------------------------------------------
-
-const STATUS_OPTIONS: { value: MemberRole; label: string; color: LabelColor }[] = [
-  { value: 'all', label: 'All', color: 'info' },
-  { value: 'inactive', label: 'Inactive', color: 'error' },
-];
+interface Props {
+  isOpen: boolean;
+  changeStatus: Function;
+  selectedMembers: Function;
+}
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', sortable: true },
@@ -60,15 +45,14 @@ const TABLE_HEAD = [
   { id: 'txcCold', label: 'TXC Cold', width: 130, sortable: true },
   { id: 'createdAt', label: 'Created At', width: 140, sortable: true },
   { id: 'deletedAt', label: 'Status', width: 95, sortable: true },
-  { id: '', width: 50 },
 ];
 
 const defaultFilter: IMemberTableFilters = {
   search: '',
-  status: 'all',
+  status: 'inactive',
 };
 
-export default function MemberListView() {
+export default function MemberListDraw({ isOpen, changeStatus, selectedMembers }: Props) {
   const table = useTable();
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
@@ -76,7 +60,7 @@ export default function MemberListView() {
 
   const {
     page = { page: 1, pageSize: 10 },
-    sort = { createdAt: 'desc' },
+    sort = { createdAt: 'asc' },
     filter = defaultFilter,
   } = query;
 
@@ -86,11 +70,8 @@ export default function MemberListView() {
       filterObj.OR = [
         { name: { contains: filter.search } },
         { email: { contains: filter.search } },
+        { status: 'active' },
       ];
-    }
-
-    if (filter.status === 'inactive') {
-      filterObj.deletedAt = { not: null };
     }
 
     return filterObj;
@@ -104,16 +85,6 @@ export default function MemberListView() {
       .join(',');
   }, [sort]);
 
-  const confirm = useBoolean();
-
-  const canReset = !!filter.search;
-
-  const { data: statsData } = useGraphQuery(FETCH_MEMBER_STATS_QUERY, {
-    variables: {
-      inactiveFilter: { deletedAt: { not: null } },
-    },
-  });
-
   const { loading, data } = useGraphQuery(FETCH_MEMBERS_QUERY, {
     variables: {
       page: page && `${page.page},${page.pageSize}`,
@@ -121,98 +92,30 @@ export default function MemberListView() {
       sort: graphQuerySort,
     },
   });
+
+  const canReset = !!filter.search;
+
   const tableData = data?.members;
 
   const notFound = (canReset && !tableData?.members?.length) || !tableData?.members?.length;
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: MemberRole) => {
-    setQuery({
-      ...query,
-      filter: { ...filter, status: newValue },
-      page: { page: 1, pageSize: query.page?.pageSize ?? 10 },
-    });
-  };
-
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setQuery({ ...query, filter: { ...filter, search: value } });
-    },
-    [setQuery, query, filter]
-  );
-
   return (
-    <DashboardContent>
-      <Breadcrumbs
-        heading="Member"
-        links={[{ name: 'Member', href: paths.dashboard.members.root }, { name: 'List' }]}
-        action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.members.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            New Member
-          </Button>
-        }
-        sx={{
-          mb: { xs: 3, md: 5 },
-        }}
-      />
-
+    <Drawer
+      open={isOpen}
+      anchor="right"
+      slotProps={{ backdrop: { invisible: true } }}
+      PaperProps={{
+        sx: {
+          width: 1300,
+          p: 1,
+        },
+      }}
+    >
       <Card>
-        <Tabs
-          value={filter.status}
-          onChange={handleTabChange}
-          sx={{
-            px: 2.5,
-            boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-          }}
-        >
-          {STATUS_OPTIONS.map((tab) => (
-            <Tab
-              key={tab.value}
-              iconPosition="end"
-              value={tab.value}
-              label={tab.label}
-              icon={
-                <Label
-                  variant={(tab.value === filter.status && 'filled') || 'soft'}
-                  color={tab.color}
-                >
-                  {statsData ? statsData[tab.value].total! : 0}
-                </Label>
-              }
-            />
-          ))}
-        </Tabs>
-
-        <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
-
-        {canReset && !loading && (
-          <MemberTableFiltersResult results={tableData!.total!} sx={{ p: 2.5, pt: 0 }} />
-        )}
-
+        <Stack sx={{ p: 2, pl: 1 }}>
+          <Typography variant="subtitle1">Member List</Typography>
+        </Stack>
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
-            dense={table.dense}
-            numSelected={table.selected.length}
-            rowCount={loading ? 0 : tableData!.members!.length}
-            onSelectAllRows={(checked) =>
-              table.onSelectAllRows(
-                checked,
-                tableData!.members!.map((row) => row!.id)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={confirm.onTrue}>
-                  <Iconify icon="solar:trash-bin-trash-bold" />
-                </IconButton>
-              </Tooltip>
-            }
-          />
-
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
               <TableHeadCustom
@@ -244,6 +147,7 @@ export default function MemberListView() {
                       row={row!}
                       selected={table.selected.includes(row!.id)}
                       onSelectRow={() => table.onSelectRow(row!.id)}
+                      action={false}
                       // onDeleteRow={() => handleDeleteRow(row.id)}
                       // onEditRow={() => handleEditRow(row.id)}
                     />
@@ -271,6 +175,17 @@ export default function MemberListView() {
           onChangeDense={table.onChangeDense}
         />
       </Card>
-    </DashboardContent>
+      <Stack sx={{ pt: 2 }} alignItems="flex-end">
+        <LoadingButton
+          variant="contained"
+          onClick={() => {
+            selectedMembers(table.selected);
+            changeStatus(false);
+          }}
+        >
+          Select
+        </LoadingButton>
+      </Stack>
+    </Drawer>
   );
 }

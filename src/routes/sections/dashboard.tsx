@@ -22,6 +22,12 @@ const MemberEditPage = lazy(() => import('src/pages/Member/Edit'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const SaleListPage = lazy(() => import('src/pages/Sale/List'));
+const SaleCreatePage = lazy(() => import('src/pages/Sale/Create'));
+// const MemberEditPage = lazy(() => import('src/pages/Member/Edit'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const DashboardPage = lazy(() => import('src/pages/Dashboard'));
 // ----------------------------------------------------------------------
 
@@ -49,6 +55,14 @@ export const dashboardRoutes = [
           { index: true, element: <MemberListPage /> },
           { path: 'new', element: <MemberCreatePage /> },
           { path: ':id', element: <MemberEditPage /> },
+        ],
+      },
+      {
+        path: 'sales',
+        children: [
+          { index: true, element: <SaleListPage /> },
+          { path: 'new', element: <SaleCreatePage /> },
+          // { path: ':id', element: <MemberEditPage /> },
         ],
       },
       {
