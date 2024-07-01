@@ -37,51 +37,51 @@ import {
   TablePaginationCustom,
 } from 'src/components/Table';
 
-import MemberTableRow from './MemberTableRow';
-import MemberTableFiltersResult from './MemberTableFiltersResult';
-import { FETCH_MEMBERS_QUERY, FETCH_MEMBER_STATS_QUERY } from '../query';
+import SaleTableRow from './SaleTableRow';
+import SaleTableFiltersResult from './SaleTableFiltersResult';
+import { FETCH_SALES_QUERY, FETCH_SALES_STATS_QUERY } from '../query';
 
-import type { MemberRole, IMemberPrismaFilter, IMemberTableFilters } from './types';
+import type { SaleRole, ISalePrismaFilter, ISaleTableFilters } from './types';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS: { value: MemberRole; label: string; color: LabelColor }[] = [
+const STATUS_OPTIONS: { value: SaleRole; label: string; color: LabelColor }[] = [
   { value: 'all', label: 'All', color: 'info' },
   { value: 'inactive', label: 'Inactive', color: 'error' },
 ];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', sortable: true },
-  { id: 'fullName', label: 'Full Name', width: 130, sortable: true },
+  { id: 'invoiceNo', label: 'Invoice No', sortable: true },
+  { id: 'name', label: 'Name', width: 130, sortable: true },
   { id: 'mobile', label: 'Mobile', width: 130, sortable: true },
-  { id: 'address', label: 'Address', width: 130, sortable: true },
-  { id: 'assetId', label: 'AssetID', width: 130, sortable: true },
-  { id: 'txcPayout', label: 'TXC Payout', width: 200, sortable: true },
-  { id: 'txcCold', label: 'TXC Cold', width: 130, sortable: true },
-  { id: 'createdAt', label: 'Created At', width: 140, sortable: true },
-  { id: 'deletedAt', label: 'Status', width: 95, sortable: true },
-  { id: '', width: 50 },
+  { id: 'assetId', label: 'Asset ID', width: 130, sortable: true },
+  { id: 'productName', label: 'Product Name', width: 200, sortable: true },
+  { id: 'paymentMethod', label: 'Payment Method', width: 130, sortable: true },
+  { id: 'amount', label: 'Amount', width: 140, sortable: true },
+  { id: 'hashPower', label: 'Hash Power', width: 95, sortable: true },
+  { id: 'orderedAt', label: 'Ordered At', width: 95, sortable: true },
+  { id: 'status', label: 'Status', width: 95, sortable: true },
+  { id: 'action', label: 'Action', width: 50 },
 ];
 
-const defaultFilter: IMemberTableFilters = {
+const defaultFilter: ISaleTableFilters = {
   search: '',
   status: 'all',
 };
 
-export default function MemberListView() {
+export default function SaleListView() {
   const table = useTable();
 
-  const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
-    useQuery<IMemberTableFilters>();
+  const [query, { setQueryParams: setQuery, setPage, setPageSize }] = useQuery<ISaleTableFilters>();
 
   const {
     page = { page: 1, pageSize: 10 },
-    sort = { createdAt: 'desc' },
+    sort = { createdAt: 'asc' },
     filter = defaultFilter,
   } = query;
 
   const graphQueryFilter = useMemo(() => {
-    const filterObj: IMemberPrismaFilter = {};
+    const filterObj: ISalePrismaFilter = {};
     if (filter.search) {
       filterObj.OR = [
         { name: { contains: filter.search } },
@@ -108,24 +108,24 @@ export default function MemberListView() {
 
   const canReset = !!filter.search;
 
-  const { data: statsData } = useGraphQuery(FETCH_MEMBER_STATS_QUERY, {
+  const { data: statsData } = useGraphQuery(FETCH_SALES_STATS_QUERY, {
     variables: {
       inactiveFilter: { deletedAt: { not: null } },
     },
   });
 
-  const { loading, data } = useGraphQuery(FETCH_MEMBERS_QUERY, {
+  const { loading, data } = useGraphQuery(FETCH_SALES_QUERY, {
     variables: {
       page: page && `${page.page},${page.pageSize}`,
       filter: graphQueryFilter,
       sort: graphQuerySort,
     },
   });
-  const tableData = data?.members;
+  const tableData = data?.sales;
 
-  const notFound = (canReset && !tableData?.members?.length) || !tableData?.members?.length;
+  const notFound = (canReset && !tableData?.sales?.length) || !tableData?.sales?.length;
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: MemberRole) => {
+  const handleTabChange = (event: React.SyntheticEvent, newValue: SaleRole) => {
     setQuery({
       ...query,
       filter: { ...filter, status: newValue },
@@ -143,16 +143,16 @@ export default function MemberListView() {
   return (
     <DashboardContent>
       <Breadcrumbs
-        heading="Member"
-        links={[{ name: 'Member', href: paths.dashboard.members.root }, { name: 'List' }]}
+        heading="Sale"
+        links={[{ name: 'Sale', href: paths.dashboard.sales.root }, { name: 'List' }]}
         action={
           <Button
             component={RouterLink}
-            href={paths.dashboard.members.new}
+            href={paths.dashboard.sales.new}
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            New Member
+            New Sale
           </Button>
         }
         sx={{
@@ -190,18 +190,18 @@ export default function MemberListView() {
         <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
 
         {canReset && !loading && (
-          <MemberTableFiltersResult results={tableData!.total!} sx={{ p: 2.5, pt: 0 }} />
+          <SaleTableFiltersResult results={tableData!.total!} sx={{ p: 2.5, pt: 0 }} />
         )}
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <TableSelectedAction
             dense={table.dense}
             numSelected={table.selected.length}
-            rowCount={loading ? 0 : tableData!.members!.length}
+            rowCount={loading ? 0 : tableData!.sales!.length}
             onSelectAllRows={(checked) =>
               table.onSelectAllRows(
                 checked,
-                tableData!.members!.map((row) => row!.id)
+                tableData!.sales!.map((row) => row!.id)
               )
             }
             action={
@@ -219,7 +219,7 @@ export default function MemberListView() {
                 order={sort && sort[Object.keys(sort)[0]]}
                 orderBy={sort && Object.keys(sort)[0]}
                 headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : tableData!.members!.length}
+                rowCount={loading ? 0 : tableData!.sales!.length}
                 numSelected={table.selected.length}
                 onSort={(id) => {
                   const isAsc = sort && sort[id] === 'asc';
@@ -229,7 +229,7 @@ export default function MemberListView() {
                 onSelectAllRows={(checked) =>
                   table.onSelectAllRows(
                     checked,
-                    tableData!.members!.map((row) => row!.id)
+                    tableData!.sales!.map((row) => row!.id)
                   )
                 }
               />
@@ -238,8 +238,8 @@ export default function MemberListView() {
                 <LoadingScreen />
               ) : (
                 <TableBody>
-                  {tableData!.members!.map((row) => (
-                    <MemberTableRow
+                  {tableData!.sales!.map((row) => (
+                    <SaleTableRow
                       key={row!.id}
                       row={row!}
                       selected={table.selected.includes(row!.id)}

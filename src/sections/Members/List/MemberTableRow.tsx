@@ -20,15 +20,11 @@ import { Iconify } from 'src/components/Iconify';
 type Props = {
   selected: boolean;
   row: Member;
+  action?: boolean;
   onSelectRow: VoidFunction;
 };
 
-export default function UserTableRow({
-  row,
-  selected,
-
-  onSelectRow,
-}: Props) {
+export default function MemberTableRow({ row, selected, action = true, onSelectRow }: Props) {
   const router = useRouter();
 
   const {
@@ -111,18 +107,20 @@ export default function UserTableRow({
         )}
       </TableCell>
 
-      <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        <Tooltip title="View" placement="top" arrow>
-          <IconButton
-            color="default"
-            onClick={() => {
-              router.push(paths.dashboard.members.edit(id));
-            }}
-          >
-            <Iconify icon="solar:eye-bold" />
-          </IconButton>
-        </Tooltip>
-      </TableCell>
+      {action && (
+        <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+          <Tooltip title="View" placement="top" arrow>
+            <IconButton
+              color="default"
+              onClick={() => {
+                router.push(paths.dashboard.members.edit(id));
+              }}
+            >
+              <Iconify icon="solar:eye-bold" />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
+      )}
     </TableRow>
   );
 }

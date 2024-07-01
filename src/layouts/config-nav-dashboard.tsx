@@ -49,6 +49,7 @@ export const navData = [
     items: [
       { title: 'Dashboard', path: paths.dashboard.history.root, icon: ICONS.analytics },
       { title: 'Member', path: paths.dashboard.members.root, icon: ICONS.user },
+      { title: 'Sale', path: paths.dashboard.sales.root, icon: ICONS.invoice },
       { title: 'User', path: paths.dashboard.user.root, icon: ICONS.user },
     ],
   },
