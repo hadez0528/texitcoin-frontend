@@ -58,7 +58,7 @@ export default function UserTableRow({
           '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
         }}
         onClick={() => {
-          router.push(paths.dashboard.user.edit(id));
+          router.push(paths.dashboard.members.edit(id));
         }}
       >
         <ListItemText
@@ -116,7 +116,7 @@ export default function UserTableRow({
           <IconButton
             color="default"
             onClick={() => {
-              router.push(paths.dashboard.user.edit(id));
+              router.push(paths.dashboard.members.edit(id));
             }}
           >
             <Iconify icon="solar:eye-bold" />
