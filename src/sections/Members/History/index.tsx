@@ -4,9 +4,9 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
+import { Reward } from './Reward';
 import { OverView } from './OverView';
 import { Personal } from './Personal';
-import { Reward } from './Reward';
 
 export default function HistoryView() {
   return (

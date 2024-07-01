@@ -90,12 +90,15 @@ export const FETCH_MEMBER_HISTORY = gql(/* GraphQL */ `
   }
 `);
 
-export const FETCH_MEMBER_REWARD = gql(/* GraphQL */ `
-  query MemberDailyReward($data: MemberDailyRewardsInput!) {
-    memberDailyReward(data: $data) {
-      hashPower
-      issuedAt
-      txcShared
+export const FETCH_MEMBER_STATISTICS = gql(/* GraphQL */ `
+  query MemberStatistics($sort: String, $page: String, $filter: JSONObject) {
+    memberStatistics(sort: $sort, page: $page, filter: $filter) {
+      memberStatistics {
+        issuedAt
+        hashPower
+        txcShared
+      }
+      total
     }
   }
 `);
