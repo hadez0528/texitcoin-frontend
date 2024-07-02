@@ -28,7 +28,6 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           status
         }
         paymentMethod
-        hashPower
         orderedAt
         status
       }
@@ -52,7 +51,6 @@ export const CREATE_SALE = gql(/* GraphQL */ `
   mutation CreateSale($data: CreateSaleInput!) {
     createSale(data: $data) {
       invoiceNo
-      hashPower
       orderedAt
       memberId
       paymentMethod

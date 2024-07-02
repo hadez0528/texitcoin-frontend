@@ -32,6 +32,11 @@ const SaleCreatePage = lazy(() => import('src/pages/Sale/Create'));
 const DashboardPage = lazy(() => import('src/pages/Dashboard'));
 // ----------------------------------------------------------------------
 
+// ----------------------------------------------------------------------
+const RewardPage = lazy(() => import('src/pages/Reward/List'));
+const RewardDetailPage = lazy(() => import('src/pages/MemberStatistics/List'));
+// ----------------------------------------------------------------------
+
 export const dashboardRoutes = [
   {
     path: '',
@@ -65,6 +70,14 @@ export const dashboardRoutes = [
           { index: true, element: <SaleListPage /> },
           { path: 'new', element: <SaleCreatePage /> },
           // { path: ':id', element: <SaleEditPage /> },
+        ],
+      },
+      {
+        path: 'reward',
+        children: [
+          { index: true, element: <RewardPage /> },
+          // { path: 'new', element: <RewardCreatePage /> },
+          { path: ':id', element: <RewardDetailPage /> },
         ],
       },
       {

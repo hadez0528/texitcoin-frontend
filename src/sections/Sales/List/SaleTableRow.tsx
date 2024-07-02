@@ -28,16 +28,7 @@ export default function SaleTableRow({
 }: Props) {
   const router = useRouter();
 
-  const {
-    id,
-    invoiceNo,
-    member,
-    package: product,
-    paymentMethod,
-    hashPower,
-    orderedAt,
-    status,
-  } = row;
+  const { id, invoiceNo, member, package: product, paymentMethod, orderedAt, status } = row;
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -71,7 +62,7 @@ export default function SaleTableRow({
         {product?.amount}
       </TableCell>
       <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        {hashPower}
+        {product?.token}
       </TableCell>
       <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         {orderedAt}

@@ -54,8 +54,8 @@ const STATUS_OPTIONS: { value: UserRole; label: string; color: LabelColor }[] = 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', sortable: true },
   { id: 'isAdmin', label: 'Admin', width: 130, sortable: true },
-  { id: 'createdAt', label: 'Created At', width: 140, sortable: true },
-  { id: 'updatedAt', label: 'Updated At', width: 140, sortable: true },
+  { id: 'createdAt', label: 'Created At', width: 200, sortable: true },
+  { id: 'updatedAt', label: 'Updated At', width: 200, sortable: true },
   { id: 'deletedAt', label: 'Status', width: 95, sortable: true },
   { id: '', width: 50 },
 ];
