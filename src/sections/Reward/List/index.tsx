@@ -52,7 +52,7 @@ const defaultFilter: IStatisticsTableFilters = {
 };
 
 export default function RewardListView() {
-  const table = useTable();
+  const table = useTable({ defaultDense: true });
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<IStatisticsTableFilters>();
@@ -113,7 +113,7 @@ export default function RewardListView() {
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
           >
-            Create Reward
+            New Reward
           </Button>
         }
         sx={{

@@ -68,3 +68,16 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const CREATE_MEMBER_STATISTICS_QUERY = gql(/* GraphQL */ `
+  mutation CreateMemberStatistics($data: CreateMemberStatisticsInput!) {
+    createMemberStatistics(data: $data) {
+      hashPower
+      issuedAt
+      memberId
+      percent
+      statisticsId
+      txcShared
+    }
+  }
+`);

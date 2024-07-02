@@ -79,8 +79,6 @@ export default function MemberStatistics() {
       .join(',');
   }, [sort]);
 
-  console.log('filter => ', graphQueryFilter);
-
   const { loading, data } = useGraphQuery(FETCH_MEMBERSTATISTICS_QUERY, {
     variables: {
       page: page && `${page.page},${page.pageSize}`,
