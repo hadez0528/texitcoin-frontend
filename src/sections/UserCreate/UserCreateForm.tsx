@@ -143,95 +143,9 @@ export default function UserCreateForm() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Text name="name" label="Full Name" />
+              <Field.Text name="username" label="Username" />
               <Field.Text name="email" label="Email Address" />
-
-              <Field.Switch
-                name="isSuperAdmin"
-                labelPlacement="start"
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                      Admin
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      Admin permission
-                    </Typography>
-                  </>
-                }
-                sx={{ mx: 0, px: 1, width: 1, justifyContent: 'space-between' }}
-              />
-
-              <Field.Switch
-                name="isApUser"
-                labelPlacement="start"
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                      AP user
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      AP user permission
-                    </Typography>
-                  </>
-                }
-                sx={{ mx: 0, px: 1, width: 1, justifyContent: 'space-between' }}
-              />
-
-              <Field.Switch
-                name="isBackOfficeUser"
-                labelPlacement="start"
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                      Back Office User
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      AP user permission
-                    </Typography>
-                  </>
-                }
-                sx={{ mx: 0, px: 1, width: 1, justifyContent: 'space-between' }}
-              />
-
-              <Field.Switch
-                name="isEmailVerified"
-                labelPlacement="start"
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                      Email Verified
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      Enabling this will NOT automatically send a verification email
-                    </Typography>
-                  </>
-                }
-                sx={{ mx: 0, px: 1, width: 1, justifyContent: 'space-between' }}
-              />
             </Box>
-
-            {/* <Divider sx={{ borderStyle: 'dashed', my: 3 }} />
-
-            <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="subtitle2">Organizations</Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Assign organizations to this user. This is optional.
-              </Typography>
-            </Stack>
-
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-              <RHFTextField name="name" label="Full Name" />
-              <RHFTextField name="email" label="Email Address" />
-            </Box> */}
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={loading}>
