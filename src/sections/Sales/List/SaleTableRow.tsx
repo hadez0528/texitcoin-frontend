@@ -20,12 +20,7 @@ type Props = {
   onSelectRow: VoidFunction;
 };
 
-export default function SaleTableRow({
-  row,
-  selected,
-
-  onSelectRow,
-}: Props) {
+export default function SaleTableRow({ row, selected, onSelectRow }: Props) {
   const router = useRouter();
 
   const { id, invoiceNo, member, package: product, paymentMethod, orderedAt, status } = row;
@@ -68,7 +63,7 @@ export default function SaleTableRow({
         {orderedAt}
       </TableCell>
       <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        {status}
+        {status ? 'active' : 'inactive'}
       </TableCell>
 
       <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
