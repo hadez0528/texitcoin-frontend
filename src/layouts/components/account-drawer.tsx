@@ -107,7 +107,7 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
             {data.map((option) => {
               const rootLabel = pathname.includes('/dashboard') ? 'Home' : 'Dashboard';
 
-              const rootHref = pathname.includes('/dashboard') ? '/' : paths.dashboard.root;
+              const rootHref = pathname.includes('/dashboard') ? '/' : paths.dashboard.history.root;
 
               return (
                 <MenuItem
