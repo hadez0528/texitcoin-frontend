@@ -1,8 +1,4 @@
-import type { MemberStatistics } from 'src/__generated__/graphql';
-
 import { useState } from 'react';
-
-import { useMutation } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Step from '@mui/material/Step';
@@ -15,31 +11,22 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
-import { useBoolean } from 'src/hooks/useBoolean';
-
 import { varAlpha } from 'src/theme/styles';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { ConfirmDialog } from 'src/components/custom-dialog';
 
+import SendMany from './Send';
 import SalesList from './SaleList';
 import SelectedSales from './SelectedSales';
 
-import { CREATE_MEMBER_STATISTICS } from '../query';
-
 // ----------------------------------------------------------------------
-const stepTitles = ['Sales', 'Selected Sales', 'Reward'];
+const stepTitles = ['Sales', 'Selected Sales', 'Send'];
 
 export default function RewardCreateView() {
-  const confirm = useBoolean();
-
   const [activeStep, setActiveStep] = useState(0);
   const [ids, setIds] = useState<string[]>([]);
   const [date, setDate] = useState<any>(new Date());
-  // const [memberStatistics, setMemberStatistics] = useState<any[]>([]);
-
-  let memberStatistics: MemberStatistics[] = [];
 
   const [skipped, setSkipped] = useState(new Set<number>());
 
@@ -68,16 +55,11 @@ export default function RewardCreateView() {
     setIds(salesIds);
   };
 
-  const getMemberStatistics = (data: MemberStatistics[]) => {
-    memberStatistics = data;
-  };
-
   const steps = [
     <SalesList date={date} setDate={setDate} selectIds={selectIds} />,
-    <SelectedSales ids={ids} date={date} getMemberStatistics={getMemberStatistics} />,
+    <SelectedSales ids={ids} date={date} handleBack={handleBack} handleNext={handleNext} />,
+    <SendMany date={date} />,
   ];
-
-  const [createMemberStatistics, { loading }] = useMutation(CREATE_MEMBER_STATISTICS);
 
   return (
     // TODO: Consider moving this Container to dashboard route definition as every page will have same layout
@@ -145,55 +127,20 @@ export default function RewardCreateView() {
           </Paper>
 
           <Stack direction="row">
-            <Button color="inherit" disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
-              Back
-            </Button>
             <Box sx={{ flexGrow: 1 }} />
-            {activeStep === 0 ? (
-              <Button variant="contained" onClick={handleNext} disabled={!ids.length}>
-                Next
-              </Button>
-            ) : (
+            {activeStep === 0 && (
               <>
-                {activeStep === stepTitles.length - 1 ? (
-                  <Button variant="contained" onClick={handleNext}>
-                    Send
-                  </Button>
-                ) : (
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      confirm.onTrue();
-                    }}
-                  >
-                    Confirm
-                  </Button>
-                )}
+                <Button color="inherit" disabled onClick={handleBack} sx={{ mr: 1 }}>
+                  Back
+                </Button>
+                <Button variant="contained" onClick={handleNext} disabled={!ids.length}>
+                  Next
+                </Button>
               </>
             )}
           </Stack>
         </>
       )}
-
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Confirm"
-        content="Are you sure?"
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              confirm.onFalse();
-              // createMemberStatistics({variables: {data: memberStatistics}});
-              handleNext();
-            }}
-          >
-            Confirm
-          </Button>
-        }
-      />
     </DashboardContent>
   );
 }

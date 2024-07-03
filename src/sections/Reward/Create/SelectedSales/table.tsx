@@ -1,3 +1,5 @@
+// import type { MemberStatistics } from 'src/__generated__/graphql';
+
 import { useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
@@ -18,7 +20,7 @@ const columns: GridColDef[] = [
     flex: 1,
     headerName: 'Percent',
     filterable: false,
-    renderCell: (params) => params.row.percent.toFixed(2),
+    renderCell: (params) => `${params.row.percent} %`,
   },
   {
     field: 'txcShared',
@@ -40,6 +42,7 @@ const columns: GridColDef[] = [
 
 interface Props {
   data: any[];
+  memberStatistics: any[];
   getMemberStatistics: Function;
 }
 
@@ -48,22 +51,26 @@ interface TXCSharedProps {
   txcShared: number;
 }
 
-export default function MemberStatisticsTable({ data, getMemberStatistics }: Props) {
+export default function MemberStatisticsTable({
+  data,
+  memberStatistics,
+  getMemberStatistics,
+}: Props) {
   const [totalTXC, setTotalTXC] = useState<number>(0);
   const [estimated, setEstimated] = useState<number>(0);
 
   const memberStatisticsData = data?.reduce(
-    (prev, { id, username, email, ...rest }) => ({ ...prev, [id]: rest }),
+    (prev, { memberId, ...rest }) => ({ ...prev, [memberId]: { memberId, ...rest } }),
     {}
   );
 
   const changeData = ({ memberId, txcShared }: TXCSharedProps) => {
     const oldValue = memberStatisticsData[memberId].txcShared;
+    const newData: any[] = Object.values(memberStatisticsData);
     if (oldValue !== Number(txcShared)) {
       memberStatisticsData[memberId].txcShared = Number(txcShared);
-      getMemberStatistics(Object.values(memberStatisticsData));
+      getMemberStatistics(newData);
     }
-    const newData: any[] = Object.values(memberStatisticsData);
 
     setTotalTXC(newData.reduce((prev, item) => prev + item.txcShared, 0));
   };
@@ -97,7 +104,7 @@ export default function MemberStatisticsTable({ data, getMemberStatistics }: Pro
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
         <ScrollBar>
           <DataGrid
-            rows={data}
+            rows={memberStatistics.length ? memberStatistics : data}
             columns={columns}
             loading={!data.length}
             hideFooterPagination
