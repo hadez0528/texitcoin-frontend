@@ -36,7 +36,7 @@ export const OverView = () => {
         <Stack width={1}>
           {fNumber(data?.memberOverview.totalTXCShared)}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-            Total TXC Shared
+            Total TXC Reward
           </Box>
         </Stack>
 

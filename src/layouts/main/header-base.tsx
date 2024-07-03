@@ -6,10 +6,14 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
 
+import { STORAGE_TOKEN_KEY } from 'src/consts';
+
 import { Logo } from 'src/components/logo';
 
 import { HeaderSection } from './header-section';
+import { _account } from '../config-nav-account';
 import { MenuButton } from '../components/menu-button';
+import { AccountDrawer } from '../components/account-drawer';
 import { SettingsButton } from '../components/settings-button';
 
 import type { HeaderSectionProps } from './header-section';
@@ -51,6 +55,8 @@ export function HeaderBase({
   ...other
 }: HeaderBaseProps) {
   const theme = useTheme();
+
+  const token = localStorage.getItem(STORAGE_TOKEN_KEY);
 
   return (
     <HeaderSection
@@ -94,17 +100,22 @@ export function HeaderBase({
               {settings && <SettingsButton data-slot="settings" />}
 
               {/* -- Login button -- */}
-              {settings && (
-                <LoadingButton
-                  color="inherit"
-                  size="medium"
-                  type="submit"
-                  href={paths.signIn}
-                  variant="contained"
-                  data-slot="login"
-                >
-                  Login
-                </LoadingButton>
+              {token ? (
+                // <Typography variant="h6">{user?.me?.username}</Typography>
+                <AccountDrawer data-slot="account" data={_account} />
+              ) : (
+                settings && (
+                  <LoadingButton
+                    color="inherit"
+                    size="medium"
+                    type="submit"
+                    href={paths.signIn}
+                    variant="contained"
+                    data-slot="login"
+                  >
+                    Login
+                  </LoadingButton>
+                )
               )}
             </Box>
 
