@@ -3,21 +3,39 @@ import { useLazyQuery } from '@apollo/client';
 import { Navigate, useParams } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+
 import { paths } from 'src/routes/paths';
+
+import { useTabs } from 'src/hooks/use-tabs';
 
 import { CONFIG } from 'src/config';
 import { DashboardContent } from 'src/layouts/dashboard';
 
+import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
 
+import History from './History';
 import MemberGeneral from './General';
 import { FETCH_MEMBER } from '../query';
+
+const TABS = [
+  { value: 'edit', label: 'Edit', icon: <Iconify icon="solar:pen-2-bold" width={24} /> },
+  {
+    value: 'history',
+    label: 'History',
+    icon: <Iconify icon="carbon:analytics" width={24} />,
+  },
+];
 
 // ----------------------------------------------------------------------
 export default function MemberEditView() {
   // Loading state including first initial render
   const [isLoading, setIsLoading] = useState(true);
+
+  const tabs = useTabs('edit');
 
   const params = useParams();
 
@@ -60,10 +78,21 @@ export default function MemberEditView() {
             { name: member.username },
           ]}
           sx={{
-            mb: { xs: 3, md: 5 },
+            mb: { xs: 2, md: 3 },
           }}
         />
-        <MemberGeneral currentMember={member} refetchMember={fetchMember} />
+
+        <Tabs value={tabs.value} onChange={tabs.onChange} sx={{ mb: { xs: 2, md: 3 } }}>
+          {TABS.map((tab) => (
+            <Tab key={tab.value} label={tab.label} icon={tab.icon} value={tab.value} />
+          ))}
+        </Tabs>
+
+        {tabs.value === 'edit' && (
+          <MemberGeneral currentMember={member} refetchMember={fetchMember} />
+        )}
+
+        {tabs.value === 'history' && <History />}
       </DashboardContent>
     </>
   );
