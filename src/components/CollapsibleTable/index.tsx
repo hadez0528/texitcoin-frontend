@@ -69,6 +69,8 @@ export default function CollapsibleTable() {
                   <TableCell align="left">Total Blocks</TableCell>
                   <TableCell align="left">Total Hash Power</TableCell>
                   <TableCell align="left">Total Members</TableCell>
+                  <TableCell align="left">TXC Shared</TableCell>
+                  <TableCell align="left">Diff</TableCell>
                   <TableCell align="left">From</TableCell>
                   <TableCell align="left">To</TableCell>
                   <TableCell align="left">Status</TableCell>
@@ -149,6 +151,8 @@ function CollapsibleTableRow({ row }: CollapsibleTableRowProps) {
         <TableCell align="left">{row.totalBlocks}</TableCell>
         <TableCell align="left">{row.totalHashPower}</TableCell>
         <TableCell align="left">{row.totalMembers}</TableCell>
+        <TableCell align="left">{row.txcShared}</TableCell>
+        <TableCell align="left">{row.newBlocks * 254 - row.txcShared}</TableCell>
         <TableCell align="left">{fDateTime(row.from)}</TableCell>
         <TableCell align="left">{fDateTime(row.to)}</TableCell>
         <TableCell align="left">{row.status ? 'Confirmed' : 'Pending'}</TableCell>
