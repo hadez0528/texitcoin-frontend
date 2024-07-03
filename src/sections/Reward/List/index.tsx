@@ -59,7 +59,7 @@ export default function RewardListView() {
 
   const {
     page = { page: 1, pageSize: 10 },
-    sort = { createdAt: 'desc' },
+    sort = { issuedAt: 'asc' },
     filter = defaultFilter,
   } = query;
 
