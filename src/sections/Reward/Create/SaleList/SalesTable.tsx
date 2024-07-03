@@ -6,6 +6,8 @@ import Stack from '@mui/material/Stack';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 
+import { formatDate } from 'src/utils/format-time';
+
 import { ScrollBar } from 'src/components/ScrollBar';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { useTable, TableNoData, TableHeadCustom, TableSelectedAction } from 'src/components/Table';
@@ -34,7 +36,7 @@ export default function SalesTable({ date, selectIds }: Props) {
   const table = useTable();
 
   const [fetchSales, { loading, data }] = useLazyQuery(FETCH_SALES_QUERY, {
-    variables: { filter: { orderedAt: date }, sort: 'invoiceNo' },
+    variables: { filter: { orderedAt: formatDate(date) }, sort: 'invoiceNo' },
   });
 
   const tableData = data?.sales.sales ?? [];
