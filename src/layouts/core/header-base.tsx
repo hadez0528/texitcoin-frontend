@@ -3,8 +3,6 @@ import type { NavSectionProps } from 'src/components/nav-section';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 
-import { Logo } from 'src/components/logo';
-
 import { HeaderSection } from './header-section';
 import { MenuButton } from '../components/menu-button';
 import { AccountDrawer } from '../components/account-drawer';
@@ -69,9 +67,6 @@ export function HeaderBase({
                 sx={{ mr: 1, ml: -1, [theme.breakpoints.up(layoutQuery)]: { display: 'none' } }}
               />
             )}
-
-            {/* -- Logo -- */}
-            <Logo data-slot="logo" />
 
             {slots?.leftAreaEnd}
           </>
