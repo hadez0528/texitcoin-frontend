@@ -78,9 +78,7 @@ export default function Dashboard() {
           />
         </Grid>
       </Grid>
-      <Grid container spacing={1}>
-        <CollapsibleTable />
-      </Grid>
+      <CollapsibleTable />
     </Container>
   );
 }
