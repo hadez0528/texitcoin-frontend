@@ -1,16 +1,11 @@
 import type { Sale } from 'src/__generated__/graphql';
 
-import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
-import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
-
-import { Iconify } from 'src/components/Iconify';
+import { Label } from 'src/components/Label';
 
 // ----------------------------------------------------------------------
 
@@ -21,9 +16,7 @@ type Props = {
 };
 
 export default function SaleTableRow({ row, selected, onSelectRow }: Props) {
-  const router = useRouter();
-
-  const { id, invoiceNo, member, package: product, paymentMethod, orderedAt, status } = row;
+  const { invoiceNo, member, package: product, paymentMethod, orderedAt, status } = row;
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -63,20 +56,15 @@ export default function SaleTableRow({ row, selected, onSelectRow }: Props) {
         {orderedAt}
       </TableCell>
       <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        {status ? 'active' : 'inactive'}
-      </TableCell>
-
-      <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        <Tooltip title="View" placement="top" arrow>
-          <IconButton
-            color="default"
-            onClick={() => {
-              router.push(paths.dashboard.sales.edit(id));
-            }}
-          >
-            <Iconify icon="solar:eye-bold" />
-          </IconButton>
-        </Tooltip>
+        {status ? (
+          <Label variant="soft" color="success">
+            active
+          </Label>
+        ) : (
+          <Label variant="soft" color="error">
+            inactive
+          </Label>
+        )}
       </TableCell>
     </TableRow>
   );
