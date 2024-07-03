@@ -9,5 +9,5 @@ export type ISaleTableFilters = {
 
 export type ISalePrismaFilter = {
   OR?: any;
-  deletedAt?: any;
+  status?: any;
 };
