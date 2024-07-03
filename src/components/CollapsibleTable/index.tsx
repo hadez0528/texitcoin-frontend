@@ -7,6 +7,7 @@ import Table from '@mui/material/Table';
 import Paper from '@mui/material/Paper';
 import TableRow from '@mui/material/TableRow';
 import Collapse from '@mui/material/Collapse';
+import Grid from '@mui/material/Unstable_Grid2';
 import TableHead from '@mui/material/TableHead';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
@@ -46,49 +47,51 @@ export default function CollapsibleTable() {
   const tableData = statisticsData?.statistics;
 
   return (
-    <Paper
-      variant="outlined"
-      sx={{
-        width: '100%',
-        m: 0.5,
-        mt: 2,
-        p: 2,
-        borderRadius: 1.5,
-      }}
-    >
-      <Typography variant="subtitle1">TXC Payout</Typography>
-      {tableData?.statistics!.length ? (
-        <TableContainer sx={{ mt: 3, overflow: 'unset' }}>
-          <ScrollBar>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell />
-                  <TableCell align="left">Date</TableCell>
-                  <TableCell align="left">New Blocks</TableCell>
-                  <TableCell align="left">Total Blocks</TableCell>
-                  <TableCell align="left">Total Hash Power</TableCell>
-                  <TableCell align="left">Total Members</TableCell>
-                  <TableCell align="left">TXC Shared</TableCell>
-                  <TableCell align="left">Diff</TableCell>
-                  <TableCell align="left">From</TableCell>
-                  <TableCell align="left">To</TableCell>
-                  <TableCell align="left">Status</TableCell>
-                </TableRow>
-              </TableHead>
+    <Grid container spacing={1}>
+      <Paper
+        variant="outlined"
+        sx={{
+          width: '100%',
+          m: 0.5,
+          mt: 2,
+          p: 2,
+          borderRadius: 1.5,
+        }}
+      >
+        <Typography variant="subtitle1">TXC Payout</Typography>
+        {tableData?.statistics!.length ? (
+          <TableContainer sx={{ mt: 3, overflow: 'unset' }}>
+            <ScrollBar>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell align="left">Date</TableCell>
+                    <TableCell align="left">New Blocks</TableCell>
+                    <TableCell align="left">Total Blocks</TableCell>
+                    <TableCell align="left">Total Hash Power</TableCell>
+                    <TableCell align="left">Total Members</TableCell>
+                    <TableCell align="left">TXC Shared</TableCell>
+                    <TableCell align="left">Diff</TableCell>
+                    <TableCell align="left">From</TableCell>
+                    <TableCell align="left">To</TableCell>
+                    <TableCell align="left">Status</TableCell>
+                  </TableRow>
+                </TableHead>
 
-              <TableBody>
-                {tableData?.statistics!.map((row) => (
-                  <CollapsibleTableRow key={row!.id} row={row!} />
-                ))}
-              </TableBody>
-            </Table>
-          </ScrollBar>
-        </TableContainer>
-      ) : (
-        <LoadingScreen />
-      )}
-    </Paper>
+                <TableBody>
+                  {tableData?.statistics!.map((row) => (
+                    <CollapsibleTableRow key={row!.id} row={row!} />
+                  ))}
+                </TableBody>
+              </Table>
+            </ScrollBar>
+          </TableContainer>
+        ) : (
+          <LoadingScreen />
+        )}
+      </Paper>
+    </Grid>
   );
 }
 

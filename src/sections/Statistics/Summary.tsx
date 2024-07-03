@@ -19,7 +19,7 @@ export const Summary = () => {
   const liveUserStats = data?.liveUserStats ?? { dailyData: [], meta: 0, total: 0 };
 
   return (
-    <>
+    <Grid container spacing={3}>
       <Grid xs={12} md={4}>
         <WidgetSummary
           title="Total blocks"
@@ -63,6 +63,6 @@ export const Summary = () => {
           }}
         />
       </Grid>
-    </>
+    </Grid>
   );
 };
