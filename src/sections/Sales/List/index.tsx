@@ -70,27 +70,24 @@ const defaultFilter: ISaleTableFilters = {
 };
 
 export default function SaleListView() {
-  const table = useTable();
+  const table = useTable({ defaultDense: true });
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] = useQuery<ISaleTableFilters>();
 
   const {
     page = { page: 1, pageSize: 10 },
-    sort = { createdAt: 'asc' },
+    sort = { invoiceNo: 'asc' },
     filter = defaultFilter,
   } = query;
 
   const graphQueryFilter = useMemo(() => {
     const filterObj: ISalePrismaFilter = {};
     if (filter.search) {
-      filterObj.OR = [
-        { name: { contains: filter.search } },
-        { email: { contains: filter.search } },
-      ];
+      filterObj.OR = [];
     }
 
     if (filter.status === 'inactive') {
-      filterObj.deletedAt = { not: null };
+      filterObj.status = false;
     }
 
     return filterObj;
@@ -110,9 +107,11 @@ export default function SaleListView() {
 
   const { data: statsData } = useGraphQuery(FETCH_SALES_STATS_QUERY, {
     variables: {
-      inactiveFilter: { deletedAt: { not: null } },
+      inactiveFilter: { status: false },
     },
   });
+
+  console.log('stats => ', statsData);
 
   const { loading, data } = useGraphQuery(FETCH_SALES_QUERY, {
     variables: {
