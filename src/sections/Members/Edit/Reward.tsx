@@ -36,6 +36,7 @@ export const Reward = () => {
             },
           },
         }}
+        height={404}
         type="bar"
       />
     </Grid>
