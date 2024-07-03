@@ -1,7 +1,10 @@
+import type { StackProps } from '@mui/material/Stack';
+import type { Theme, SxProps } from '@mui/material/styles';
+
 import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import { alpha } from '@mui/material/styles';
 import CardHeader from '@mui/material/CardHeader';
-import Stack, { StackProps } from '@mui/material/Stack';
-import { Theme, alpha, SxProps } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
