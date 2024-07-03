@@ -5,6 +5,9 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import ListItemText from '@mui/material/ListItemText';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { Label } from 'src/components/Label';
 
 // ----------------------------------------------------------------------
@@ -16,14 +19,28 @@ type Props = {
 };
 
 export default function SaleTableRow({ row, selected, onSelectRow }: Props) {
+  const router = useRouter();
+
   const { invoiceNo, member, package: product, paymentMethod, orderedAt, status } = row;
+
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
       <TableCell>{invoiceNo}</TableCell>
-      <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+      <TableCell
+        align="left"
+        sx={{
+          px: 1,
+          whiteSpace: 'nowrap',
+          cursor: 'pointer',
+          '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
+        }}
+        onClick={() => {
+          router.push(paths.dashboard.members.edit(member?.id ?? ''));
+        }}
+      >
         <ListItemText
           primary={member?.username}
           secondary={member?.email}
