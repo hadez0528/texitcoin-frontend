@@ -55,6 +55,7 @@ export const FETCH_STATISTICS_QUERY = gql(/* GraphQL */ `
         newBlocks
         totalBlocks
         totalMembers
+        txcShared
         issuedAt
         from
         to

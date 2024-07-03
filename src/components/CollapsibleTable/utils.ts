@@ -7,6 +7,7 @@ export default function createData(
   newBlocks: number,
   totalHashPower: number,
   totalMembers: number,
+  txcShared: number,
   from: string,
   to: string,
   status: boolean
@@ -18,6 +19,7 @@ export default function createData(
     newBlocks,
     totalHashPower,
     totalMembers,
+    txcShared,
     from,
     to,
     status,
