@@ -78,7 +78,7 @@ export default function OrganizationEditView() {
           heading={user.username}
           links={[{ name: 'User', href: paths.dashboard.user.root }, { name: user.username }]}
           sx={{
-            mb: { xs: 3, md: 5 },
+            mb: { xs: 1, md: 2 },
           }}
           action={
             <Button variant="contained" onClick={drawerState.onTrue}>
