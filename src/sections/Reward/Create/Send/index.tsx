@@ -7,6 +7,8 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+import { paths } from 'src/routes/paths';
+
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import ComponentBlock from 'src/components/Component-Block';
@@ -85,6 +87,7 @@ export default function SendMany({ date }: Props) {
           <Button
             variant="contained"
             color="error"
+            href={paths.dashboard.reward.root}
             onClick={async () => {
               confirm.onFalse();
 

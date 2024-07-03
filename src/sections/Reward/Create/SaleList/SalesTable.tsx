@@ -33,7 +33,7 @@ const TABLE_HEAD = [
 ];
 
 export default function SalesTable({ date, selectIds }: Props) {
-  const table = useTable();
+  const table = useTable({ defaultDense: true });
 
   const [fetchSales, { loading, data }] = useLazyQuery(FETCH_SALES_QUERY, {
     variables: { filter: { orderedAt: formatDate(date) }, sort: 'invoiceNo' },
