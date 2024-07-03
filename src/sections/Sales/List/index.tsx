@@ -87,6 +87,8 @@ export default function SaleListView() {
 
     if (filter.status === 'inactive') {
       filterObj.status = false;
+    } else {
+      filterObj.status = true;
     }
 
     return filterObj;
