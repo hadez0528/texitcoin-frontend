@@ -42,9 +42,13 @@ export default function SendMany({ date }: Props) {
   ];
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       fetchMemberStatistics();
     }, 1000);
+
+    return () => {
+      clearTimeout(timer);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
@@ -61,9 +65,6 @@ export default function SendMany({ date }: Props) {
           }}
         >
           {sendmany.length === 1 ? (
-            // <Typography variant="subtitle1" sx={{ textAlign: 'center' }}>
-            //   There are no any mined blocks.
-            // </Typography>
             <LoadingScreen />
           ) : (
             sendmany.map((item) => <Typography variant="body1">{item}</Typography>)
