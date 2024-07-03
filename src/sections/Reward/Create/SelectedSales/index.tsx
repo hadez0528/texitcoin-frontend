@@ -17,20 +17,17 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { FETCH_SALES_QUERY } from 'src/sections/Sales/query';
 
 import MemberStatisticsTable from './table';
-import {
-  FETCH_STATISTICS_QUERY,
-  UPDATE_MEMBER_STATISTICS,
-  CREATE_MANY_MEMBER_STATISTICS,
-} from '../../query';
+import { UPDATE_MEMBER_STATISTICS, CREATE_MANY_MEMBER_STATISTICS } from '../../query';
 
 interface Props {
   ids: string[];
   date: Date;
+  statistics: any[];
   handleBack: Function;
   handleNext: Function;
 }
 
-export default function SelectedSales({ ids, date, handleBack, handleNext }: Props) {
+export default function SelectedSales({ ids, date, statistics, handleBack, handleNext }: Props) {
   const confirm = useBoolean();
   const memberStatisticsRef = useRef<any[]>([]);
 
@@ -38,15 +35,9 @@ export default function SelectedSales({ ids, date, handleBack, handleNext }: Pro
     variables: { filter: { orderedAt: formatDate(date) } },
   });
 
-  const { data: statisticsData } = useGraphQuery(FETCH_STATISTICS_QUERY, {
-    variables: { filter: { issuedAt: new Date(formatDate(date)) } },
-  });
-
   const [createMemberStatistics, { loading }] = useMutation(CREATE_MANY_MEMBER_STATISTICS);
 
   const [updateMemberStatistics] = useMutation(UPDATE_MEMBER_STATISTICS);
-
-  const statistics = statisticsData?.statistics?.statistics ?? [];
 
   const blocks = statistics[0]?.newBlocks ?? 0;
   const statisticsId = statistics[0]?.id ?? '';

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useQuery as useGraphQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Step from '@mui/material/Step';
@@ -19,6 +20,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import SendMany from './Send';
 import SalesList from './SaleList';
 import SelectedSales from './SelectedSales';
+import { FETCH_STATISTICS_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
 const stepTitles = ['Sales', 'Selected Sales', 'Send'];
@@ -26,7 +28,14 @@ const stepTitles = ['Sales', 'Selected Sales', 'Send'];
 export default function RewardCreateView() {
   const [activeStep, setActiveStep] = useState(0);
   const [ids, setIds] = useState<string[]>([]);
-  const [date, setDate] = useState<any>(new Date());
+
+  const { data } = useGraphQuery(FETCH_STATISTICS_QUERY, {
+    variables: { sort: 'createdAt', filter: { status: false } },
+  });
+
+  const statistics = data?.statistics?.statistics ?? [];
+
+  const date = statistics[0]?.issuedAt ?? new Date();
 
   const [skipped, setSkipped] = useState(new Set<number>());
 
@@ -56,8 +65,14 @@ export default function RewardCreateView() {
   };
 
   const steps = [
-    <SalesList date={date} setDate={setDate} selectIds={selectIds} />,
-    <SelectedSales ids={ids} date={date} handleBack={handleBack} handleNext={handleNext} />,
+    <SalesList date={date} statistics={statistics} selectIds={selectIds} />,
+    <SelectedSales
+      ids={ids}
+      date={date}
+      statistics={statistics}
+      handleBack={handleBack}
+      handleNext={handleNext}
+    />,
     <SendMany date={date} />,
   ];
 

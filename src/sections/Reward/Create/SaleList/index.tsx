@@ -1,5 +1,3 @@
-import { useQuery as useGraphQuery } from '@apollo/client';
-
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
@@ -10,21 +8,15 @@ import Typography from '@mui/material/Typography';
 import { formatDate } from 'src/utils/format-time';
 
 import SalesTable from './SalesTable';
-import { FETCH_STATISTICS_QUERY } from '../../query';
 
 interface Props {
   date: Date;
-  setDate: Function;
+  // Todo: Update type to Statistics[]
+  statistics: any[];
   selectIds: Function;
 }
 
-export default function SalesList({ date, setDate, selectIds }: Props) {
-  const { data } = useGraphQuery(FETCH_STATISTICS_QUERY, {
-    variables: { sort: 'createdAt' },
-  });
-
-  const statistics = data?.statistics.statistics ?? [];
-
+export default function SalesList({ date, statistics, selectIds }: Props) {
   return (
     <Card sx={{ p: 2 }}>
       <Grid container>
@@ -39,9 +31,9 @@ export default function SalesList({ date, setDate, selectIds }: Props) {
             size="small"
             sx={{ width: 300 }}
             value={`${formatDate(date)}`}
-            onChange={(e) => {
-              setDate(formatDate(e.target.value));
-            }}
+            // onChange={(e) => {
+            //   setDate(formatDate(e.target.value));
+            // }}
           >
             {statistics?.map((item) => (
               <MenuItem key={item?.id} value={`${formatDate(item?.issuedAt)}`}>
