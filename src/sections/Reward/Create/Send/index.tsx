@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export default function SendMany({ date }: Props) {
+  const router = useRouter();
   const confirm = useBoolean();
 
   const [fetchMemberStatistics, { data }] = useLazyQuery(FETCH_MEMBERSTATISTICS_QUERY, {
@@ -88,7 +90,6 @@ export default function SendMany({ date }: Props) {
           <Button
             variant="contained"
             color="error"
-            href={paths.dashboard.reward.root}
             onClick={async () => {
               confirm.onFalse();
 
@@ -97,6 +98,8 @@ export default function SendMany({ date }: Props) {
                   variables: { data: { id: memberStatistics[0]!.statisticsId, status: true } },
                 });
               }
+
+              router.push(paths.dashboard.reward.root);
             }}
           >
             Confirm
