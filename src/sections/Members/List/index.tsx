@@ -69,7 +69,7 @@ const defaultFilter: IMemberTableFilters = {
 };
 
 export default function MemberListView() {
-  const table = useTable();
+  const table = useTable({ defaultDense: true });
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<IMemberTableFilters>();
