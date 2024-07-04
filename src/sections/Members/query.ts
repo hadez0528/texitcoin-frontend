@@ -83,7 +83,7 @@ export const UPDATE_MEMBER = gql(/* GraphQL */ `
 export const FETCH_MEMBER_HISTORY = gql(/* GraphQL */ `
   query MemberOverview($data: MemberOverviewInput!) {
     memberOverview(data: $data) {
-      totalHashPower
+      lastHashPower
       totalTXCShared
       joinDate
     }

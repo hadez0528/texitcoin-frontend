@@ -27,7 +27,7 @@ export const OverView = () => {
         divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
       >
         <Stack width={1}>
-          {fNumber(data?.memberOverview.totalHashPower)}
+          {fNumber(data?.memberOverview.lastHashPower)}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
             Total Hash Power
           </Box>
