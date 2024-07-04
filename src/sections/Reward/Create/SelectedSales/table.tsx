@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -50,6 +49,7 @@ const columns: GridColDef[] = [
 
 interface Props {
   data: any[];
+  blocks: number;
   memberStatistics: any[];
   getMemberStatistics: Function;
 }
@@ -61,11 +61,14 @@ interface TXCSharedProps {
 
 export default function MemberStatisticsTable({
   data,
+  blocks,
   memberStatistics,
   getMemberStatistics,
 }: Props) {
   const [totalTXC, setTotalTXC] = useState<number>(0);
-  const [estimated, setEstimated] = useState<number>(0);
+
+  const estimated = blocks * 254;
+  const diff = estimated - totalTXC;
 
   const memberStatisticsData = data?.reduce(
     (prev, { memberId, ...rest }) => ({ ...prev, [memberId]: { memberId, ...rest } }),
@@ -85,7 +88,6 @@ export default function MemberStatisticsTable({
 
   useEffect(
     () => {
-      setEstimated(data?.reduce((prev, { txcShared }) => prev + txcShared, 0));
       setTotalTXC(data?.reduce((prev, { txcShared }) => prev + txcShared, 0));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,21 +96,9 @@ export default function MemberStatisticsTable({
 
   return (
     <Card sx={{ pt: 2 }}>
-      <Grid container>
-        <Grid xl={6}>
-          <Typography variant="subtitle1" sx={{ ml: 2, mb: 2 }}>
-            Selected Sales
-          </Typography>
-        </Grid>
-        <Grid xl={6}>
-          <Stack direction="row" gap={2}>
-            <Typography variant="subtitle1">Estimated TXC Shared:</Typography>
-            <Typography>{estimated}</Typography>
-            <Typography variant="subtitle1">Diff:</Typography>
-            <Typography>{estimated - totalTXC}</Typography>
-          </Stack>
-        </Grid>
-      </Grid>
+      <Typography variant="subtitle1" sx={{ ml: 2, mb: 2 }}>
+        Selected Sales
+      </Typography>
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
         <ScrollBar>
           <DataGrid
@@ -124,6 +114,21 @@ export default function MemberStatisticsTable({
               })
             }
           />
+          <Stack direction="row" display="flex" justifyContent="flex-end" spacing={2} sx={{ p: 2 }}>
+            <Typography color="grey">Mined Blocks:</Typography>
+            <Typography sx={{ mr: 5 }}>{blocks}</Typography>
+
+            <Typography color="grey">Total TXC:</Typography>
+            <Typography sx={{ mr: 5 }}>{estimated}</Typography>
+
+            <Typography color="grey">TXC:</Typography>
+            <Typography sx={{ mr: 5 }}>{totalTXC}</Typography>
+
+            <Typography color="grey">Diff:</Typography>
+            <Typography sx={{ mr: 20 }} color={diff > 0 ? 'blue' : 'red'}>
+              {diff}
+            </Typography>
+          </Stack>
         </ScrollBar>
       </TableContainer>
     </Card>

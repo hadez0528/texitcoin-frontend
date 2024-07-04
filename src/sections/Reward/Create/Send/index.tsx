@@ -20,9 +20,10 @@ import { UPDATE_MEMBER_STATISTICS, FETCH_MEMBERSTATISTICS_QUERY } from '../../qu
 
 interface Props {
   date: Date;
+  handleBack: Function;
 }
 
-export default function SendMany({ date }: Props) {
+export default function SendMany({ date, handleBack }: Props) {
   const router = useRouter();
   const confirm = useBoolean();
 
@@ -62,7 +63,7 @@ export default function SendMany({ date }: Props) {
             display: 'block',
             alignItems: 'unset',
             overflow: 'auto',
-            maxHeight: 800,
+            maxHeight: 550,
             backgroundColor: '#f2f2f2',
           }}
         >
@@ -76,8 +77,11 @@ export default function SendMany({ date }: Props) {
 
       <Stack direction="row" sx={{ mt: 3 }}>
         <Box sx={{ flexGrow: 1 }} />
+        <Button color="inherit" onClick={() => handleBack()} sx={{ mr: 1 }}>
+          Back
+        </Button>
         <Button variant="contained" onClick={() => confirm.onTrue()}>
-          Send
+          Confirm
         </Button>
       </Stack>
 
