@@ -8,6 +8,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import { Label } from 'src/components/Label';
+
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -60,7 +62,17 @@ export default function SalesTableRow({ row, selected, onSelectRow }: Props) {
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{member?.assetId}</TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{status ? 'active' : 'inactive'}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>
+        {status ? (
+          <Label variant="soft" color="success">
+            Active
+          </Label>
+        ) : (
+          <Label variant="soft" color="error">
+            Inactive
+          </Label>
+        )}
+      </TableCell>
     </TableRow>
   );
 }
