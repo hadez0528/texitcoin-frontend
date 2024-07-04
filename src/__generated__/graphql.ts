@@ -99,7 +99,6 @@ export type CreateStatisticsInput = {
 };
 
 export type CreateUserInput = {
-  avatar?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
   isAdmin?: Scalars['Boolean']['input'];
   password: Scalars['String']['input'];
@@ -479,7 +478,6 @@ export type UpdateStatisticsInput = {
 };
 
 export type UpdateUserInput = {
-  avatar?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
   id: Scalars['ID']['input'];
   isAdmin?: InputMaybe<Scalars['Boolean']['input']>;
@@ -488,7 +486,6 @@ export type UpdateUserInput = {
 
 export type User = {
   __typename?: 'User';
-  avatar: Scalars['String']['output'];
   createdAt?: Maybe<Scalars['DateTimeISO']['output']>;
   deletedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   email: Scalars['String']['output'];
