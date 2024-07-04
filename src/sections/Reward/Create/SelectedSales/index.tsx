@@ -66,7 +66,7 @@ export default function SelectedSales({ ids, date, statistics, handleBack, handl
                   email,
                   hashPower,
                   percent: Number((percent * 100).toFixed(2)),
-                  txcShared: Number((blocks * 254 * percent).toFixed(3)),
+                  txcShared: blocks * 254 * percent,
                   txcCold,
                   status,
                   statisticsId,

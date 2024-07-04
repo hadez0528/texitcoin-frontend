@@ -13,10 +13,11 @@ interface Props {
   date: Date;
   // Todo: Update type to Statistics[]
   statistics: any[];
+  setDate: Function;
   selectIds: Function;
 }
 
-export default function SalesList({ date, statistics, selectIds }: Props) {
+export default function SalesList({ date, setDate, statistics, selectIds }: Props) {
   return (
     <Card sx={{ p: 2 }}>
       <Grid container>
@@ -31,9 +32,9 @@ export default function SalesList({ date, statistics, selectIds }: Props) {
             size="small"
             sx={{ width: 300 }}
             value={`${formatDate(date)}`}
-            // onChange={(e) => {
-            //   setDate(formatDate(e.target.value));
-            // }}
+            onChange={(e) => {
+              setDate(formatDate(e.target.value));
+            }}
           >
             {statistics?.map((item) => (
               <MenuItem key={item?.id} value={`${formatDate(item?.issuedAt)}`}>
