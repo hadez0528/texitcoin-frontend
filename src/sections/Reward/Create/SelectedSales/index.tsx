@@ -107,9 +107,10 @@ export default function SelectedSales({ ids, date, statistics, handleBack, handl
   return (
     <>
       <MemberStatisticsTable
+        blocks={blocks}
         data={Object.values(tableData)}
-        memberStatistics={memberStatisticsRef.current}
         getMemberStatistics={getMemberStatistics}
+        memberStatistics={memberStatisticsRef.current}
       />
 
       <Stack direction="row" sx={{ mt: 3 }}>

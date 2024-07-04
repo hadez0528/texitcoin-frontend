@@ -73,7 +73,7 @@ export default function RewardCreateView() {
       handleBack={handleBack}
       handleNext={handleNext}
     />,
-    <SendMany date={date} />,
+    <SendMany handleBack={handleBack} date={date} />,
   ];
 
   return (
