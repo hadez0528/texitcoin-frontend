@@ -36,7 +36,7 @@ export default function SalesTable({ date, selectIds }: Props) {
   const table = useTable({ defaultDense: true });
 
   const [fetchSales, { loading, data }] = useLazyQuery(FETCH_SALES_QUERY, {
-    variables: { filter: { orderedAt: formatDate(date) }, sort: 'invoiceNo' },
+    variables: { filter: { orderedAt: formatDate(date) }, sort: 'status,invoiceNo' },
   });
 
   const tableData = data?.sales.sales ?? [];

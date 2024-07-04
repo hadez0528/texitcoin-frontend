@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 
+import { Label } from 'src/components/Label';
 import { ScrollBar } from 'src/components/ScrollBar';
 
 const columns: GridColDef[] = [
@@ -34,7 +35,16 @@ const columns: GridColDef[] = [
     flex: 1,
     headerName: 'Status',
     filterable: false,
-    renderCell: (params) => (params.row.status ? 'active' : 'inactive'),
+    renderCell: (params) =>
+      params.row.status ? (
+        <Label variant="soft" color="success">
+          Active
+        </Label>
+      ) : (
+        <Label variant="soft" color="error">
+          Inactive
+        </Label>
+      ),
   },
 ];
 
