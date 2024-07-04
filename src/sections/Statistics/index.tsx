@@ -9,7 +9,7 @@ export default function StatisticsSection() {
     <Container maxWidth="xl">
       <Summary />
       <Chart />
-      <StatisticsTable />
+      <StatisticsTable status />
     </Container>
   );
 }

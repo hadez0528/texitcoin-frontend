@@ -1,7 +1,4 @@
-import type {
-  IStatisticsPrismaFilter,
-  IStatisticsTableFilters,
-} from 'src/sections/Reward/List/types';
+import type { IStatisticsTableFilters } from 'src/sections/Reward/List/types';
 
 import { useMemo } from 'react';
 import { useQuery as useGraphQuery } from '@apollo/client';
@@ -94,27 +91,14 @@ const columns: GridColDef[] = [
   },
 ];
 
-const defaultFilter: IStatisticsTableFilters = {
-  search: '',
-};
+interface Props {
+  status?: boolean;
+}
 
-export default function StatisticsTable() {
+export default function StatisticsTable({ status = false }: Props) {
   const [query, { setPage, setPageSize }] = useQuery<IStatisticsTableFilters>();
 
-  const {
-    page = { page: 1, pageSize: 10 },
-    sort = { issuedAt: 'asc' },
-    filter = defaultFilter,
-  } = query;
-
-  const graphQueryFilter = useMemo(() => {
-    const filterObj: IStatisticsPrismaFilter = {};
-    if (filter.search) {
-      filterObj.OR = [];
-    }
-
-    return filterObj;
-  }, [filter]);
+  const { page = { page: 1, pageSize: 10 }, sort = { issuedAt: 'asc' } } = query;
 
   const graphQuerySort = useMemo(() => {
     if (!sort) return undefined;
@@ -127,7 +111,7 @@ export default function StatisticsTable() {
   const { data } = useGraphQuery(FETCH_STATISTICS_QUERY, {
     variables: {
       page: page && `${page.page},${page.pageSize}`,
-      filter: graphQueryFilter,
+      filter: { ...(status && { status: true }) },
       sort: graphQuerySort,
     },
   });
@@ -141,11 +125,12 @@ export default function StatisticsTable() {
           width: '100%',
           m: 0.5,
           mt: 2,
-          p: 2,
           borderRadius: 1.5,
         }}
       >
-        <Typography variant="h6">Reward</Typography>
+        <Typography variant="h6" sx={{ m: 1 }}>
+          Reward
+        </Typography>
         <Paper>
           <DataGrid
             rows={statistics}
@@ -158,7 +143,7 @@ export default function StatisticsTable() {
               setPageSize(pageSize);
             }}
             onRowClick={(params) => window.open(paths.dashboard.reward.detail(params.row.id))}
-            sx={{ mt: 2, cursor: 'pointer' }}
+            sx={{ mt: 1, cursor: 'pointer' }}
           />
         </Paper>
       </Card>
