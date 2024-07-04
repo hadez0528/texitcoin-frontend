@@ -112,8 +112,6 @@ export default function SaleListView() {
     },
   });
 
-  console.log('stats => ', statsData);
-
   const { loading, data } = useGraphQuery(FETCH_SALES_QUERY, {
     variables: {
       page: page && `${page.page},${page.pageSize}`,
