@@ -1,5 +1,3 @@
-// import type { MemberStatistics } from 'src/__generated__/graphql';
-
 import { useState, useEffect } from 'react';
 
 import Card from '@mui/material/Card';

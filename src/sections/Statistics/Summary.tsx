@@ -7,7 +7,7 @@ import WidgetSummary from 'src/components/WidgetSummary';
 
 import { GENERAL_QUERY } from './query';
 
-export const Summary = () => {
+export default function Summary() {
   const theme = useTheme();
 
   const { data } = useGraphQuery(GENERAL_QUERY, {
@@ -65,4 +65,4 @@ export const Summary = () => {
       </Grid>
     </Grid>
   );
-};
+}
