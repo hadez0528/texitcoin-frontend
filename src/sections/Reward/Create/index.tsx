@@ -35,8 +35,7 @@ export default function RewardCreateView() {
 
   const statistics = data?.statistics?.statistics ?? [];
 
-  const date = statistics[0]?.issuedAt ?? new Date();
-
+  const [date, setDate] = useState(statistics[0]?.issuedAt ?? new Date());
   const [skipped, setSkipped] = useState(new Set<number>());
 
   const isStepSkipped = (step: number) => skipped.has(step);
@@ -65,7 +64,7 @@ export default function RewardCreateView() {
   };
 
   const steps = [
-    <SalesList date={date} statistics={statistics} selectIds={selectIds} />,
+    <SalesList date={date} setDate={setDate} statistics={statistics} selectIds={selectIds} />,
     <SelectedSales
       ids={ids}
       date={date}
