@@ -17,6 +17,7 @@ export default function Dashboard() {
     {
       variables: {
         page: '1,20',
+        sort: 'issuedAt',
       },
     }
   );
@@ -37,17 +38,17 @@ export default function Dashboard() {
           <ChartWidget
             title="Daily"
             chart={{
-              categories: statistics?.statistics!.map(
-                (item) => new Date(item!.issuedAt).toISOString().split('T')[0]
-              ),
+              categories: statistics
+                ?.statistics!.map((item) => new Date(item!.issuedAt).toISOString().split('T')[0])
+                .reverse(),
               series: [
                 {
                   name: 'New Blocks',
-                  data: statistics!.statistics!.map((item) => item!.newBlocks),
+                  data: statistics!.statistics!.map((item) => item!.newBlocks).reverse(),
                 },
                 {
                   name: 'New Hash Power',
-                  data: statistics!.statistics!.map((item) => item!.totalHashPower),
+                  data: statistics!.statistics!.map((item) => item!.totalHashPower).reverse(),
                 },
               ],
               options: {
@@ -65,13 +66,13 @@ export default function Dashboard() {
           <ChartWidget
             title="TXC Shared"
             chart={{
-              categories: statistics?.statistics!.map(
-                (item) => new Date(item!.issuedAt).toISOString().split('T')[0]
-              ),
+              categories: statistics
+                ?.statistics!.map((item) => new Date(item!.issuedAt).toISOString().split('T')[0])
+                .reverse(),
               series: [
                 {
                   name: 'Daily Reward',
-                  data: statistics!.statistics!.map((item) => item!.newBlocks * 254),
+                  data: statistics!.statistics!.map((item) => item!.newBlocks * 254).reverse(),
                 },
               ],
             }}
