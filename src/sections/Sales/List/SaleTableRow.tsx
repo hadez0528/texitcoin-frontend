@@ -1,7 +1,6 @@
 import type { Sale } from 'src/__generated__/graphql';
 
 import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import ListItemText from '@mui/material/ListItemText';
 
@@ -13,21 +12,16 @@ import { Label } from 'src/components/Label';
 // ----------------------------------------------------------------------
 
 type Props = {
-  selected: boolean;
   row: Sale;
-  onSelectRow: VoidFunction;
 };
 
-export default function SaleTableRow({ row, selected, onSelectRow }: Props) {
+export default function SaleTableRow({ row }: Props) {
   const router = useRouter();
 
   const { invoiceNo, member, package: product, paymentMethod, orderedAt, status } = row;
 
   return (
-    <TableRow hover selected={selected}>
-      <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
+    <TableRow hover>
       <TableCell>{invoiceNo}</TableCell>
       <TableCell
         align="left"

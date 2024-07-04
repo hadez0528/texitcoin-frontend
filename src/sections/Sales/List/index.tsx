@@ -218,18 +218,11 @@ export default function SaleListView() {
                 orderBy={sort && Object.keys(sort)[0]}
                 headLabel={TABLE_HEAD}
                 rowCount={loading ? 0 : tableData!.sales!.length}
-                numSelected={table.selected.length}
                 onSort={(id) => {
                   const isAsc = sort && sort[id] === 'asc';
                   const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
                   setQuery({ ...query, sort: newSort });
                 }}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    tableData!.sales!.map((row) => row!.id)
-                  )
-                }
               />
 
               {loading ? (
@@ -240,8 +233,6 @@ export default function SaleListView() {
                     <SaleTableRow
                       key={row!.id}
                       row={row!}
-                      selected={table.selected.includes(row!.id)}
-                      onSelectRow={() => table.onSelectRow(row!.id)}
                       // onDeleteRow={() => handleDeleteRow(row.id)}
                       // onEditRow={() => handleEditRow(row.id)}
                     />
