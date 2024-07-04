@@ -6,5 +6,4 @@ export type IStatisticsTableFilters = {
 
 export type IStatisticsPrismaFilter = {
   OR?: any;
-  deletedAt?: any;
 };
