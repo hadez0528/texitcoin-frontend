@@ -7,9 +7,9 @@ import { paths } from 'src/routes/paths';
 
 import ChartWidget from 'src/components/ChartWidget';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import CollapsibleTable from 'src/components/CollapsibleTable';
 
 import { FETCH_STATISTICS_QUERY } from './query';
+import StatisticsTable from '../Statistics/Statistics';
 
 export default function Dashboard() {
   const { loading: statisticsLoading, data: statisticsData } = useGraphQuery(
@@ -79,7 +79,7 @@ export default function Dashboard() {
           />
         </Grid>
       </Grid>
-      <CollapsibleTable />
+      <StatisticsTable />
     </Container>
   );
 }
