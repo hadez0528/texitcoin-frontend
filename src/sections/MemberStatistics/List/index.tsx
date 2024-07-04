@@ -6,23 +6,20 @@ import { useQuery as useGraphQuery } from '@apollo/client';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
+import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 
-import { paths } from 'src/routes/paths';
 import { useQuery } from 'src/routes/hooks';
 
-import { DashboardContent } from 'src/layouts/dashboard';
-
 import { ScrollBar } from 'src/components/ScrollBar';
-import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { SearchInput } from 'src/components/SearchInput';
 import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/Table';
 
@@ -34,11 +31,11 @@ import MemberStatisticsTableFiltersResult from './MemberStatisticsTableFiltersRe
 import type { IMemberStatisticsPrismaFilter, IMemberStatisticsTableFilters } from './types';
 
 const TABLE_HEAD = [
-  { id: 'issuedAt', label: 'Date', sortable: true },
-  { id: 'username', label: 'Username', width: 130, sortable: true },
-  { id: 'txcCold', label: 'TXC Cold', width: 130, sortable: true },
-  { id: 'hashPower', label: 'Hash Power', width: 130, sortable: true },
-  { id: 'reward', label: 'Reward', width: 130, sortable: true },
+  { id: 'issuedAt', label: 'Date', width: 200, sortable: true },
+  { id: 'username', label: 'Username', width: 200, sortable: true },
+  { id: 'txcCold', label: 'TXC Cold', sortable: true },
+  { id: 'hashPower', label: 'Hash Power', width: 200, sortable: true },
+  { id: 'reward', label: 'Rewarded TXC', width: 200, sortable: true },
   { id: 'percent', label: 'Percent', width: 130, sortable: true },
 ];
 
@@ -49,7 +46,7 @@ const defaultFilter: IMemberStatisticsTableFilters = {
 export default function MemberStatistics() {
   const { id: statisticsId } = useParams();
 
-  const table = useTable({ defaultDense: true });
+  const table = useTable();
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<IMemberStatisticsTableFilters>();
@@ -102,62 +99,32 @@ export default function MemberStatistics() {
   );
 
   return (
-    <DashboardContent>
-      <Breadcrumbs
-        heading="Reward"
-        links={[
-          { name: 'Reward', href: paths.dashboard.reward.root },
-          { name: 'List' },
-          { name: 'Detail' },
-        ]}
-        sx={{
-          mb: { xs: 1, md: 2 },
-        }}
-      />
+    <Container maxWidth="xl">
+      <Typography variant="h4">Reward</Typography>
 
-      <Card>
+      <Card sx={{ mt: 2 }}>
         <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
         {canReset && !loading && (
           <MemberStatisticsTableFiltersResult results={tableData.total!} sx={{ p: 2.5, pt: 0 }} />
         )}
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
-            dense={table.dense}
-            numSelected={table.selected.length}
-            rowCount={loading ? 0 : tableData.memberStatistics!.length}
-            onSelectAllRows={(checked) =>
-              table.onSelectAllRows(
-                checked,
-                tableData.memberStatistics!.map((row) => row!.id)
-              )
-            }
-          />
-
           <ScrollBar>
-            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={sort && sort[Object.keys(sort)[0]]}
-                orderBy={sort && Object.keys(sort)[0]}
-                headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : tableData?.memberStatistics?.length}
-                numSelected={table.selected.length}
-                onSort={(id) => {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
-                }}
-                onSelectAllRows={(checked) =>
-                  table.onSelectAllRows(
-                    checked,
-                    tableData.memberStatistics!.map((row) => row!.id)
-                  )
-                }
-              />
-
-              {loading ? (
-                <LoadingScreen />
-              ) : (
+            {loading ? (
+              <LoadingScreen />
+            ) : (
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                <TableHeadCustom
+                  order={sort && sort[Object.keys(sort)[0]]}
+                  orderBy={sort && Object.keys(sort)[0]}
+                  headLabel={TABLE_HEAD}
+                  rowCount={loading ? 0 : tableData?.memberStatistics?.length}
+                  onSort={(id) => {
+                    const isAsc = sort && sort[id] === 'asc';
+                    const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                    setQuery({ ...query, sort: newSort });
+                  }}
+                />
                 <TableBody>
                   {tableData.memberStatistics!.map((row) => (
                     <MemberStatisticsTableRow
@@ -172,8 +139,8 @@ export default function MemberStatistics() {
 
                   <TableNoData notFound={notFound} />
                 </TableBody>
-              )}
-            </Table>
+              </Table>
+            )}
           </ScrollBar>
         </TableContainer>
 
@@ -192,6 +159,6 @@ export default function MemberStatistics() {
           onChangeDense={table.onChangeDense}
         />
       </Card>
-    </DashboardContent>
+    </Container>
   );
 }
