@@ -23,7 +23,7 @@ import SelectedSales from './SelectedSales';
 import { FETCH_STATISTICS_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
-const stepTitles = ['Sales', 'Selected Sales', 'Send'];
+const stepTitles = ['Sales', 'Reward', 'Confirm'];
 
 export default function RewardCreateView() {
   const [activeStep, setActiveStep] = useState(0);

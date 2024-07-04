@@ -119,7 +119,7 @@ export default function SelectedSales({ ids, date, statistics, handleBack, handl
           Back
         </Button>
         <Button variant="contained" onClick={() => confirm.onTrue()}>
-          Confirm
+          Next
         </Button>
       </Stack>
 

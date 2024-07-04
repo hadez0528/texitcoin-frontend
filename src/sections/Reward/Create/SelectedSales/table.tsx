@@ -97,7 +97,7 @@ export default function MemberStatisticsTable({
   return (
     <Card sx={{ pt: 2 }}>
       <Typography variant="subtitle1" sx={{ ml: 2, mb: 2 }}>
-        Selected Sales
+        Reward
       </Typography>
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
         <ScrollBar>
@@ -121,7 +121,7 @@ export default function MemberStatisticsTable({
             <Typography color="grey">Total TXC:</Typography>
             <Typography sx={{ mr: 5 }}>{estimated}</Typography>
 
-            <Typography color="grey">TXC:</Typography>
+            <Typography color="grey">TXC to reward:</Typography>
             <Typography sx={{ mr: 5 }}>{totalTXC}</Typography>
 
             <Typography color="grey">Diff:</Typography>
