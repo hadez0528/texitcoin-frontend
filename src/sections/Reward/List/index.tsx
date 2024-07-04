@@ -8,7 +8,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
-import StatisticsTable from 'src/sections/Statistics/Statistics';
+import StatisticsTable from './Statistics';
 
 export default function RewardListView() {
   return (
