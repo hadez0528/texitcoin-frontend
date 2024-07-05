@@ -17,17 +17,16 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { FETCH_SALES_QUERY } from 'src/sections/Sales/query';
 
 import MemberStatisticsTable from './table';
-import { UPDATE_MEMBER_STATISTICS, CREATE_MANY_MEMBER_STATISTICS } from '../../query';
+import { CREATE_MANY_MEMBER_STATISTICS, CREATE_STATISTICS, UPDATE_STATISTICS } from '../../query';
 
 interface Props {
   ids: string[];
   date: Date;
-  statistics: any[];
   handleBack: Function;
   handleNext: Function;
 }
 
-export default function SelectedSales({ ids, date, statistics, handleBack, handleNext }: Props) {
+export default function SelectedSales({ ids, date, handleBack, handleNext }: Props) {
   const confirm = useBoolean();
   const memberStatisticsRef = useRef<any[]>([]);
 
@@ -35,12 +34,15 @@ export default function SelectedSales({ ids, date, statistics, handleBack, handl
     variables: { filter: { orderedAt: formatDate(date) } },
   });
 
+  const [createStatistics, { data: statistics }] = useMutation(CREATE_STATISTICS);
   const [createMemberStatistics, { loading }] = useMutation(CREATE_MANY_MEMBER_STATISTICS);
 
-  const [updateMemberStatistics] = useMutation(UPDATE_MEMBER_STATISTICS);
+  const [updateStatistics] = useMutation(UPDATE_STATISTICS);
 
-  const blocks = statistics[0]?.newBlocks ?? 0;
-  const statisticsId = statistics[0]?.id ?? '';
+  // const blocks = statistics[0]?.newBlocks ?? 0;
+  // const statisticsId = statistics[0]?.id ?? '';
+
+  const blocks = 576;
 
   const data = salesData?.sales?.sales ?? [];
 
@@ -69,7 +71,7 @@ export default function SelectedSales({ ids, date, statistics, handleBack, handl
                   txcShared: blocks * 254 * percent,
                   txcCold,
                   status,
-                  statisticsId,
+                  statisticsId: 'qwewqe',
                   memberId: id,
                   issuedAt: fDate(date),
                 },
@@ -90,13 +92,17 @@ export default function SelectedSales({ ids, date, statistics, handleBack, handl
     try {
       const txcShared = mutation?.reduce((prev, item) => prev + item.txcShared, 0);
 
-      await createMemberStatistics({
-        variables: { data: { memberStatistics: mutation } },
-      });
+      // await createStatistics({
+      //   variables: {data: {members: tableData.length, totalHashPower}}
+      // })
 
-      if (statisticsId) {
-        await updateMemberStatistics({
-          variables: { data: { id: statisticsId, txcShared } },
+      if (statistics) {
+        await createMemberStatistics({
+          variables: { data: { memberStatistics: mutation } },
+        });
+
+        await updateStatistics({
+          variables: { data: { id: statistics.createStatistics.id, txcShared } },
         });
       }
     } catch (err) {
@@ -118,7 +124,28 @@ export default function SelectedSales({ ids, date, statistics, handleBack, handl
         <Button color="inherit" onClick={() => handleBack()} sx={{ mr: 1 }}>
           Back
         </Button>
-        <Button variant="contained" onClick={() => confirm.onTrue()}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            const memberStatistics =
+              memberStatisticsRef.current.length === 0
+                ? Object.values(tableData)
+                : memberStatisticsRef.current;
+
+            const mutation = memberStatistics?.map(
+              ({ username, email, txcCold, status, id, issuedAt, ...rest }) => ({
+                issuedAt: new Date(issuedAt),
+                ...rest,
+              })
+            );
+
+            handleCreate(mutation);
+
+            if (!loading) {
+              handleNext();
+            }
+          }}
+        >
           Next
         </Button>
       </Stack>
@@ -134,24 +161,6 @@ export default function SelectedSales({ ids, date, statistics, handleBack, handl
             color="error"
             onClick={() => {
               confirm.onFalse();
-
-              const memberStatistics =
-                memberStatisticsRef.current.length === 0
-                  ? Object.values(tableData)
-                  : memberStatisticsRef.current;
-
-              const mutation = memberStatistics?.map(
-                ({ username, email, txcCold, status, id, issuedAt, ...rest }) => ({
-                  issuedAt: new Date(issuedAt),
-                  ...rest,
-                })
-              );
-
-              handleCreate(mutation);
-
-              if (!loading) {
-                handleNext();
-              }
             }}
           >
             Confirm

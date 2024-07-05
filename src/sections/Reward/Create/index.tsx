@@ -28,14 +28,14 @@ const stepTitles = ['Sales', 'Reward', 'Confirm'];
 export default function RewardCreateView() {
   const [activeStep, setActiveStep] = useState(0);
   const [ids, setIds] = useState<string[]>([]);
+  const [date, setDate] = useState(new Date());
 
   const { data } = useGraphQuery(FETCH_STATISTICS_QUERY, {
-    variables: { sort: 'createdAt', filter: { status: false } },
+    variables: { sort: 'createdAt' },
   });
 
   const statistics = data?.statistics?.statistics ?? [];
 
-  const [date, setDate] = useState(statistics[0]?.issuedAt ?? new Date());
   const [skipped, setSkipped] = useState(new Set<number>());
 
   const isStepSkipped = (step: number) => skipped.has(step);
@@ -65,13 +65,7 @@ export default function RewardCreateView() {
 
   const steps = [
     <SalesList date={date} setDate={setDate} statistics={statistics} selectIds={selectIds} />,
-    <SelectedSales
-      ids={ids}
-      date={date}
-      statistics={statistics}
-      handleBack={handleBack}
-      handleNext={handleNext}
-    />,
+    <SelectedSales ids={ids} date={date} handleBack={handleBack} handleNext={handleNext} />,
     <SendMany handleBack={handleBack} date={date} />,
   ];
 
