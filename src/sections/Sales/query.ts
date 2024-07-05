@@ -16,8 +16,15 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           mobile
           assetId
           address
-          txcPayout
-          txcCold
+          payoutId
+          payout {
+            id
+            name
+            status
+            method
+            display
+          }
+          wallet
         }
         package {
           id

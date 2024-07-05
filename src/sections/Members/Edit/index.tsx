@@ -88,9 +88,7 @@ export default function MemberEditView() {
           ))}
         </Tabs>
 
-        {tabs.value === 'edit' && (
-          <MemberGeneral currentMember={member} refetchMember={fetchMember} />
-        )}
+        {tabs.value === 'edit' && <MemberGeneral currentMember={member} />}
 
         {tabs.value === 'history' && <History />}
       </DashboardContent>
