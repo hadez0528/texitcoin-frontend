@@ -20,7 +20,7 @@ import { useQuery, useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { fDate, fTime } from 'src/utils/format-time';
+import { fDate, fTime, formatDate } from 'src/utils/format-time';
 
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
@@ -50,7 +50,7 @@ export default function StatisticsTable({ status = false }: Props) {
       flex: 1,
       headerName: 'Date',
       filterable: true,
-      renderCell: (params) => fDate(params.row.issuedAt),
+      renderCell: (params) => formatDate(params.row.issuedAt),
     },
     { field: 'newBlocks', flex: 1, headerName: 'New Blocks', filterable: true },
     { field: 'totalBlocks', flex: 1, headerName: 'Total Blocks', filterable: true },
@@ -123,7 +123,10 @@ export default function StatisticsTable({ status = false }: Props) {
         <>
           {params.row.status ? (
             <Tooltip title="View" placement="top" arrow>
-              <IconButton color="success">
+              <IconButton
+                color="success"
+                onClick={() => router.push(paths.dashboard.reward.view(params.row.id))}
+              >
                 <Iconify icon="solar:eye-bold" />
               </IconButton>
             </Tooltip>
@@ -210,9 +213,6 @@ export default function StatisticsTable({ status = false }: Props) {
             borderRadius: 1.5,
           }}
         >
-          <Typography variant="h6" sx={{ m: 1 }}>
-            Reward
-          </Typography>
           <Paper>
             <DataGrid
               rows={statistics}
