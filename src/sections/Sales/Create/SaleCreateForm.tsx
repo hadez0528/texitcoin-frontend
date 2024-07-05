@@ -2,7 +2,7 @@ import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useMutation, useLazyQuery } from '@apollo/client';
+import { ApolloError, useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -24,15 +24,12 @@ import { Form, Field } from 'src/components/Form';
 
 import { FETCH_MEMBERS_QUERY } from 'src/sections/Members/query';
 
-import { CREATE_SALE, FETCH_PACKAGES_QUERY } from '../query';
-
-// import MemberListDraw from './MemberDraw';
+import { CREATE_SALE, FETCH_SALES_QUERY, FETCH_PACKAGES_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
 export type NewSaleSchemaType = zod.infer<typeof NewSaleSchema>;
 
 const NewSaleSchema = zod.object({
-  hashPower: zod.number({ required_error: 'Hash Power is required' }),
   orderedAt: zod.date({ required_error: 'Ordered At is required' }),
   paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
   status: zod.number({ required_error: 'Status is required' }).default(1),
@@ -44,13 +41,9 @@ export default function SaleCreateForm() {
   const [memberId, setMemberId] = useState<string>('');
   const [packageId, setPackageId] = useState<string>('');
 
-  // const [isMemberOpen, setIsMemberOpen] = useState<boolean>(false);
-  // const [isPackageOpen, setIsPackageOpen] = useState<boolean>(false);
-
   const defaultValues = useMemo(
     () => ({
       packageId: '',
-      hashPower: 0,
       orderedAt: new Date(today()),
       paymentMethod: '',
       status: 1,
@@ -64,6 +57,12 @@ export default function SaleCreateForm() {
     resolver: zodResolver(NewSaleSchema),
     defaultValues,
   });
+
+  const { data: salesData } = useGraphQuery(FETCH_SALES_QUERY, {
+    variables: { sort: 'invoiceNo' },
+  });
+
+  const sales = salesData?.sales.sales ?? [{ invoiceNo: 0 }];
 
   const [fetchMembers, { data: membersData }] = useLazyQuery(FETCH_MEMBERS_QUERY, {
     variables: { filter: {} },
@@ -82,14 +81,17 @@ export default function SaleCreateForm() {
           data: {
             ...data,
             status: !!status,
-            invoiceNo: 1,
+            invoiceNo: (sales[0]?.invoiceNo ?? 0) + 1,
             memberId,
             packageId,
           },
         },
       });
+
       reset();
+
       toast.success('Create success!');
+
       router.push(paths.dashboard.sales.root);
     } catch (err) {
       if (err instanceof ApolloError) {
@@ -124,25 +126,10 @@ export default function SaleCreateForm() {
                   <Grid xl={6}>
                     <Typography variant="subtitle1">Personal Information</Typography>
                   </Grid>
-                  {/* <Grid xl={6} justifyContent="flex-end" display="flex">
-                    <LoadingButton
-                      type="submit"
-                      variant="contained"
-                      loading={loading}
-                      sx={{ mr: 2 }}
-                      onClick={() => setIsMemberOpen(!isMemberOpen)}
-                    >
-                      Member
-                    </LoadingButton>
-                    <LoadingButton
-                      type="submit"
-                      variant="contained"
-                      loading={loading}
-                      onClick={() => setIsPackageOpen(!isPackageOpen)}
-                    >
-                      Package
-                    </LoadingButton>
-                  </Grid> */}
+                  <Grid xl={6} justifyContent="flex-end" display="flex" gap={2}>
+                    <Typography variant="subtitle1">Invoice No:</Typography>
+                    <Typography>{(sales[0]?.invoiceNo ?? 0) + 1}</Typography>
+                  </Grid>
                 </Grid>
               </Stack>
               <Box
@@ -178,7 +165,6 @@ export default function SaleCreateForm() {
                   )}
                   onChange={(_, newValue) => setPackageId(newValue?.id!)}
                 />
-                <Field.Text name="hashPower" label="Hash Power" type="number" />
                 <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
                 <Field.Text name="paymentMethod" label="Payment Method" />
                 <Field.Select name="status" label="Status">
