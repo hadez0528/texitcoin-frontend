@@ -1,4 +1,7 @@
-import type { IStatisticsTableFilters } from 'src/sections/Reward/List/types';
+import type {
+  IStatisticsTableFilters,
+  IStatisticsPrismaFilter,
+} from 'src/sections/Reward/List/types';
 
 import { useMemo } from 'react';
 import { useQuery as useGraphQuery } from '@apollo/client';
@@ -32,17 +35,30 @@ const TABLE_HEAD = [
   { id: 'status', label: 'Status', sortable: true },
 ];
 
-interface Props {
-  status?: boolean;
-}
+const defaultFilter: IStatisticsTableFilters = {
+  search: '',
+};
 
-export default function StatisticsTable({ status = false }: Props) {
-  const table = useTable({ defaultDense: true, defaultRowsPerPage: 5 });
+export default function StatisticsTable() {
+  const table = useTable({ defaultDense: true });
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<IStatisticsTableFilters>();
 
-  const { page = { page: 1, pageSize: 5 }, sort = { issuedAt: 'asc' } } = query;
+  const {
+    page = { page: 1, pageSize: 10 },
+    sort = { issuedAt: 'asc' },
+    filter = defaultFilter,
+  } = query;
+
+  const graphQueryFilter = useMemo(() => {
+    const filterObj: IStatisticsPrismaFilter = {};
+    if (filter.search) {
+      filterObj.OR = [];
+    }
+
+    return filterObj;
+  }, [filter]);
 
   const graphQuerySort = useMemo(() => {
     if (!sort) return undefined;
@@ -55,7 +71,7 @@ export default function StatisticsTable({ status = false }: Props) {
   const { loading, data } = useGraphQuery(FETCH_STATISTICS_QUERY, {
     variables: {
       page: page && `${page.page},${page.pageSize}`,
-      filter: { ...(status && { status: true }) },
+      filter: graphQueryFilter,
       sort: graphQuerySort,
     },
   });
