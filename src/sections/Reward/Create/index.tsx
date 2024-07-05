@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery as useGraphQuery } from '@apollo/client';
 
@@ -30,7 +30,6 @@ export default function RewardCreateView() {
   const params = useParams();
   const [activeStep, setActiveStep] = useState(0);
   const [ids, setIds] = useState<string[]>([]);
-  const [date, setDate] = useState(new Date());
 
   const { id } = params;
 
@@ -39,6 +38,17 @@ export default function RewardCreateView() {
   });
 
   const statistics = data?.statistics?.statistics ?? [];
+
+  const [date, setDate] = useState(new Date());
+
+  useEffect(() => {
+    if (id && statistics.length) {
+      const current = statistics.filter((item) => item?.id === id).map((item) => item?.issuedAt);
+
+      setDate(current[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statistics]);
 
   const [skipped, setSkipped] = useState(new Set<number>());
 
@@ -75,7 +85,13 @@ export default function RewardCreateView() {
       statistics={statistics}
       selectIds={selectIds}
     />,
-    <SelectedSales ids={ids} date={date} handleBack={handleBack} handleNext={handleNext} />,
+    <SelectedSales
+      id={id!}
+      ids={ids}
+      date={date}
+      handleBack={handleBack}
+      handleNext={handleNext}
+    />,
     <SendMany handleBack={handleBack} date={date} />,
   ];
 

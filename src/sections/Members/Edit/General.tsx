@@ -73,8 +73,6 @@ export default function MemberGeneral({ currentMember }: Props) {
         return;
       }
 
-      console.log('new => ', newMember);
-
       await submit({
         variables: {
           data: {

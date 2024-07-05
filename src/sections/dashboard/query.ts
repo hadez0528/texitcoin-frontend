@@ -9,6 +9,7 @@ export const FETCH_STATISTICS_QUERY = gql(/* GraphQL */ `
         newBlocks
         totalBlocks
         totalMembers
+        txcShared
         issuedAt
         from
         to
@@ -16,23 +17,6 @@ export const FETCH_STATISTICS_QUERY = gql(/* GraphQL */ `
         createdAt
         updatedAt
         deletedAt
-        memberStatistics {
-          id
-          hashPower
-          txcShared
-          issuedAt
-          percent
-          createdAt
-          updatedAt
-          deletedAt
-          member {
-            id
-            username
-            wallet
-            email
-            mobile
-          }
-        }
       }
       total
     }
