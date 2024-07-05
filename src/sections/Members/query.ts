@@ -22,8 +22,15 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         address
         assetId
         mobile
-        txcPayout
-        txcCold
+        payoutId
+        payout {
+          id
+          name
+          status
+          method
+          display
+        }
+        wallet
         createdAt
         updatedAt
         deletedAt
@@ -42,8 +49,8 @@ export const CREATE_MEMBER = gql(/* GraphQL */ `
       mobile
       address
       assetId
-      txcCold
-      txcPayout
+      wallet
+      payoutId
     }
   }
 `);
@@ -59,8 +66,15 @@ export const FETCH_MEMBER = gql(/* GraphQL */ `
         mobile
         address
         assetId
-        txcCold
-        txcPayout
+        wallet
+        payoutId
+        payout {
+          id
+          name
+          status
+          method
+          display
+        }
         deletedAt
       }
     }
@@ -73,8 +87,11 @@ export const UPDATE_MEMBER = gql(/* GraphQL */ `
       id
       mobile
       address
-      txcPayout
-      txcCold
+      payout {
+        method
+        display
+      }
+      wallet
       assetId
     }
   }
@@ -97,6 +114,24 @@ export const FETCH_MEMBER_STATISTICS = gql(/* GraphQL */ `
         issuedAt
         hashPower
         txcShared
+      }
+      total
+    }
+  }
+`);
+
+export const FETCH_PAYOUTS_QUERY = gql(/* GraphQL */ `
+  query Payouts($filter: JSONObject, $page: String, $sort: String) {
+    payouts(filter: $filter, page: $page, sort: $sort) {
+      payouts {
+        id
+        method
+        display
+        name
+        status
+        createdAt
+        updatedAt
+        deletedAt
       }
       total
     }

@@ -28,7 +28,7 @@ export const FETCH_STATISTICS_QUERY = gql(/* GraphQL */ `
           member {
             id
             username
-            txcCold
+            wallet
             email
             mobile
           }

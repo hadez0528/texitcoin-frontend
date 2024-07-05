@@ -83,7 +83,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
         deletedAt
         member {
           username
-          txcCold
+          wallet
           email
           assetId
         }

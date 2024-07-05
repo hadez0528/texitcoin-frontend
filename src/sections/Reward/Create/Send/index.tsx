@@ -40,7 +40,7 @@ export default function SendMany({ date, handleBack }: Props) {
     ...initial,
     ...memberStatistics!.map(
       (item, index) =>
-        `\\"${item?.member?.txcCold}\\": ${item?.txcShared}${index === memberStatistics.length - 1 ? '}"' : ','}`
+        `\\"${item?.member?.wallet}\\": ${item?.txcShared}${index === memberStatistics.length - 1 ? '}"' : ','}`
     ),
   ];
 

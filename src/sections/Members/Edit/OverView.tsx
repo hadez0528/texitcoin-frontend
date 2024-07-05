@@ -27,21 +27,21 @@ export const OverView = () => {
         divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
       >
         <Stack width={1}>
-          {fNumber(data?.memberOverview.lastHashPower)}
+          {fNumber(data?.memberOverview.lastHashPower ?? 0)}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
             Total Hash Power
           </Box>
         </Stack>
 
         <Stack width={1}>
-          {fNumber(data?.memberOverview.totalTXCShared)}
+          {fNumber(data?.memberOverview.totalTXCShared ?? 0)}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
             Total TXC Reward
           </Box>
         </Stack>
 
         <Stack width={1}>
-          {fDate(data?.memberOverview.joinDate)}
+          {fDate(data?.memberOverview.joinDate ?? new Date())}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
             Join Date
           </Box>

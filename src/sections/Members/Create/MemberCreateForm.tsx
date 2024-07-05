@@ -2,7 +2,7 @@ import { z as zod } from 'zod';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useMutation } from '@apollo/client';
+import { ApolloError, useMutation, useQuery as useGraphQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -19,7 +19,7 @@ import { useRouter } from 'src/routes/hooks';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
-import { CREATE_MEMBER } from '../query';
+import { CREATE_MEMBER, FETCH_PAYOUTS_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
 export type NewMemberSchemaType = zod.infer<typeof NewMemberSchema>;
@@ -33,57 +33,23 @@ const NewMemberSchema = zod.object({
     .email({ message: 'Invalid email address is provided' }),
   mobile: zod.string({ required_error: 'Mobile is required' }),
   address: zod.string({ required_error: 'Address is required' }),
-  txcPayout: zod.string({ required_error: 'TXC Payout is required' }),
-  txcCold: zod.string({ required_error: 'TXC Cold is required' }),
+  payoutId: zod.string({ required_error: 'TXC Payout is required' }),
+  wallet: zod.string({ required_error: 'TXC Cold is required' }),
 });
 
-const payouts = [
-  {
-    id: '0c05c356-39eb-11ef-91ee-00155d4f3548',
-    method: '$TXC-Cold',
-    status: 'active',
-    name: 'blockio',
-    display: '$TXC-Cold',
-  },
-  {
-    id: '0cd6f20a-39eb-11ef-bee4-00155d4f3548',
-    method: '$TXC-Hot',
-    status: 'active',
-    name: 'coin_payments',
-    display: '$TXC-Hot',
-  },
-  {
-    id: '0d536fba-39eb-11ef-a034-00155d4f3548',
-    method: '$BTC',
-    status: 'active',
-    name: 'paypal',
-    display: '$BTC Wallet Address',
-  },
-  {
-    id: '0d97d11e-39eb-11ef-bb9e-00155d4f3548',
-    method: '$USDT',
-    status: 'active',
-    name: 'advcache',
-    display: '$USDT Wallet Address',
-  },
-  {
-    id: '0dbc3d24-39eb-11ef-b6a6-00155d4f3548',
-    method: '$ETH',
-    status: 'active',
-    name: 'bitgo',
-    display: '$ETH Wallet Address',
-  },
-  {
-    id: '0dd7422c-39eb-11ef-a1db-00155d4f3548',
-    method: '$Other',
-    status: 'active',
-    name: 'authorizenet',
-    display: '$Other',
-  },
-];
+interface Payout {
+  id: string;
+  display: string;
+}
 
 export default function MemberCreateForm() {
-  const [payout, setPayout] = useState<string>(payouts[0].display);
+  const { data: payoutsData } = useGraphQuery(FETCH_PAYOUTS_QUERY, {
+    variables: {},
+  });
+
+  const payouts = payoutsData?.payouts.payouts ?? [];
+
+  const [payout, setPayout] = useState<Payout>();
 
   const router = useRouter();
 
@@ -94,8 +60,8 @@ export default function MemberCreateForm() {
       email: '',
       mobile: '',
       address: '',
-      txcPayout: '',
-      txcCold: '',
+      payoutId: '',
+      wallet: '',
     }),
     []
   );
@@ -109,15 +75,16 @@ export default function MemberCreateForm() {
 
   const { reset, setError, handleSubmit } = methods;
 
-  const onSubmit = handleSubmit(async ({ firstName, lastName, txcCold, ...data }) => {
+  const onSubmit = handleSubmit(async ({ firstName, lastName, wallet, ...data }) => {
     try {
       await submit({
         variables: {
           data: {
             ...data,
-            assetId: txcCold.substring(1, 7),
+            assetId: wallet.substring(1, 7),
             fullName: `${firstName} ${lastName}`,
-            txcCold,
+            wallet,
+            payoutId: payout?.id ?? '',
           },
         },
       });
@@ -173,9 +140,11 @@ export default function MemberCreateForm() {
                     {option!.method}
                   </li>
                 )}
-                onChange={(_, value) => setPayout(value?.display ?? '')}
+                onChange={(_, value) =>
+                  setPayout({ id: value?.id ?? '', display: value?.display ?? '' })
+                }
               />
-              <Field.Text name="wallet" label={payout} />
+              <Field.Text name="wallet" label={payout?.display} />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>

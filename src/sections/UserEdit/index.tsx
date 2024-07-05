@@ -24,6 +24,7 @@ const FETCH_USER = gql(/* GraphQL */ `
     users(filter: $filter) {
       users {
         id
+        avatar
         username
         email
         isAdmin

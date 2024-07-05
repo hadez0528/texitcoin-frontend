@@ -35,8 +35,8 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
     address,
     assetId,
     fullName,
-    txcPayout,
-    txcCold,
+    payout,
+    wallet,
     createdAt,
     deletedAt,
   } = row;
@@ -76,9 +76,9 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{assetId}</TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{txcPayout}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{payout.display}</TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{txcCold}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{wallet}</TableCell>
 
       <TableCell>
         <ListItemText

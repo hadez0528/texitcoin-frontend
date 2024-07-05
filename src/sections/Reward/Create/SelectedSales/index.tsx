@@ -17,7 +17,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { FETCH_SALES_QUERY } from 'src/sections/Sales/query';
 
 import MemberStatisticsTable from './table';
-import { CREATE_MANY_MEMBER_STATISTICS, CREATE_STATISTICS, UPDATE_STATISTICS } from '../../query';
+import { CREATE_STATISTICS, UPDATE_STATISTICS, CREATE_MANY_MEMBER_STATISTICS } from '../../query';
 
 interface Props {
   ids: string[];
