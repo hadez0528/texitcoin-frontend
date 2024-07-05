@@ -52,7 +52,7 @@ export default function SalesTable({ date, selectIds }: Props) {
   }, [table, selectIds]);
 
   return (
-    <Stack sx={{ pt: 2 }}>
+    <Stack>
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
         <TableSelectedAction
           dense={table.dense}
