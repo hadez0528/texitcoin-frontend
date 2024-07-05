@@ -25,13 +25,14 @@ import {
 } from '../../query';
 
 interface Props {
+  id: string;
   ids: string[];
   date: Date;
   handleBack: Function;
   handleNext: Function;
 }
 
-export default function SelectedSales({ ids, date, handleBack, handleNext }: Props) {
+export default function SelectedSales({ id: currentId, ids, date, handleBack, handleNext }: Props) {
   const confirm = useBoolean();
   const memberStatisticsRef = useRef<any[]>([]);
 
@@ -95,7 +96,7 @@ export default function SelectedSales({ ids, date, handleBack, handleNext }: Pro
       const txcShared = mutation?.reduce((prev, item) => prev + item.txcShared, 0);
 
       const response = await createStatistics({
-        variables: { data: { totalMembers: mutation.length, totalHashPower } },
+        variables: { data: { id: currentId, totalMembers: mutation.length, totalHashPower } },
       });
 
       const statisticsId = response.data?.createStatistics.id;

@@ -8,8 +8,8 @@ import { paths } from 'src/routes/paths';
 import ChartWidget from 'src/components/ChartWidget';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
+import StatisticsTable from './StatisticsTable';
 import { FETCH_STATISTICS_QUERY } from './query';
-import StatisticsTable from '../Statistics/Statistics';
 
 export default function Dashboard() {
   const { data: statisticsData } = useGraphQuery(FETCH_STATISTICS_QUERY, {

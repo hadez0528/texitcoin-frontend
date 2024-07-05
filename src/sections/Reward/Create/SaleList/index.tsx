@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -29,6 +29,11 @@ export default function SalesList({ id, date, setDate, statistics, selectIds }: 
     {}
   );
 
+  const disabledDates = statistics.map((item) => item.issuedAt);
+
+  const shouldDisableDate = (current: Dayjs) =>
+    disabledDates.some((disabledDate) => current.isSame(disabledDate, 'day'));
+
   return (
     <Card>
       <Grid container sx={{ p: 2 }}>
@@ -44,6 +49,7 @@ export default function SalesList({ id, date, setDate, statistics, selectIds }: 
             format="YYYY-MM-DD"
             disabled={!!id}
             slotProps={{ textField: { fullWidth: true } }}
+            shouldDisableDate={shouldDisableDate}
           />
         </Grid>
       </Grid>

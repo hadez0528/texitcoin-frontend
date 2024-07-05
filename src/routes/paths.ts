@@ -45,6 +45,7 @@ export const paths = {
       new: `${ROOTS.REWARD}/new`,
       edit: (id: string) => `${ROOTS.REWARD}/new/${id}`,
       detail: (id: string) => `${ROOTS.REWARD}/${id}`,
+      view: (id: string) => `${ROOTS.REWARD}/statistics/${id}`,
     },
   },
   notFound: '/404',
