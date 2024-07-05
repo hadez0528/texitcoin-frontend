@@ -88,7 +88,7 @@ export const CREATE_STATISTICS = gql(/* GraphQL */ `
 export const CREATE_MANY_MEMBER_STATISTICS = gql(/* GraphQL */ `
   mutation CreateManyMemberStatistics($data: CreateManyMemberStatisticsInput!) {
     createManyMemberStatistics(data: $data) {
-      createdCount
+      count
     }
   }
 `);
@@ -98,6 +98,14 @@ export const UPDATE_STATISTICS = gql(/* GraphQL */ `
     updateStatistics(data: $data) {
       status
       txcShared
+    }
+  }
+`);
+
+export const REMOVE_MEMBER_STATISTICS = gql(/* GraphQL */ `
+  mutation RemoveMemberStatisticsByStaitisId($data: StatisticIDInput!) {
+    removeMemberStatisticsByStaitisId(data: $data) {
+      count
     }
   }
 `);

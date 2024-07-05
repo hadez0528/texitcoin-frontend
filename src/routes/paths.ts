@@ -43,6 +43,7 @@ export const paths = {
     reward: {
       root: ROOTS.REWARD,
       new: `${ROOTS.REWARD}/new`,
+      edit: (id: string) => `${ROOTS.REWARD}/new/${id}`,
       detail: (id: string) => `${ROOTS.REWARD}/${id}`,
     },
   },

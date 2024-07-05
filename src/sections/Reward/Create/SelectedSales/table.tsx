@@ -28,7 +28,13 @@ const columns: GridColDef[] = [
     filterable: false,
     renderCell: (params) => Number(params.row.txcShared),
   },
-  { field: 'txcCold', width: 400, headerName: 'TXC Cold', filterable: false },
+  {
+    field: 'txcCold',
+    width: 400,
+    headerName: 'TXC Cold',
+    filterable: false,
+    renderCell: (params) => params.row.wallet,
+  },
   {
     field: 'status',
     flex: 1,
