@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useQuery as useGraphQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
@@ -26,9 +27,12 @@ import { FETCH_STATISTICS_QUERY } from '../query';
 const stepTitles = ['Sales', 'Reward', 'Confirm'];
 
 export default function RewardCreateView() {
+  const params = useParams();
   const [activeStep, setActiveStep] = useState(0);
   const [ids, setIds] = useState<string[]>([]);
   const [date, setDate] = useState(new Date());
+
+  const { id } = params;
 
   const { data } = useGraphQuery(FETCH_STATISTICS_QUERY, {
     variables: { sort: 'createdAt' },
@@ -64,7 +68,13 @@ export default function RewardCreateView() {
   };
 
   const steps = [
-    <SalesList date={date} setDate={setDate} statistics={statistics} selectIds={selectIds} />,
+    <SalesList
+      id={id}
+      date={date}
+      setDate={setDate}
+      statistics={statistics}
+      selectIds={selectIds}
+    />,
     <SelectedSales ids={ids} date={date} handleBack={handleBack} handleNext={handleNext} />,
     <SendMany handleBack={handleBack} date={date} />,
   ];

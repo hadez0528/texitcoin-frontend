@@ -17,7 +17,12 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { FETCH_SALES_QUERY } from 'src/sections/Sales/query';
 
 import MemberStatisticsTable from './table';
-import { CREATE_STATISTICS, UPDATE_STATISTICS, CREATE_MANY_MEMBER_STATISTICS } from '../../query';
+import {
+  CREATE_STATISTICS,
+  UPDATE_STATISTICS,
+  REMOVE_MEMBER_STATISTICS,
+  CREATE_MANY_MEMBER_STATISTICS,
+} from '../../query';
 
 interface Props {
   ids: string[];
@@ -34,13 +39,11 @@ export default function SelectedSales({ ids, date, handleBack, handleNext }: Pro
     variables: { filter: { orderedAt: formatDate(date) } },
   });
 
-  const [createStatistics, { data: statistics }] = useMutation(CREATE_STATISTICS);
+  const [createStatistics] = useMutation(CREATE_STATISTICS);
   const [createMemberStatistics, { loading }] = useMutation(CREATE_MANY_MEMBER_STATISTICS);
 
   const [updateStatistics] = useMutation(UPDATE_STATISTICS);
-
-  // const blocks = statistics[0]?.newBlocks ?? 0;
-  // const statisticsId = statistics[0]?.id ?? '';
+  const [removeMemberStatistics] = useMutation(REMOVE_MEMBER_STATISTICS);
 
   const blocks = 576;
 
@@ -56,7 +59,7 @@ export default function SelectedSales({ ids, date, handleBack, handleNext }: Pro
     () =>
       selected
         ? selected?.reduce(
-            (prev, { member: { id, username, email, txcCold }, package: product, status }) => {
+            (prev, { member: { id, username, email, wallet }, package: product, status }) => {
               const hashPower = (prev[id]?.hashPower || 0) + product.token;
               const percent = hashPower / totalHashPower;
 
@@ -69,9 +72,8 @@ export default function SelectedSales({ ids, date, handleBack, handleNext }: Pro
                   hashPower,
                   percent: Number((percent * 100).toFixed(2)),
                   txcShared: blocks * 254 * percent,
-                  txcCold,
+                  wallet,
                   status,
-                  statisticsId: 'qwewqe',
                   memberId: id,
                   issuedAt: fDate(date),
                 },
@@ -92,17 +94,28 @@ export default function SelectedSales({ ids, date, handleBack, handleNext }: Pro
     try {
       const txcShared = mutation?.reduce((prev, item) => prev + item.txcShared, 0);
 
-      // await createStatistics({
-      //   variables: {data: {members: tableData.length, totalHashPower}}
-      // })
+      const response = await createStatistics({
+        variables: { data: { totalMembers: mutation.length, totalHashPower } },
+      });
 
-      if (statistics) {
+      const statisticsId = response.data?.createStatistics.id;
+
+      const memberStatistics = mutation.map((item) => ({
+        ...item,
+        statisticsId: statisticsId ?? '',
+      }));
+
+      if (response) {
+        await removeMemberStatistics({
+          variables: { data: { id: statisticsId ?? '' } },
+        });
+
         await createMemberStatistics({
-          variables: { data: { memberStatistics: mutation } },
+          variables: { data: { memberStatistics } },
         });
 
         await updateStatistics({
-          variables: { data: { id: statistics.createStatistics.id, txcShared } },
+          variables: { data: { id: statisticsId ?? '', txcShared } },
         });
       }
     } catch (err) {
@@ -133,7 +146,7 @@ export default function SelectedSales({ ids, date, handleBack, handleNext }: Pro
                 : memberStatisticsRef.current;
 
             const mutation = memberStatistics?.map(
-              ({ username, email, txcCold, status, id, issuedAt, ...rest }) => ({
+              ({ username, email, wallet, status, id, issuedAt, ...rest }) => ({
                 issuedAt: new Date(issuedAt),
                 ...rest,
               })

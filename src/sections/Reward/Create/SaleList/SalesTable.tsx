@@ -22,10 +22,10 @@ interface Props {
 }
 
 const TABLE_HEAD = [
-  { id: 'invoiceNo', label: 'Invoice No', sortable: true },
-  { id: 'name', label: 'Name', width: 130, sortable: true },
+  { id: 'invoiceNo', label: 'Invoice No', width: 130, sortable: true },
+  { id: 'name', label: 'Name', sortable: true },
   { id: 'productName', label: 'Product Name', width: 130, sortable: true },
-  { id: 'paymentMethod', label: 'Payment Method', width: 130, sortable: true },
+  { id: 'paymentMethod', label: 'Payment Method', width: 300, sortable: true },
   { id: 'amount', label: 'Amount', width: 130, sortable: true },
   { id: 'hashPower', label: 'Hash Power', width: 200, sortable: true },
   { id: 'assetId', label: 'Asset ID', width: 200, sortable: true },
