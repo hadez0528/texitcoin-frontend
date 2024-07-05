@@ -38,7 +38,7 @@ export default function SalesList({ id, date, setDate, statistics, selectIds }: 
         <Grid xl={3} xlOffset={3} display="flex" justifyContent="right">
           <DesktopDatePicker
             label="Date"
-            value={id ? dayjs(statisticsData[id] ?? new Date()) : dayjs(date)}
+            value={id ? dayjs(statisticsData[id] ?? new Date(), 'YYYY-MM-DD') : dayjs(date)}
             minDate={dayjs('2024-04-01')}
             onChange={(newValue) => setDate(newValue)}
             format="YYYY-MM-DD"
