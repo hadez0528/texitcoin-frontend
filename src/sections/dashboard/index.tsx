@@ -12,17 +12,15 @@ import { FETCH_STATISTICS_QUERY } from './query';
 import StatisticsTable from '../Statistics/Statistics';
 
 export default function Dashboard() {
-  const { loading: statisticsLoading, data: statisticsData } = useGraphQuery(
-    FETCH_STATISTICS_QUERY,
-    {
-      variables: {
-        page: '1,20',
-        sort: 'issuedAt',
-      },
-    }
-  );
+  const { data: statisticsData } = useGraphQuery(FETCH_STATISTICS_QUERY, {
+    variables: {
+      page: '1,20',
+      sort: 'issuedAt',
+    },
+  });
 
-  const statistics = statisticsLoading ? { statistics: [], total: 0 } : statisticsData?.statistics;
+  const statistics = statisticsData?.statistics ?? { statistics: [], total: 0 };
+
   return (
     <Container maxWidth="xl">
       <Breadcrumbs

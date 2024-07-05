@@ -37,7 +37,7 @@ export default function Summary() {
         <WidgetSummary
           title="New blocks since last reward"
           meta={
-            liveMiningStats.dailyData.length
+            liveBlockStats.dailyData.length
               ? liveBlockStats.dailyData[0].count - liveBlockStats.dailyData[1].count
               : 0
           }

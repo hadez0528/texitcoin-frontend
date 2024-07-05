@@ -16,6 +16,7 @@ import { useQuery } from 'src/routes/hooks';
 import { fDate, fTime } from 'src/utils/format-time';
 
 import { Label } from 'src/components/Label';
+import { Iconify } from 'src/components/Iconify';
 
 import { FETCH_STATISTICS_QUERY } from './query';
 
@@ -132,19 +133,30 @@ export default function StatisticsTable({ status = false }: Props) {
           Reward
         </Typography>
         <Paper>
-          <DataGrid
-            rows={statistics}
-            columns={columns}
-            loading={!statistics.length}
-            pageSizeOptions={[5, 10, 25, 50, 100]}
-            initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
-            onPaginationModelChange={({ page: currentPage, pageSize }) => {
-              setPage(currentPage);
-              setPageSize(pageSize);
-            }}
-            onRowClick={(params) => window.open(paths.dashboard.reward.detail(params.row.id))}
-            sx={{ mt: 1, cursor: 'pointer' }}
-          />
+          {statistics.length ? (
+            <DataGrid
+              rows={statistics}
+              columns={columns}
+              loading={!statistics.length}
+              pageSizeOptions={[5, 10, 25, 50, 100]}
+              initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
+              onPaginationModelChange={({ page: currentPage, pageSize }) => {
+                setPage(currentPage);
+                setPageSize(pageSize);
+              }}
+              onRowClick={(params) => window.open(paths.dashboard.reward.detail(params.row.id))}
+              sx={{ mt: 1, cursor: 'pointer' }}
+            />
+          ) : (
+            <Paper sx={{ background: '#f2f2f2', borderRadius: 0, p: 3, color: '#666666' }}>
+              <Grid container justifyContent="center">
+                <Iconify icon="bxs:inbox" width={50} height={50} />
+              </Grid>
+              <Typography variant="h3" textAlign="center" sx={{ mb: 3 }}>
+                No Data
+              </Typography>
+            </Paper>
+          )}
         </Paper>
       </Card>
     </Grid>
