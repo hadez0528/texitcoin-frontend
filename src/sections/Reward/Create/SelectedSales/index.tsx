@@ -1,5 +1,6 @@
 import type { MemberStatistics } from 'src/__generated__/graphql';
 
+import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { useRef, useMemo } from 'react';
 import { useMutation, useQuery as useGraphQuery } from '@apollo/client';
@@ -10,7 +11,7 @@ import Button from '@mui/material/Button';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { fDate, formatDate } from 'src/utils/format-time';
+import { formatDate } from 'src/utils/format-time';
 
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
@@ -37,7 +38,15 @@ export default function SelectedSales({ id: currentId, ids, date, handleBack, ha
   const memberStatisticsRef = useRef<any[]>([]);
 
   const { data: salesData } = useGraphQuery(FETCH_SALES_QUERY, {
-    variables: { filter: { orderedAt: formatDate(date) } },
+    // variables: { filter: { orderedAt: formatDate(date) } },
+    variables: {
+      filter: {
+        orderedAt: {
+          gte: `${formatDate(date)}T00:00:00Z`,
+          lt: dayjs(date).add(1, 'day'),
+        },
+      },
+    },
   });
 
   const [createStatistics] = useMutation(CREATE_STATISTICS);
@@ -76,7 +85,7 @@ export default function SelectedSales({ id: currentId, ids, date, handleBack, ha
                   wallet,
                   status,
                   memberId: id,
-                  issuedAt: fDate(date),
+                  issuedAt: `${formatDate(date)}T00:00:00Z`,
                 },
               };
             },
