@@ -14,7 +14,7 @@ import { FETCH_STATISTICS_QUERY } from './query';
 export default function Dashboard() {
   const { data: statisticsData } = useGraphQuery(FETCH_STATISTICS_QUERY, {
     variables: {
-      page: '1,20',
+      page: '1,30',
       sort: 'issuedAt',
     },
   });

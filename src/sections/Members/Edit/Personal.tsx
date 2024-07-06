@@ -22,8 +22,8 @@ export const Personal = () => {
   const member = data?.members?.members?.[0];
   return (
     <Grid xl={12}>
-      <Card sx={{ mr: 2, mt: 2, p: 2 }}>
-        <Typography variant="h5" sx={{ pb: 2 }}>
+      <Card sx={{ mr: 2, mt: 2, p: 3 }}>
+        <Typography variant="h6" sx={{ pb: 2 }}>
           About
         </Typography>
         <Stack direction="row" spacing={2} sx={{ pb: 1 }}>
