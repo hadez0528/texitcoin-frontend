@@ -10,14 +10,14 @@ type Props = {
 };
 
 export default function BlocksTableRow({ row }: Props) {
-  const { blockNo, hashRate, difficulty, issuedAt } = row;
+  const { blockNo, hashRate, difficulty, createdAt } = row;
 
   return (
     <TableRow hover sx={{ cursor: 'pointer' }}>
       <TableCell>{blockNo}</TableCell>
       <TableCell>{hashRate}</TableCell>
       <TableCell>{difficulty}</TableCell>
-      <TableCell>{issuedAt}</TableCell>
+      <TableCell>{createdAt}</TableCell>
     </TableRow>
   );
 }

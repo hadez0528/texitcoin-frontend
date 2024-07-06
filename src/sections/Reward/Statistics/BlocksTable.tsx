@@ -25,7 +25,7 @@ const TABLE_HEAD = [
   { id: 'blockNo', label: 'Block', sortable: true },
   { id: 'hashRate', label: 'Hash Rate', sortable: true },
   { id: 'difficulty', label: 'Difficulty', sortable: true },
-  { id: 'issuedAt', label: 'Issued At', sortable: true },
+  { id: 'createdAt', label: 'Created At', sortable: true },
 ];
 
 interface Props {
@@ -38,7 +38,7 @@ export default function BlocksTable({ id }: Props) {
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<IBlockTableFilters>();
 
-  const { page = { page: 1, pageSize: 5 }, sort = { issuedAt: 'asc' } } = query;
+  const { page = { page: 1, pageSize: 10 }, sort = { issuedAt: 'asc' } } = query;
 
   const graphQuerySort = useMemo(() => {
     if (!sort) return undefined;
@@ -54,7 +54,8 @@ export default function BlocksTable({ id }: Props) {
 
   const { loading, data: blocksData } = useGraphQuery(FETCH_BLOCKS_QUERY, {
     variables: {
-      filter: { period: [statistics[0]?.from, statistics[0]?.to] },
+      page: page && `${page.page},${page.pageSize}`,
+      filter: { issuedAt: { gte: statistics[0]?.from, lte: statistics[0]?.to } },
       sort: graphQuerySort,
     },
   });
