@@ -39,9 +39,18 @@ type Props = CardProps & {
     | 'rangeBar'
     | 'rangeArea'
     | 'treemap';
+  card?: boolean;
 };
 
-export default function ChartWidget({ title, subheader, chart, type, height, ...other }: Props) {
+export default function ChartWidget({
+  title,
+  subheader,
+  chart,
+  type,
+  height,
+  card,
+  ...other
+}: Props) {
   const theme = useTheme();
 
   const chartColors = chart.colors ?? [theme.palette.primary.main, theme.palette.warning.main];
@@ -55,16 +64,28 @@ export default function ChartWidget({ title, subheader, chart, type, height, ...
   const currentSeries = chart.series;
 
   return (
-    <Card {...other}>
-      <CardHeader title={title} subheader={subheader} />
+    <>
+      {card ? (
+        <Chart
+          type={type ?? 'area'}
+          series={currentSeries}
+          options={chartOptions}
+          height={height ?? 320}
+          sx={{ py: 2.5, pl: 1, pr: 2.5 }}
+        />
+      ) : (
+        <Card {...other}>
+          <CardHeader title={title} subheader={subheader} />
 
-      <Chart
-        type={type ?? 'area'}
-        series={currentSeries}
-        options={chartOptions}
-        height={height ?? 320}
-        sx={{ py: 2.5, pl: 1, pr: 2.5 }}
-      />
-    </Card>
+          <Chart
+            type={type ?? 'area'}
+            series={currentSeries}
+            options={chartOptions}
+            height={height ?? 320}
+            sx={{ py: 2.5, pl: 1, pr: 2.5 }}
+          />
+        </Card>
+      )}
+    </>
   );
 }
