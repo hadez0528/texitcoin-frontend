@@ -37,6 +37,7 @@ export const FETCH_BLOCKS_QUERY = gql(/* GraphQL */ `
         blockNo
         hashRate
         difficulty
+        issuedAt
         createdAt
         updatedAt
         deletedAt
