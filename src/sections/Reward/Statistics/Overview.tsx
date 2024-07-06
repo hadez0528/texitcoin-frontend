@@ -14,7 +14,7 @@ interface Props {
 
 export default function Overview({ data }: Props) {
   return (
-    <Card sx={{ mr: 2, mt: 2, py: 3, textAlign: 'center', typography: 'h4' }}>
+    <Card sx={{ py: 3, textAlign: 'center', typography: 'h4' }}>
       <Stack
         direction="row"
         divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
@@ -44,13 +44,6 @@ export default function Overview({ data }: Props) {
           {fNumber(data?.txcShared ?? 0)}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
             Rewarded TXC
-          </Box>
-        </Stack>
-
-        <Stack width={1}>
-          {fNumber(data?.totalBlocks ?? 0)}
-          <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-            Total Blocks
           </Box>
         </Stack>
 
