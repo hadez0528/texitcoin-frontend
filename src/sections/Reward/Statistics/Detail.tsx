@@ -12,6 +12,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import OverView from './Overview';
+import BlocksTable from './BlocksTable';
 import { FETCH_STATISTICS_QUERY } from '../query';
 
 export default function DetailView() {
@@ -34,9 +35,12 @@ export default function DetailView() {
         }}
       />
 
-      <Grid container>
+      <Grid container rowGap={2}>
         <Grid xl={12}>
           <OverView data={current!} />
+        </Grid>
+        <Grid xl={12}>
+          <BlocksTable id={id!} />
         </Grid>
       </Grid>
     </DashboardContent>

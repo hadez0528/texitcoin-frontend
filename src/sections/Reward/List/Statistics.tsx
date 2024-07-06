@@ -3,8 +3,8 @@ import type {
   IStatisticsPrismaFilter,
 } from 'src/sections/Reward/List/types';
 
-import { useMemo } from 'react';
-import { useQuery as useGraphQuery } from '@apollo/client';
+import { useMemo, useState, useEffect } from 'react';
+import { useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -19,8 +19,8 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { useTable, TableHeadCustom, TablePaginationCustom } from 'src/components/Table';
 
-import { FETCH_STATISTICS_QUERY } from '../query';
 import StatisticsTableRow from './StatisticsTableRow';
+import { UPDATE_STATISTICS, FETCH_STATISTICS_QUERY, FETCH_MEMBERSTATISTICS_QUERY } from '../query';
 
 const TABLE_HEAD = [
   { id: 'issuedAt', label: 'Date', sortable: true },
@@ -33,6 +33,7 @@ const TABLE_HEAD = [
   { id: 'from', label: 'From', sortable: true },
   { id: 'to', label: 'To', sortable: true },
   { id: 'status', label: 'Status', sortable: true },
+  { id: 'action', label: 'Action', sortable: true },
 ];
 
 const defaultFilter: IStatisticsTableFilters = {
@@ -40,6 +41,8 @@ const defaultFilter: IStatisticsTableFilters = {
 };
 
 export default function StatisticsTable() {
+  const [statisticsId, setStatisticsId] = useState<string>('');
+
   const table = useTable({ defaultDense: true });
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
@@ -76,7 +79,23 @@ export default function StatisticsTable() {
     },
   });
 
+  const [fetchMemberStatistics, { data: sendmanyData }] = useLazyQuery(
+    FETCH_MEMBERSTATISTICS_QUERY,
+    {
+      variables: { filter: { statisticsId } },
+    }
+  );
+
+  const [updateStatistics] = useMutation(UPDATE_STATISTICS);
+
   const statistics = data?.statistics.statistics ?? [];
+
+  useEffect(() => {
+    fetchMemberStatistics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statisticsId]);
+
+  const memberStatistics = sendmanyData?.memberStatistics.memberStatistics ?? [];
 
   return (
     <Grid container spacing={1}>
@@ -88,30 +107,39 @@ export default function StatisticsTable() {
           borderRadius: 1.5,
         }}
       >
-        <CardHeader title="Reward" />
+        <CardHeader title="Reward" sx={{ mb: 3 }} />
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={sort && sort[Object.keys(sort)[0]]}
-                orderBy={sort && Object.keys(sort)[0]}
-                headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : statistics!.length}
-                onSort={(id) => {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
-                }}
-              />
-
               {loading ? (
                 <LoadingScreen />
               ) : (
-                <TableBody>
-                  {statistics!.map((row) => (
-                    <StatisticsTableRow key={row!.id} row={row!} />
-                  ))}
-                </TableBody>
+                <>
+                  <TableHeadCustom
+                    order={sort && sort[Object.keys(sort)[0]]}
+                    orderBy={sort && Object.keys(sort)[0]}
+                    headLabel={TABLE_HEAD}
+                    rowCount={loading ? 0 : statistics!.length}
+                    onSort={(id) => {
+                      const isAsc = sort && sort[id] === 'asc';
+                      const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                      setQuery({ ...query, sort: newSort });
+                    }}
+                  />
+                  <TableBody>
+                    {statistics!.map((row) => (
+                      <StatisticsTableRow
+                        key={row!.id}
+                        row={row!}
+                        statisticsId={statisticsId}
+                        setStatisticsId={setStatisticsId}
+                        memberStatistics={memberStatistics!}
+                        statistics={statistics!}
+                        updateStatistics={updateStatistics}
+                      />
+                    ))}
+                  </TableBody>
+                </>
               )}
             </Table>
           </ScrollBar>
