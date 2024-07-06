@@ -3,7 +3,7 @@ import { useQuery as useGraphQuery } from '@apollo/client';
 
 import Grid from '@mui/material/Unstable_Grid2';
 
-import { fDate } from 'src/utils/format-time';
+import { formatDate } from 'src/utils/format-time';
 
 import ChartWidget from 'src/components/ChartWidget';
 
@@ -23,10 +23,16 @@ export const Reward = () => {
       <ChartWidget
         title="Daily Reward"
         chart={{
-          categories: memberStatistics.map((item) => `${fDate(item?.issuedAt!)}`),
+          categories: memberStatistics.map((item) => `${formatDate(item?.issuedAt!)}`),
           series: [
-            { name: 'TXC Shared', data: memberStatistics.map((item) => item?.txcShared!) },
-            { name: 'Hash Power', data: memberStatistics.map((item) => item?.hashPower!) },
+            {
+              name: 'TXC Shared',
+              data: memberStatistics.map((item) => Number(item?.txcShared.toFixed(3))),
+            },
+            {
+              name: 'Hash Power',
+              data: memberStatistics.map((item) => Number(item?.hashPower.toFixed(3))),
+            },
           ],
           options: {
             plotOptions: {
