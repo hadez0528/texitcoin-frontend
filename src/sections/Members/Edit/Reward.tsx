@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useQuery as useGraphQuery } from '@apollo/client';
 
+import Card from '@mui/material/Card';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import { useQuery } from 'src/routes/hooks';
@@ -11,6 +12,7 @@ import ChartWidget from 'src/components/ChartWidget';
 import { TablePaginationCustom } from 'src/components/Table';
 
 import { FETCH_MEMBER_STATISTICS } from '../query';
+import { CardHeader } from '@mui/material';
 
 export const Reward = () => {
   const { id } = useParams();
@@ -31,43 +33,46 @@ export const Reward = () => {
 
   return (
     <Grid sx={{ mt: 2 }}>
-      <ChartWidget
-        title="Daily Reward"
-        chart={{
-          categories: memberStatistics.map((item) => `${formatDate(item?.issuedAt!)}`).reverse(),
-          series: [
-            {
-              name: 'TXC Shared',
-              data: memberStatistics.map((item) => Number(item?.txcShared.toFixed(3))).reverse(),
-            },
-            {
-              name: 'Hash Power',
-              data: memberStatistics.map((item) => Number(item?.hashPower.toFixed(3))).reverse(),
-            },
-          ],
-          options: {
-            plotOptions: {
-              bar: {
-                columnWidth: '16%',
+      <Card>
+        <CardHeader title="Reward" />
+        <ChartWidget
+          chart={{
+            categories: memberStatistics.map((item) => `${formatDate(item?.issuedAt!)}`).reverse(),
+            series: [
+              {
+                name: 'TXC Shared',
+                data: memberStatistics.map((item) => Number(item?.txcShared.toFixed(3))).reverse(),
+              },
+              {
+                name: 'Hash Power',
+                data: memberStatistics.map((item) => Number(item?.hashPower.toFixed(3))).reverse(),
+              },
+            ],
+            options: {
+              plotOptions: {
+                bar: {
+                  columnWidth: '16%',
+                },
               },
             },
-          },
-        }}
-        height={404}
-        type="bar"
-      />
+          }}
+          height={355}
+          type="bar"
+          card
+        />
 
-      <TablePaginationCustom
-        count={loading ? 0 : data?.memberStatistics!.total!}
-        page={loading ? 0 : page!.page - 1}
-        rowsPerPage={page?.pageSize}
-        onPageChange={(_, curPage) => {
-          setPage(curPage + 1);
-        }}
-        onRowsPerPageChange={(event) => {
-          setPageSize(parseInt(event.target.value, 10));
-        }}
-      />
+        <TablePaginationCustom
+          count={loading ? 0 : data?.memberStatistics!.total!}
+          page={loading ? 0 : page!.page - 1}
+          rowsPerPage={page?.pageSize}
+          onPageChange={(_, curPage) => {
+            setPage(curPage + 1);
+          }}
+          onRowsPerPageChange={(event) => {
+            setPageSize(parseInt(event.target.value, 10));
+          }}
+        />
+      </Card>
     </Grid>
   );
 };
