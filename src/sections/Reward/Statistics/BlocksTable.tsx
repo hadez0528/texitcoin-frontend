@@ -55,7 +55,7 @@ export default function BlocksTable({ id }: Props) {
   const { loading, data: blocksData } = useGraphQuery(FETCH_BLOCKS_QUERY, {
     variables: {
       page: page && `${page.page},${page.pageSize}`,
-      filter: { issuedAt: { gte: statistics[0]?.from, lte: statistics[0]?.to } },
+      filter: { createdAt: { gte: statistics[0]?.from, lte: statistics[0]?.to } },
       sort: graphQuerySort,
     },
   });
