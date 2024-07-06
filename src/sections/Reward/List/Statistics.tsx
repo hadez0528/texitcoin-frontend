@@ -29,7 +29,7 @@ const TABLE_HEAD = [
   { id: 'totalHashPower', label: 'Total Hash Power', sortable: true },
   { id: 'totalMembers', label: 'Total Members', sortable: true },
   { id: 'txcShared', label: 'TXC Shared', sortable: true },
-  { id: 'diff', label: 'Doff', sortable: true },
+  { id: 'diff', label: 'Diff', sortable: true },
   { id: 'from', label: 'From', sortable: true },
   { id: 'to', label: 'To', sortable: true },
   { id: 'status', label: 'Status', sortable: true },
