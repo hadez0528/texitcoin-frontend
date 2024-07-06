@@ -7,7 +7,7 @@ import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
-import Typography from '@mui/material/Typography';
+import CardHeader from '@mui/material/CardHeader';
 import TableContainer from '@mui/material/TableContainer';
 
 import { useQuery, type SortOrder } from 'src/routes/hooks';
@@ -25,7 +25,7 @@ const TABLE_HEAD = [
   { id: 'totalBlocks', label: 'Total Blocks', sortable: true },
   { id: 'totalHashPower', label: 'Total Hash Power', sortable: true },
   { id: 'totalMembers', label: 'Total Members', sortable: true },
-  { id: 'txcShared', label: 'TXc Shared', sortable: true },
+  { id: 'txcShared', label: 'TXC Shared', sortable: true },
   { id: 'diff', label: 'Doff', sortable: true },
   { id: 'from', label: 'From', sortable: true },
   { id: 'to', label: 'To', sortable: true },
@@ -72,9 +72,7 @@ export default function StatisticsTable({ status = false }: Props) {
           borderRadius: 1.5,
         }}
       >
-        <Typography variant="h6" sx={{ m: 1 }}>
-          Reward
-        </Typography>
+        <CardHeader title="Reward" sx={{ mb: 3 }} />
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>

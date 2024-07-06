@@ -1,163 +1,64 @@
-import type { IStatisticsTableFilters } from 'src/sections/Reward/List/types';
+import type {
+  IStatisticsTableFilters,
+  IStatisticsPrismaFilter,
+} from 'src/sections/Reward/List/types';
 
-import { useMemo, useState, useEffect } from 'react';
-import { useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
+import { useMemo } from 'react';
+import { useQuery as useGraphQuery } from '@apollo/client';
 
 import Card from '@mui/material/Card';
-import Paper from '@mui/material/Paper';
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
+import Table from '@mui/material/Table';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import ListItemText from '@mui/material/ListItemText';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import TableBody from '@mui/material/TableBody';
+import CardHeader from '@mui/material/CardHeader';
+import TableContainer from '@mui/material/TableContainer';
 
-import { paths } from 'src/routes/paths';
-import { useQuery, useRouter } from 'src/routes/hooks';
+import { useQuery, type SortOrder } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/useBoolean';
-
-import { fDate, fTime, formatDate } from 'src/utils/format-time';
-
-import { Label } from 'src/components/Label';
-import { Iconify } from 'src/components/Iconify';
-import ComponentBlock from 'src/components/Component-Block';
-import { ConfirmDialog } from 'src/components/custom-dialog';
+import { ScrollBar } from 'src/components/ScrollBar';
 import { LoadingScreen } from 'src/components/loading-screen';
+import { useTable, TableHeadCustom, TablePaginationCustom } from 'src/components/Table';
 
-import { UPDATE_STATISTICS, FETCH_STATISTICS_QUERY, FETCH_MEMBERSTATISTICS_QUERY } from '../query';
+import { FETCH_STATISTICS_QUERY } from '../query';
+import StatisticsTableRow from './StatisticsTableRow';
 
-interface Props {
-  status?: boolean;
-}
+const TABLE_HEAD = [
+  { id: 'issuedAt', label: 'Date', sortable: true },
+  { id: 'newBlocks', label: 'New Blocks', sortable: true },
+  { id: 'totalBlocks', label: 'Total Blocks', sortable: true },
+  { id: 'totalHashPower', label: 'Total Hash Power', sortable: true },
+  { id: 'totalMembers', label: 'Total Members', sortable: true },
+  { id: 'txcShared', label: 'TXC Shared', sortable: true },
+  { id: 'diff', label: 'Doff', sortable: true },
+  { id: 'from', label: 'From', sortable: true },
+  { id: 'to', label: 'To', sortable: true },
+  { id: 'status', label: 'Status', sortable: true },
+];
 
-export default function StatisticsTable({ status = false }: Props) {
-  const router = useRouter();
+const defaultFilter: IStatisticsTableFilters = {
+  search: '',
+};
 
-  const confirm = useBoolean();
+export default function StatisticsTable() {
+  const table = useTable({ defaultDense: true });
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [statisticsId, setStatisticsId] = useState<string>('');
+  const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
+    useQuery<IStatisticsTableFilters>();
 
-  const [query, { setPage, setPageSize }] = useQuery<IStatisticsTableFilters>();
+  const {
+    page = { page: 1, pageSize: 10 },
+    sort = { issuedAt: 'asc' },
+    filter = defaultFilter,
+  } = query;
 
-  const columns: GridColDef[] = [
-    {
-      field: 'issuedAt',
-      flex: 1,
-      headerName: 'Date',
-      filterable: true,
-      renderCell: (params) => formatDate(params.row.issuedAt),
-    },
-    { field: 'newBlocks', flex: 1, headerName: 'New Blocks', filterable: true },
-    { field: 'totalBlocks', flex: 1, headerName: 'Total Blocks', filterable: true },
-    { field: 'totalHashPower', flex: 1, headerName: 'Total Hash Power', filterable: true },
-    { field: 'totalMembers', flex: 1, headerName: 'Total Members', filterable: true },
-    { field: 'txcShared', flex: 1, headerName: 'TXC Shared', filterable: true },
-    {
-      field: 'diff',
-      flex: 1,
-      headerName: 'Diff',
-      filterable: true,
-      renderCell: (params) => params.row.newBlocks * 254 - params.row.txcShared,
-    },
-    {
-      field: 'from',
-      flex: 1,
-      headerName: 'From',
-      filterable: true,
-      renderCell: (params) => (
-        <ListItemText
-          primary={fDate(params.row.from)}
-          secondary={fTime(params.row.from)}
-          primaryTypographyProps={{ typography: 'body2' }}
-          secondaryTypographyProps={{
-            component: 'span',
-            color: 'text.disabled',
-          }}
-        />
-      ),
-    },
-    {
-      field: 'to',
-      flex: 1,
-      headerName: 'To',
-      filterable: true,
-      renderCell: (params) => (
-        <ListItemText
-          primary={fDate(params.row.to)}
-          secondary={fTime(params.row.to)}
-          primaryTypographyProps={{ typography: 'body2' }}
-          secondaryTypographyProps={{
-            component: 'span',
-            color: 'text.disabled',
-          }}
-        />
-      ),
-    },
-    {
-      field: 'status',
-      flex: 1,
-      headerName: 'Status',
-      filterable: true,
-      renderCell: (params) =>
-        params.row.status ? (
-          <Label variant="soft" color="success">
-            Confirmed
-          </Label>
-        ) : (
-          <Label variant="soft" color="warning">
-            Pending
-          </Label>
-        ),
-    },
-    {
-      field: 'action',
-      width: 150,
-      headerName: 'Action',
-      filterable: false,
-      renderCell: (params) => (
-        <>
-          {params.row.status ? (
-            <Tooltip title="View" placement="top" arrow>
-              <IconButton
-                color="success"
-                onClick={() => router.push(paths.dashboard.reward.view(params.row.id))}
-              >
-                <Iconify icon="solar:eye-bold" />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            <Tooltip title="Edit" placement="top" arrow>
-              <IconButton
-                color="default"
-                onClick={() => router.push(paths.dashboard.reward.edit(params.row.id))}
-              >
-                <Iconify icon="solar:pen-2-bold" />
-              </IconButton>
-            </Tooltip>
-          )}
-          <Tooltip title="Confirm" placement="top" arrow>
-            <IconButton
-              color="success"
-              disabled={params.row.status}
-              onClick={() => {
-                setStatisticsId(params.row.id);
-                setIsOpen(true);
-              }}
-            >
-              <Iconify icon="bxs:check-circle" />
-            </IconButton>
-          </Tooltip>
-        </>
-      ),
-    },
-  ];
+  const graphQueryFilter = useMemo(() => {
+    const filterObj: IStatisticsPrismaFilter = {};
+    if (filter.search) {
+      filterObj.OR = [];
+    }
 
-  const { page = { page: 1, pageSize: 10 }, sort = { issuedAt: 'asc' } } = query;
+    return filterObj;
+  }, [filter]);
 
   const graphQuerySort = useMemo(() => {
     if (!sort) return undefined;
@@ -167,122 +68,70 @@ export default function StatisticsTable({ status = false }: Props) {
       .join(',');
   }, [sort]);
 
-  const [updateStatistics] = useMutation(UPDATE_STATISTICS);
-
-  const { data } = useGraphQuery(FETCH_STATISTICS_QUERY, {
+  const { loading, data } = useGraphQuery(FETCH_STATISTICS_QUERY, {
     variables: {
       page: page && `${page.page},${page.pageSize}`,
-      filter: { ...(status && { status: true }) },
+      filter: graphQueryFilter,
       sort: graphQuerySort,
     },
   });
 
-  const [fetchMemberStatistics, { data: sendmanyData }] = useLazyQuery(
-    FETCH_MEMBERSTATISTICS_QUERY,
-    {
-      variables: { filter: { statisticsId } },
-    }
-  );
-
-  useEffect(() => {
-    fetchMemberStatistics();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statisticsId]);
-
   const statistics = data?.statistics.statistics ?? [];
 
-  const memberStatistics = sendmanyData?.memberStatistics.memberStatistics ?? [];
-
-  const initial = ['sendmany "" "{'];
-  const sendmany = [
-    ...initial,
-    ...memberStatistics!.map(
-      (item, index) =>
-        `\\"${item?.member?.wallet}\\": ${item?.txcShared}${index === memberStatistics.length - 1 ? '}"' : ','}`
-    ),
-  ];
-
   return (
-    <>
-      <Grid container spacing={1}>
-        <Card
-          sx={{
-            width: '100%',
-            m: 0.5,
-            mt: 2,
-            borderRadius: 1.5,
-          }}
-        >
-          <Paper>
-            <DataGrid
-              rows={statistics}
-              columns={columns}
-              loading={!statistics.length}
-              pageSizeOptions={[5, 10, 25, 50, 100]}
-              initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
-              onPaginationModelChange={({ page: currentPage, pageSize }) => {
-                setPage(currentPage);
-                setPageSize(pageSize);
-              }}
-            />
-          </Paper>
-        </Card>
-      </Grid>
-
-      <Drawer
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        anchor="right"
-        slotProps={{ backdrop: { invisible: true } }}
-        PaperProps={{ sx: { width: { xs: 1, sm: 700 } } }}
+    <Grid container spacing={1}>
+      <Card
+        sx={{
+          width: '100%',
+          m: 0.5,
+          mt: 2,
+          borderRadius: 1.5,
+        }}
       >
-        <Paper sx={{ p: 3 }}>
-          <ComponentBlock
-            sx={{
-              display: 'block',
-              alignItems: 'unset',
-              overflow: 'auto',
-              maxHeight: 800,
-              backgroundColor: '#f2f2f2',
-            }}
-          >
-            {sendmany.length === 1 ? (
-              <LoadingScreen />
-            ) : (
-              sendmany.map((item) => <Typography variant="body1">{item}</Typography>)
-            )}
-          </ComponentBlock>
-          <Paper sx={{ textAlign: 'right' }}>
-            <ButtonGroup sx={{ mt: 2 }} variant="contained" color="success">
-              <Button onClick={() => confirm.onTrue()}>Confirm</Button>
-            </ButtonGroup>
-          </Paper>
-        </Paper>
-      </Drawer>
+        <CardHeader title="Reward" />
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <ScrollBar>
+            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <TableHeadCustom
+                order={sort && sort[Object.keys(sort)[0]]}
+                orderBy={sort && Object.keys(sort)[0]}
+                headLabel={TABLE_HEAD}
+                rowCount={loading ? 0 : statistics!.length}
+                onSort={(id) => {
+                  const isAsc = sort && sort[id] === 'asc';
+                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                  setQuery({ ...query, sort: newSort });
+                }}
+              />
 
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Confirm"
-        content="Are you sure?"
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              confirm.onFalse();
+              {loading ? (
+                <LoadingScreen />
+              ) : (
+                <TableBody>
+                  {statistics!.map((row) => (
+                    <StatisticsTableRow key={row!.id} row={row!} />
+                  ))}
+                </TableBody>
+              )}
+            </Table>
+          </ScrollBar>
+        </TableContainer>
 
-              updateStatistics({
-                variables: { data: { id: statisticsId, status: true } },
-              });
-
-              router.refresh();
-            }}
-          >
-            Confirm
-          </Button>
-        }
-      />
-    </>
+        <TablePaginationCustom
+          count={loading ? 0 : data?.statistics!.total!}
+          page={loading ? 0 : page!.page - 1}
+          rowsPerPage={page?.pageSize}
+          onPageChange={(_, curPage) => {
+            setPage(curPage + 1);
+          }}
+          onRowsPerPageChange={(event) => {
+            setPageSize(parseInt(event.target.value, 10));
+          }}
+          //
+          dense={table.dense}
+          onChangeDense={table.onChangeDense}
+        />
+      </Card>
+    </Grid>
   );
 }
