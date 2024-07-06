@@ -3,6 +3,7 @@ import { useQuery as useGraphQuery } from '@apollo/client';
 
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Unstable_Grid2';
+import CardHeader from '@mui/material/CardHeader';
 
 import { useQuery } from 'src/routes/hooks';
 
@@ -12,7 +13,6 @@ import ChartWidget from 'src/components/ChartWidget';
 import { TablePaginationCustom } from 'src/components/Table';
 
 import { FETCH_MEMBER_STATISTICS } from '../query';
-import { CardHeader } from '@mui/material';
 
 export const Reward = () => {
   const { id } = useParams();
