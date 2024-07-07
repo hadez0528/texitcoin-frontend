@@ -1,3 +1,5 @@
+import type { IStatisticsFilters, IStatisticsPrismaFilter } from 'src/types/statistics';
+
 import { useMemo } from 'react';
 import { useQuery as useGraphQuery } from '@apollo/client';
 
@@ -6,10 +8,8 @@ import Container from '@mui/material/Container';
 
 import { useQuery } from 'src/routes/hooks';
 
-// import ChartWidget from 'src/components/ChartWidget';
-// import CollapsibleTable from 'src/components/CollapsibleTable';
-
-import type { IStatisticsFilters, IStatisticsPrismaFilter } from 'src/types/statistics';
+import ChartWidget from 'src/components/ChartWidget';
+import CollapsibleTable from 'src/components/CollapsibleTable';
 
 import { Summary } from './Summary';
 import { FETCH_BLOCKS_QUERY } from './query';
@@ -48,30 +48,24 @@ export default function StatisticsSection() {
 
   const blocks = blocksData?.blocks ?? { blocks: [], total: 0 };
 
-  console.log('blocks => ', blocks);
-
   return (
     <Container maxWidth="xl">
       <Grid container spacing={3}>
         <Summary />
       </Grid>
-      {/* <Grid container spacing={3}>
+      <Grid container spacing={3}>
         <Grid xs={12} md={6}>
           <ChartWidget
             key="hashRate"
             title="Hashrate"
             chart={{
-              categories: blocks!.blocks!.map((item) => item?.blockNo).reverse(),
+              categories: blocks!.blocks!.map((item) => `${item?.blockNo}`).reverse(),
               series: [
                 {
-                  data: [
-                    {
-                      name: 'Hashrate',
-                      data: blocks!
-                        .blocks!.map((item) => Math.floor((item?.hashRate! || 1) / 1000000))
-                        .reverse(),
-                    },
-                  ],
+                  name: 'Hashrate',
+                  data: blocks!
+                    .blocks!.map((item) => Math.floor((item?.hashRate! || 1) / 1000000))
+                    .reverse(),
                 },
               ],
             }}
@@ -83,15 +77,11 @@ export default function StatisticsSection() {
             title="Network Difficulty"
             chart={{
               colors: ['#ffb136'],
-              categories: blocks!.blocks!.map((item) => item?.blockNo).reverse(),
+              categories: blocks!.blocks!.map((item) => `${item?.blockNo}`).reverse(),
               series: [
                 {
-                  data: [
-                    {
-                      name: 'Pos Difficulty',
-                      data: blocks!.blocks!.map((item) => Math.floor(item?.difficulty!)).reverse(),
-                    },
-                  ],
+                  name: 'Pos Difficulty',
+                  data: blocks!.blocks!.map((item) => Math.floor(item?.difficulty!)).reverse(),
                 },
               ],
             }}
@@ -100,7 +90,7 @@ export default function StatisticsSection() {
       </Grid>
       <Grid container spacing={1}>
         <CollapsibleTable />
-      </Grid> */}
+      </Grid>
     </Container>
   );
 }
