@@ -83,7 +83,7 @@ export function MainLayout({ sx, data, children }: MainLayoutProps) {
          *************************************** */
         sx={sx}
       >
-        <Main>{children}</Main>
+        <Main sx={{ pb: 20 }}>{children}</Main>
       </LayoutSection>
     </>
   );
