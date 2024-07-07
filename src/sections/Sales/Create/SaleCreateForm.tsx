@@ -124,7 +124,7 @@ export default function SaleCreateForm() {
               <Stack spacing={1} sx={{ mb: 3 }}>
                 <Grid container xl={12}>
                   <Grid xl={6}>
-                    <Typography variant="subtitle1">Personal Information</Typography>
+                    <Typography variant="subtitle1">Sale</Typography>
                   </Grid>
                   <Grid xl={6} justifyContent="flex-end" display="flex" gap={2}>
                     <Typography variant="subtitle1">Invoice No:</Typography>

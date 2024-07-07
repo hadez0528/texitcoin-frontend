@@ -2,12 +2,14 @@ import type { Sale } from 'src/__generated__/graphql';
 
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
+import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { Label } from 'src/components/Label';
+import { Iconify } from 'src/components/Iconify';
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +20,7 @@ type Props = {
 export default function SaleTableRow({ row }: Props) {
   const router = useRouter();
 
-  const { invoiceNo, member, package: product, paymentMethod, orderedAt, status } = row;
+  const { id, invoiceNo, member, package: product, paymentMethod, orderedAt, status } = row;
 
   return (
     <TableRow hover>
@@ -76,6 +78,15 @@ export default function SaleTableRow({ row }: Props) {
             inactive
           </Label>
         )}
+      </TableCell>
+      <TableCell>
+        <IconButton
+          onClick={() => {
+            router.push(`${paths.dashboard.sales.edit(id)}`);
+          }}
+        >
+          <Iconify icon="solar:pen-2-bold" />
+        </IconButton>
       </TableCell>
     </TableRow>
   );
