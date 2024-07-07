@@ -67,6 +67,15 @@ export const CREATE_SALE = gql(/* GraphQL */ `
   }
 `);
 
+export const UPDATE_SALE = gql(/* GraphQL */ `
+  mutation UpdateSale($data: UpdateSaleInput!) {
+    updateSale(data: $data) {
+      id
+      status
+    }
+  }
+`);
+
 export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
   query Packages($sort: String, $page: String, $filter: JSONObject) {
     packages(sort: $sort, page: $page, filter: $filter) {
