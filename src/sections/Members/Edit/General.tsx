@@ -1,8 +1,8 @@
 import type { Member } from 'src/__generated__/graphql';
 
 import { z as zod } from 'zod';
-import { useMemo } from 'react';
 import isEqual from 'lodash/isEqual';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ApolloError, useMutation, useQuery as useGraphQuery } from '@apollo/client';
@@ -14,6 +14,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
+
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
@@ -42,6 +45,11 @@ const MemberGeneralSchema = zod.object({
 });
 
 export default function MemberGeneral({ currentMember }: Props) {
+  const router = useRouter();
+
+  const [firstName, setFirstName] = useState<string>(currentMember.fullName.split(' ')[0]);
+  const [lastName, setLastName] = useState<string>(currentMember.fullName.split(' ')[1]);
+
   const { data: payoutsData } = useGraphQuery(FETCH_PAYOUTS_QUERY, {
     variables: {},
   });
@@ -77,6 +85,9 @@ export default function MemberGeneral({ currentMember }: Props) {
         variables: {
           data: {
             id: currentMember.id,
+            username: newMember.username,
+            email: newMember.email,
+            fullName: `${firstName} ${lastName}`,
             mobile: newMember.mobile,
             address: newMember.address,
             payoutId: newMember.payoutId,
@@ -85,7 +96,10 @@ export default function MemberGeneral({ currentMember }: Props) {
           },
         },
       });
+
       toast.success('Update success!');
+
+      router.push(paths.dashboard.members.root);
     } catch (err) {
       if (err instanceof ApolloError) {
         const [error] = err.graphQLErrors;
@@ -117,10 +131,20 @@ export default function MemberGeneral({ currentMember }: Props) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <Field.Text name="username" label="Username" disabled />
-              <Field.Text name="email" label="Email" defaultValue={currentMember.email} disabled />
-              <Field.Text name="firstName" label="First Name" disabled />
-              <Field.Text name="lastName" label="Last Name" disabled />
+              <Field.Text name="username" label="Username" />
+              <Field.Text name="email" label="Email" defaultValue={currentMember.email} />
+              <Field.Text
+                name="firstName"
+                label="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+              <Field.Text
+                name="lastName"
+                label="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
               <Field.Phone name="mobile" label="Mobile" />
               <Field.Text name="address" label="Address" />
               <Field.Select name="payoutId" label="TXC Payout">
