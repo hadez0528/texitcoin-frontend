@@ -1,6 +1,6 @@
 // ----------------------------------------------------------------------
 
-export type UserRole = 'all' | 'admin' | 'ap' | 'inactive';
+export type UserRole = 'all' | 'admin' | 'user' | 'inactive';
 
 export type IUserTableFilters = {
   search: string;

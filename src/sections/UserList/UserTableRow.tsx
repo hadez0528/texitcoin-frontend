@@ -61,9 +61,13 @@ export default function UserTableRow({
       </TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>
-        {isAdmin && (
-          <Label variant="soft" color="secondary">
+        {isAdmin ? (
+          <Label variant="soft" color="success">
             Admin
+          </Label>
+        ) : (
+          <Label variant="soft" color="warning">
+            User
           </Label>
         )}
       </TableCell>

@@ -48,6 +48,7 @@ import type { UserRole, IUserPrismaFilter, IUserTableFilters } from './types';
 const STATUS_OPTIONS: { value: UserRole; label: string; color: LabelColor }[] = [
   { value: 'all', label: 'All', color: 'info' },
   { value: 'admin', label: 'Admin', color: 'success' },
+  { value: 'user', label: 'User', color: 'warning' },
   { value: 'inactive', label: 'Inactive', color: 'error' },
 ];
 
@@ -79,7 +80,7 @@ const FETCH_USER_STATS_QUERY = gql(/* GraphQL */ `
     admin: users(filter: $adminFilter) {
       total
     }
-    ap: users(filter: $apFilter) {
+    user: users(filter: $apFilter) {
       total
     }
     inactive: users(filter: $inactiveFilter) {
@@ -128,6 +129,10 @@ export default function UserListView() {
       filterObj.isAdmin = true;
     }
 
+    if (filter.status === 'user') {
+      filterObj.isAdmin = false;
+    }
+
     if (filter.status === 'inactive') {
       filterObj.deletedAt = { not: null };
     }
@@ -150,6 +155,7 @@ export default function UserListView() {
   const { data: statsData } = useGraphQuery(FETCH_USER_STATS_QUERY, {
     variables: {
       adminFilter: { isAdmin: true },
+      apFilter: { isAdmin: false },
       inactiveFilter: { deletedAt: { not: null } },
     },
   });

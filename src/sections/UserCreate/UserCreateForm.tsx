@@ -37,15 +37,12 @@ const CREATE_USER = gql(/* GraphQL */ `
 export type NewUserSchemaType = zod.infer<typeof NewUserSchema>;
 
 const NewUserSchema = zod.object({
-  name: zod.string({ required_error: 'Name is required' }),
+  username: zod.string({ required_error: 'Name is required' }),
   email: zod
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
   avatarUrl: zod.custom<File | string>().nullable(),
-  isSuperAdmin: zod.boolean().nullable(),
-  isApUser: zod.boolean().nullable(),
-  isBackOfficeUser: zod.boolean().nullable(),
-  isEmailVerified: zod.boolean().nullable(),
+  isAdmin: zod.boolean().default(false),
 });
 
 export default function UserCreateForm() {
@@ -56,10 +53,7 @@ export default function UserCreateForm() {
       name: '',
       email: '',
       avatarUrl: null,
-      isSuperAdmin: false,
-      isApUser: false,
-      isBackOfficeUser: false,
-      isEmailVerified: false,
+      isAdmin: false,
     }),
     []
   );
@@ -79,7 +73,6 @@ export default function UserCreateForm() {
         variables: {
           data: {
             ...data,
-            username: '',
             password: '',
           },
         },
@@ -145,6 +138,17 @@ export default function UserCreateForm() {
             >
               <Field.Text name="username" label="Username" />
               <Field.Text name="email" label="Email Address" />
+
+              <Field.Switch
+                name="isAdmin"
+                labelPlacement="start"
+                label={
+                  <Typography variant="subtitle1" sx={{ mb: 0.5 }}>
+                    Admin
+                  </Typography>
+                }
+                sx={{ mx: 0, px: 1, width: 1, justifyContent: 'space-between' }}
+              />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
