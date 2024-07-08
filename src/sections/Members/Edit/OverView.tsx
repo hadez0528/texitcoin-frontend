@@ -29,7 +29,7 @@ export const OverView = () => {
         <Stack width={1}>
           {fNumber(data?.memberOverview.lastHashPower ?? 0)}
           <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-            Total Hash Power
+            Hash Power
           </Box>
         </Stack>
 
