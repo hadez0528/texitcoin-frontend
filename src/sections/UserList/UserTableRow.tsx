@@ -112,14 +112,14 @@ export default function UserTableRow({
       </TableCell>
 
       <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        <Tooltip title="View" placement="top" arrow>
+        <Tooltip title="Edit" placement="top" arrow>
           <IconButton
             color="default"
             onClick={() => {
               router.push(paths.dashboard.user.edit(id));
             }}
           >
-            <Iconify icon="solar:eye-bold" />
+            <Iconify icon="solar:pen-2-bold" />
           </IconButton>
         </Tooltip>
       </TableCell>

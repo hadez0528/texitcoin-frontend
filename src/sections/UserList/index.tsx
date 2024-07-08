@@ -2,7 +2,7 @@ import type { LabelColor } from 'src/components/Label';
 import type { SortOrder } from 'src/routes/hooks/useQuery';
 
 import { useMemo, useCallback } from 'react';
-import { useQuery as useGraphQuery } from '@apollo/client';
+import { useMutation, useQuery as useGraphQuery } from '@apollo/client';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -16,8 +16,8 @@ import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
-import { useQuery } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
+import { useQuery, useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
@@ -27,6 +27,7 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
+import { ConfirmDialog } from 'src/components/Dialog';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
@@ -107,10 +108,20 @@ const FETCH_USERS_QUERY = gql(/* GraphQL */ `
   }
 `);
 
+const REMOVE_USERS = gql(/* GraphQL */ `
+  mutation RemoveUsers($data: UserIDsInput!) {
+    removeUsers(data: $data) {
+      count
+    }
+  }
+`);
+
 // ----------------------------------------------------------------------
 
 export default function UserListView() {
   const table = useTable();
+
+  const router = useRouter();
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] = useQuery<IUserTableFilters>();
 
@@ -167,6 +178,11 @@ export default function UserListView() {
       sort: graphQuerySort,
     },
   });
+
+  const [removeUsers] = useMutation(REMOVE_USERS, {
+    variables: { data: { ids: table.selected } },
+  });
+
   const tableData = data?.users;
 
   const notFound = (canReset && !tableData?.users?.length) || !tableData?.users?.length;
@@ -317,6 +333,28 @@ export default function UserListView() {
           onChangeDense={table.onChangeDense}
         />
       </Card>
+
+      <ConfirmDialog
+        title="Delete"
+        content="Are you sure?"
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={async () => {
+              confirm.onFalse();
+
+              removeUsers();
+
+              router.refresh();
+            }}
+          >
+            Confirm
+          </Button>
+        }
+      />
     </DashboardContent>
   );
 }
