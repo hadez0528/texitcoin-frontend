@@ -15,6 +15,9 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
@@ -40,6 +43,8 @@ const SaleGeneralSchema = zod.object({
 });
 
 export default function SaleGeneral({ currentSale }: Props) {
+  const router = useRouter();
+
   const { status: currentStatus } = currentSale;
 
   const [status, setStatus] = useState(currentStatus);
@@ -80,6 +85,7 @@ export default function SaleGeneral({ currentSale }: Props) {
         variables: {
           data: {
             id: currentSale.id,
+            invoiceNo: currentSale.invoiceNo,
             status,
             ...newSale,
           },
@@ -87,6 +93,8 @@ export default function SaleGeneral({ currentSale }: Props) {
       });
 
       toast.success('Update success!');
+
+      router.push(paths.dashboard.sales.root);
     } catch (err) {
       if (err instanceof ApolloError) {
         const [error] = err.graphQLErrors;

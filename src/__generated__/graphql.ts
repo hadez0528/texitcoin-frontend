@@ -521,6 +521,8 @@ export type UpdatePasswordInput = {
 
 export type UpdateSaleInput = {
   id: Scalars['ID']['input'];
+  invoiceNo?: InputMaybe<Scalars['Float']['input']>;
+  memberId?: InputMaybe<Scalars['ID']['input']>;
   orderedAt?: InputMaybe<Scalars['DateTimeISO']['input']>;
   packageId?: InputMaybe<Scalars['ID']['input']>;
   paymentMethod?: InputMaybe<Scalars['String']['input']>;
