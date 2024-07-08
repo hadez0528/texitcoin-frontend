@@ -51,7 +51,7 @@ export const Reward = () => {
             options: {
               plotOptions: {
                 bar: {
-                  columnWidth: '16%',
+                  columnWidth: '80%',
                 },
               },
             },

@@ -518,9 +518,12 @@ export type StatisticsResponse = {
 export type UpdateMemberInput = {
   address?: InputMaybe<Scalars['String']['input']>;
   assetId?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  fullName?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   mobile?: InputMaybe<Scalars['String']['input']>;
   payoutId?: InputMaybe<Scalars['String']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
   wallet?: InputMaybe<Scalars['String']['input']>;
 };
 
