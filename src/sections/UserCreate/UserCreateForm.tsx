@@ -41,7 +41,7 @@ const NewUserSchema = zod.object({
   email: zod
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
-  avatarUrl: zod.custom<File | string>().nullable(),
+  avatar: zod.custom<File | string>().nullable(),
   isAdmin: zod.boolean().default(false),
 });
 
@@ -52,7 +52,7 @@ export default function UserCreateForm() {
     () => ({
       name: '',
       email: '',
-      avatarUrl: null,
+      avatar: null,
       isAdmin: false,
     }),
     []
@@ -67,7 +67,7 @@ export default function UserCreateForm() {
 
   const { reset, setError, handleSubmit } = methods;
 
-  const onSubmit = handleSubmit(async ({ avatarUrl, ...data }) => {
+  const onSubmit = handleSubmit(async ({ avatar, ...data }) => {
     try {
       await submit({
         variables: {
@@ -111,7 +111,7 @@ export default function UserCreateForm() {
                       color: 'text.disabled',
                     }}
                   >
-                    Select your favorite avatar <br /> among 25 gorgeous avatars
+                    Select your favorite avatar
                   </Typography>
                 }
               />

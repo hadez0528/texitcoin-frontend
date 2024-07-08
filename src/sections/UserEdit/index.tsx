@@ -88,7 +88,7 @@ export default function OrganizationEditView() {
           }
         />
 
-        {tabParam === 'general' && <UserGeneral currentUser={user} refetchUser={fetchUser} />}
+        {tabParam === 'general' && <UserGeneral currentUser={user} />}
       </DashboardContent>
     </>
   );
