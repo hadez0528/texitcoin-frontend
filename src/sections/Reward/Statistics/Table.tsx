@@ -14,18 +14,18 @@ import { ScrollBar } from 'src/components/ScrollBar';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { useTable, TableHeadCustom, TablePaginationCustom } from 'src/components/Table';
 
-import { FETCH_BLOCKS_QUERY } from 'src/sections/Statistics/query';
+import TableRow from './TableRow';
+import { FETCH_MEMBERSTATISTICS_QUERY } from '../query';
 
-import BlocksTableRow from './BlocksRowTable';
-import { FETCH_STATISTICS_QUERY } from '../query';
-
-import type { IBlockTableFilters } from './types';
+import type { IMemberStatisticsTableFilters } from './types';
 
 const TABLE_HEAD = [
-  { id: 'blockNo', label: 'Block', sortable: true },
-  { id: 'hashRate', label: 'Hash Rate', sortable: true },
-  { id: 'difficulty', label: 'Difficulty', sortable: true },
-  { id: 'createdAt', label: 'Created At', sortable: true },
+  { id: 'issuedAt', label: 'Date', width: 200, sortable: true },
+  { id: 'username', label: 'Username', width: 200, sortable: true },
+  { id: 'txcCold', label: 'TXC Cold', sortable: true },
+  { id: 'hashPower', label: 'Hash Power', width: 200, sortable: true },
+  { id: 'reward', label: 'Rewarded TXC', width: 200, sortable: true },
+  { id: 'percent', label: 'Percent', width: 130, sortable: true },
 ];
 
 interface Props {
@@ -36,9 +36,9 @@ export default function BlocksTable({ id }: Props) {
   const table = useTable({ defaultDense: true });
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
-    useQuery<IBlockTableFilters>();
+    useQuery<IMemberStatisticsTableFilters>();
 
-  const { page = { page: 1, pageSize: 10 }, sort = { issuedAt: 'asc' } } = query;
+  const { page = { page: 1, pageSize: 10 }, sort = { hashPower: 'asc' } } = query;
 
   const graphQuerySort = useMemo(() => {
     if (!sort) return undefined;
@@ -48,19 +48,15 @@ export default function BlocksTable({ id }: Props) {
       .join(',');
   }, [sort]);
 
-  const { data } = useGraphQuery(FETCH_STATISTICS_QUERY, { variables: { filter: { id } } });
-
-  const statistics = data?.statistics.statistics ?? [];
-
-  const { loading, data: blocksData } = useGraphQuery(FETCH_BLOCKS_QUERY, {
+  const { loading, data: memberStatisticsData } = useGraphQuery(FETCH_MEMBERSTATISTICS_QUERY, {
     variables: {
       page: page && `${page.page},${page.pageSize}`,
-      filter: { createdAt: { gte: statistics[0]?.from, lte: statistics[0]?.to } },
+      filter: { statisticsId: id },
       sort: graphQuerySort,
     },
   });
 
-  const blocks = blocksData?.blocks.blocks ?? [];
+  const memberStatistics = memberStatisticsData?.memberStatistics.memberStatistics ?? [];
 
   return (
     <Grid container spacing={1}>
@@ -84,7 +80,9 @@ export default function BlocksTable({ id }: Props) {
                     order={sort && sort[Object.keys(sort)[0]]}
                     orderBy={sort && Object.keys(sort)[0]}
                     headLabel={TABLE_HEAD}
-                    rowCount={loading ? 0 : blocksData?.blocks.blocks!.length}
+                    rowCount={
+                      loading ? 0 : memberStatisticsData?.memberStatistics.memberStatistics!.length
+                    }
                     onSort={(currentId) => {
                       const isAsc = sort && sort[currentId] === 'asc';
                       const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
@@ -92,8 +90,8 @@ export default function BlocksTable({ id }: Props) {
                     }}
                   />
                   <TableBody>
-                    {blocks!.map((row) => (
-                      <BlocksTableRow key={row!.id} row={row!} />
+                    {memberStatistics!.map((row) => (
+                      <TableRow key={row!.id} row={row!} />
                     ))}
                   </TableBody>
                 </>
@@ -103,7 +101,7 @@ export default function BlocksTable({ id }: Props) {
         </TableContainer>
 
         <TablePaginationCustom
-          count={loading ? 0 : blocksData?.blocks!.total!}
+          count={loading ? 0 : memberStatisticsData?.memberStatistics!.total!}
           page={loading ? 0 : page!.page - 1}
           rowsPerPage={page?.pageSize}
           onPageChange={(_, curPage) => {

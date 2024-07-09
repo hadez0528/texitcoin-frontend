@@ -11,8 +11,8 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
+import Table from './Table';
 import OverView from './Overview';
-import BlocksTable from './BlocksTable';
 import { FETCH_STATISTICS_QUERY } from '../query';
 
 export default function DetailView() {
@@ -42,7 +42,7 @@ export default function DetailView() {
           <OverView data={current!} />
         </Grid>
         <Grid xl={12}>
-          <BlocksTable id={id!} />
+          <Table id={id!} />
         </Grid>
       </Grid>
     </DashboardContent>

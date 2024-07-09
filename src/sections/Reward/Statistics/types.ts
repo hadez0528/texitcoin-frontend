@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------
 
-export type BlockRole = 'all' | 'inactive';
+export type MemberStatisticsRole = 'all' | 'inactive';
 
-export type IBlockTableFilters = {
+export type IMemberStatisticsTableFilters = {
   search: string;
-  status: BlockRole;
+  status: MemberStatisticsRole;
 };
 
-export type IBlockPrismaFilter = {
+export type IMemberStatisticsPrismaFilter = {
   OR?: any;
 };
