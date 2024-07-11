@@ -1,6 +1,5 @@
 import type { MemberStatistics } from 'src/__generated__/graphql';
 
-import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 import { useRef, useMemo } from 'react';
 import { useMutation, useQuery as useGraphQuery } from '@apollo/client';
@@ -37,17 +36,7 @@ export default function SelectedSales({ id: currentId, ids, date, handleBack, ha
   const confirm = useBoolean();
   const memberStatisticsRef = useRef<any[]>([]);
 
-  const { data: salesData } = useGraphQuery(FETCH_SALES_QUERY, {
-    // variables: { filter: { orderedAt: formatDate(date) } },
-    variables: {
-      filter: {
-        orderedAt: {
-          gte: `${formatDate(date)}T00:00:00Z`,
-          lt: dayjs(date).add(1, 'day'),
-        },
-      },
-    },
-  });
+  const { data: salesData } = useGraphQuery(FETCH_SALES_QUERY);
 
   const [createStatistics] = useMutation(CREATE_STATISTICS);
   const [createMemberStatistics, { loading }] = useMutation(CREATE_MANY_MEMBER_STATISTICS);

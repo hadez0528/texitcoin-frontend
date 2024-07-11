@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client';
 
@@ -6,8 +5,6 @@ import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
-
-import { formatDate } from 'src/utils/format-time';
 
 import { ScrollBar } from 'src/components/ScrollBar';
 import { LoadingScreen } from 'src/components/loading-screen';
@@ -37,15 +34,7 @@ export default function SalesTable({ date, selectIds }: Props) {
   const table = useTable({ defaultDense: true });
 
   const [fetchSales, { loading, data }] = useLazyQuery(FETCH_SALES_QUERY, {
-    variables: {
-      filter: {
-        orderedAt: {
-          gte: `${formatDate(date)}T00:00:00Z`,
-          lt: dayjs(date).add(1, 'day'),
-        },
-      },
-      sort: 'status,invoiceNo',
-    },
+    variables: { sort: 'status,invoiceNo' },
   });
 
   const tableData = data?.sales.sales ?? [];
