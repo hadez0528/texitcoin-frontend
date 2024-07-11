@@ -42,12 +42,14 @@ export default function RewardCreateView() {
   const statistics = data?.statistics?.statistics ?? [];
 
   const [date, setDate] = useState(new Date());
+  const [blocks, setBlocks] = useState<number>(0);
 
   useEffect(() => {
     if (id && statistics.length) {
-      const current = statistics.filter((item) => item?.id === id).map((item) => item?.issuedAt);
+      const current = statistics.filter((item) => item?.id === id);
 
-      setDate(current[0]);
+      setDate(current[0]?.issuedAt);
+      setBlocks(current[0]?.newBlocks ?? 0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statistics]);
@@ -90,6 +92,7 @@ export default function RewardCreateView() {
     <SelectedSales
       id={id!}
       ids={ids}
+      blocks={blocks}
       date={date}
       handleBack={handleBack}
       handleNext={handleNext}

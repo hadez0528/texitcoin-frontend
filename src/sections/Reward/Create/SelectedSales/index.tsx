@@ -27,12 +27,20 @@ import {
 interface Props {
   id: string;
   ids: string[];
+  blocks: number;
   date: Date;
   handleBack: Function;
   handleNext: Function;
 }
 
-export default function SelectedSales({ id: currentId, ids, date, handleBack, handleNext }: Props) {
+export default function SelectedSales({
+  id: currentId,
+  ids,
+  blocks,
+  date,
+  handleBack,
+  handleNext,
+}: Props) {
   const confirm = useBoolean();
   const memberStatisticsRef = useRef<any[]>([]);
 
@@ -43,8 +51,6 @@ export default function SelectedSales({ id: currentId, ids, date, handleBack, ha
 
   const [updateStatistics] = useMutation(UPDATE_STATISTICS);
   const [removeMemberStatistics] = useMutation(REMOVE_MEMBER_STATISTICS);
-
-  const blocks = 576;
 
   const data = salesData?.sales?.sales ?? [];
 
