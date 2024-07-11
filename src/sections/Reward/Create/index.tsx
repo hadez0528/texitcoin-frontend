@@ -13,6 +13,8 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
+import { fDate } from 'src/utils/format-time';
+
 import { varAlpha } from 'src/theme/styles';
 import { DashboardContent } from 'src/layouts/dashboard';
 
@@ -99,13 +101,13 @@ export default function RewardCreateView() {
     // TODO: Consider moving this Container to dashboard route definition as every page will have same layout
     <DashboardContent>
       <Breadcrumbs
-        heading="Create a new Reward"
+        heading={id ? 'Edit' : 'New Reward'}
         links={[
           {
             name: 'Reward',
             href: paths.dashboard.reward.root,
           },
-          { name: 'New Reward' },
+          { name: id ? `${fDate(date)}` : 'New Reward' },
         ]}
         sx={{
           mb: { xs: 1, md: 2 },
