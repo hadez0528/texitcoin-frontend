@@ -6,11 +6,19 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 
+import { formatDate } from 'src/utils/format-time';
+
 import { Label } from 'src/components/Label';
 import { ScrollBar } from 'src/components/ScrollBar';
 
 const columns: GridColDef[] = [
-  { field: 'issuedAt', flex: 1, headerName: 'Date', filterable: false },
+  {
+    field: 'issuedAt',
+    flex: 1,
+    headerName: 'Date',
+    filterable: false,
+    renderCell: (params) => formatDate(params.row.issuedAt),
+  },
   { field: 'username', flex: 1, headerName: 'Username', filterable: false },
   { field: 'hashPower', flex: 1, headerName: 'Hash Power', filterable: false },
   {
