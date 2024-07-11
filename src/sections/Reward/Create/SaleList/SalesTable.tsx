@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useLazyQuery } from '@apollo/client';
+import { useState, useEffect } from 'react';
+import { useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
@@ -13,8 +13,10 @@ import { useTable, TableNoData, TableHeadCustom, TableSelectedAction } from 'src
 import { FETCH_SALES_QUERY } from 'src/sections/Sales/query';
 
 import SalesTableRow from './SalesTableRow';
+import { FETCH_STATISTICS_QUERY } from '../../query';
 
 interface Props {
+  id: string;
   selectIds: Function;
   date: Date;
 }
@@ -30,20 +32,45 @@ const TABLE_HEAD = [
   { id: 'status', label: 'Status', width: 95, sortable: true },
 ];
 
-export default function SalesTable({ date, selectIds }: Props) {
-  const table = useTable({ defaultDense: true });
-
+export default function SalesTable({ id, date, selectIds }: Props) {
   const [fetchSales, { loading, data }] = useLazyQuery(FETCH_SALES_QUERY, {
     variables: { sort: 'status,invoiceNo' },
   });
 
+  const { data: statistics } = useGraphQuery(FETCH_STATISTICS_QUERY, {
+    variables: { filter: { id } },
+  });
+
+  const sales = statistics?.statistics?.statistics?.map((item) => item?.statisticsSales!) ?? [];
+
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
   const tableData = data?.sales.sales ?? [];
+
+  const table = useTable({
+    defaultDense: true,
+    defaultSelected: selectedIds,
+  });
 
   const notFound = !tableData?.length;
 
   useEffect(() => {
     fetchSales();
   }, [date, fetchSales]);
+
+  useEffect(() => {
+    if (tableData.length > 0) {
+      // const filteredIds = sales
+      //   .filter((item) => formatDate(item?.orderedAt) === formatDate(date))
+      //   .map((item) => item!.id);
+      const ids = sales[0]?.map((item) => item?.saleId!);
+      // const ids = sales.map((item) => item?.saleId);
+      console.log('ids => ', ids);
+      setSelectedIds(ids ?? []);
+      table.setSelected(ids ?? []);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, statistics]);
 
   useEffect(() => {
     selectIds(table.selected);

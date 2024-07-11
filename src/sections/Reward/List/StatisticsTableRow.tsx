@@ -1,5 +1,3 @@
-import type { Statistics } from 'src/__generated__/graphql';
-
 import { useState } from 'react';
 
 import Paper from '@mui/material/Paper';
@@ -29,8 +27,8 @@ import { LoadingScreen } from 'src/components/loading-screen';
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: Statistics;
-  statistics: any[];
+  // Todo: Update type to Statistics
+  row: any;
   memberStatistics: any[];
   statisticsId: string;
   setStatisticsId: Function;
@@ -41,7 +39,6 @@ export default function StatisticsTableRow({
   row,
   statisticsId,
   setStatisticsId,
-  statistics,
   memberStatistics,
   updateStatistics,
 }: Props) {

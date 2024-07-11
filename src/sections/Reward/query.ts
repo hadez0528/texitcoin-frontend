@@ -14,6 +14,11 @@ export const FETCH_STATISTICS_QUERY = gql(/* GraphQL */ `
         from
         to
         status
+        statisticsSales {
+          id
+          saleId
+          issuedAt
+        }
       }
       total
     }

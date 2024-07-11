@@ -134,7 +134,6 @@ export default function StatisticsTable() {
                         statisticsId={statisticsId}
                         setStatisticsId={setStatisticsId}
                         memberStatistics={memberStatistics!}
-                        statistics={statistics!}
                         updateStatistics={updateStatistics}
                       />
                     ))}

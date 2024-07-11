@@ -1,5 +1,3 @@
-import type { Statistics } from 'src/__generated__/graphql';
-
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -9,7 +7,8 @@ import { fDate } from 'src/utils/format-time';
 import { fNumber } from 'src/utils/formatNumber';
 
 interface Props {
-  data: Statistics;
+  // Todo: Update type to Statistics
+  data: any;
 }
 
 export default function Overview({ data }: Props) {

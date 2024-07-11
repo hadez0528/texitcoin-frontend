@@ -54,7 +54,7 @@ export default function SalesList({ id, date, setDate, statistics, selectIds }: 
         </Grid>
       </Grid>
       <Stack>
-        <SalesTable date={date} selectIds={selectIds} />
+        <SalesTable id={id!} date={date} selectIds={selectIds} />
       </Stack>
     </Card>
   );

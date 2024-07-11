@@ -17,12 +17,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { FETCH_SALES_QUERY } from 'src/sections/Sales/query';
 
 import MemberStatisticsTable from './table';
-import {
-  CREATE_STATISTICS,
-  UPDATE_STATISTICS,
-  REMOVE_MEMBER_STATISTICS,
-  CREATE_MANY_MEMBER_STATISTICS,
-} from '../../query';
+import { CREATE_STATISTICS } from '../../query';
 
 interface Props {
   id: string;
@@ -46,11 +41,11 @@ export default function SelectedSales({
 
   const { data: salesData } = useGraphQuery(FETCH_SALES_QUERY);
 
-  const [createStatistics] = useMutation(CREATE_STATISTICS);
-  const [createMemberStatistics, { loading }] = useMutation(CREATE_MANY_MEMBER_STATISTICS);
+  const [createStatistics, { loading }] = useMutation(CREATE_STATISTICS);
+  // const [createMemberStatistics, { loading }] = useMutation(CREATE_MANY_MEMBER_STATISTICS);
 
-  const [updateStatistics] = useMutation(UPDATE_STATISTICS);
-  const [removeMemberStatistics] = useMutation(REMOVE_MEMBER_STATISTICS);
+  // const [updateStatistics] = useMutation(UPDATE_STATISTICS);
+  // const [removeMemberStatistics] = useMutation(REMOVE_MEMBER_STATISTICS);
 
   const data = salesData?.sales?.sales ?? [];
 
@@ -99,30 +94,19 @@ export default function SelectedSales({
     try {
       const txcShared = mutation?.reduce((prev, item) => prev + item.txcShared, 0);
 
-      const response = await createStatistics({
-        variables: { data: { id: currentId, totalMembers: mutation.length, totalHashPower } },
+      await createStatistics({
+        variables: {
+          data: {
+            id: currentId,
+            memberStatistics: mutation,
+            saleIds: ids,
+            totalMembers: mutation.length,
+            totalHashPower,
+            txcShared,
+            issuedAt: `${formatDate(date)}T00:00:00Z`,
+          },
+        },
       });
-
-      const statisticsId = response.data?.createStatistics.id;
-
-      const memberStatistics = mutation.map((item) => ({
-        ...item,
-        statisticsId: statisticsId ?? '',
-      }));
-
-      if (response) {
-        await removeMemberStatistics({
-          variables: { data: { id: statisticsId ?? '' } },
-        });
-
-        await createMemberStatistics({
-          variables: { data: { memberStatistics } },
-        });
-
-        await updateStatistics({
-          variables: { data: { id: statisticsId ?? '', txcShared } },
-        });
-      }
     } catch (err) {
       console.log('error => ', err.message);
     }
