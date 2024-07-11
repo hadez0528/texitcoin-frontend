@@ -32,7 +32,7 @@ export default function SalesList({ id, date, setDate, statistics, selectIds }: 
   const disabledDates = statistics.map((item) => item.issuedAt);
 
   const shouldDisableDate = (current: Dayjs) =>
-    disabledDates.some((disabledDate) => current.isSame(disabledDate, 'day'));
+    disabledDates.some((disabledDate) => formatDate(disabledDate) === current.format('YYYY-MM-DD'));
 
   return (
     <Card>
