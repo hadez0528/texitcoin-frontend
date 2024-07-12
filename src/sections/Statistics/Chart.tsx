@@ -37,7 +37,7 @@ export default function Chart() {
 
   const { data: blocksData } = useGraphQuery(FETCH_BLOCKS_QUERY, {
     variables: {
-      page: '1,100',
+      page: '1,80',
       filter: graphQueryFilter,
       sort: 'blockNo',
     },
