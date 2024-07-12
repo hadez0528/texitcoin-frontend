@@ -135,10 +135,7 @@ export default function SelectedSales({
                 : memberStatisticsRef.current;
 
             const mutation = memberStatistics?.map(
-              ({ username, email, wallet, status, id, issuedAt, ...rest }) => ({
-                issuedAt: new Date(issuedAt),
-                ...rest,
-              })
+              ({ username, email, wallet, status, id, issuedAt, ...rest }) => rest
             );
 
             handleCreate(mutation);
