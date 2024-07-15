@@ -50,15 +50,21 @@ export default function Summary() {
         <ChartWidget
           title="TXC Shared"
           chart={{
-            categories: statistics
-              ?.statistics!.map((item) => new Date(item!.issuedAt).toISOString().split('T')[0])
-              .reverse(),
             series: [
               {
                 name: 'Daily Reward',
                 data: statistics!.statistics!.map((item) => item!.txcShared).reverse(),
               },
             ],
+            options: {
+              xaxis: {
+                tooltip: { enabled: false },
+                tickAmount: 30,
+                categories: statistics
+                  ?.statistics!.map((item) => new Date(item!.issuedAt).toISOString().split('T')[0])
+                  .reverse(),
+              },
+            },
             colors: [theme.palette.warning.main],
           }}
         />

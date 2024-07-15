@@ -62,11 +62,7 @@ export default function Chart() {
             ],
             options: {
               xaxis: {
-                tooltip: {
-                  formatter(value, opts) {
-                    return `${value}`;
-                  },
-                },
+                tooltip: { enabled: false },
                 tickAmount: 30,
                 categories: blocks!.blocks!.map((item) => `${item?.blockNo}`).reverse(),
               },
@@ -89,11 +85,7 @@ export default function Chart() {
             ],
             options: {
               xaxis: {
-                tooltip: {
-                  formatter(value, opts) {
-                    return `${value}`;
-                  },
-                },
+                tooltip: { enabled: false },
                 tickAmount: 30,
                 categories: blocks!.blocks!.map((item) => `${item?.blockNo}`).reverse(),
               },

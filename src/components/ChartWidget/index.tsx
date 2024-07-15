@@ -58,6 +58,24 @@ export default function ChartWidget({
   const chartOptions = useChart({
     colors: chartColors,
     xaxis: { categories: chart.categories },
+    tooltip: {
+      custom: ({ seriesIndex, dataPointIndex, w }) => {
+        const data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+        const category = w.globals.categoryLabels.length
+          ? w.globals.categoryLabels[dataPointIndex]
+          : w.globals.labels[dataPointIndex];
+        const legend = w.globals.seriesNames[seriesIndex];
+        const color = w.globals.colors[seriesIndex];
+
+        return `<div style="background: #ffffff;">
+          <div style="background: #f4f6f8; color: #637381; font-weight: bold; padding: 5px 10px;">${category}</div>
+          <div style="display: flex; padding: 10px;">
+          <div style="margin-right: 8px; width: 12px; height: 12px; border-radius: 50%; background-color: ${color}; margin-top: 4px;">
+          </div>
+          <div><span style="color: #637381; margin-right: 5px;">${legend}:</span> <span style="font-weight: bold;">${data}</span></div></div>
+        </div>`;
+      },
+    },
     ...chart.options,
   });
 
