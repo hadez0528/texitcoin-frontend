@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 import { paths } from 'src/routes/paths';
-import { useRouter, usePathname, useSearchParams } from 'src/routes/hooks';
+import { useRouter } from 'src/routes/hooks';
 
 import { SplashScreen } from 'src/components/loading-screen';
 
@@ -16,23 +16,9 @@ type Props = {
 export function AuthGuard({ children }: Props) {
   const router = useRouter();
 
-  const pathname = usePathname();
-
-  const searchParams = useSearchParams();
-
   const { isAuthenticated, loading } = useAuthContext();
 
   const [isChecking, setIsChecking] = useState<boolean>(true);
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams]
-  );
 
   useEffect(() => {
     if (loading) {
@@ -40,11 +26,7 @@ export function AuthGuard({ children }: Props) {
     }
 
     if (!isAuthenticated) {
-      const signInPath = paths.signIn;
-
-      const href = `${signInPath}?${createQueryString('returnTo', pathname)}`;
-
-      router.replace(href);
+      router.replace(paths.statistics.root);
       return;
     }
 
