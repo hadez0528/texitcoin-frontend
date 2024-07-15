@@ -37,7 +37,7 @@ export default function Chart() {
 
   const { data: blocksData } = useGraphQuery(FETCH_BLOCKS_QUERY, {
     variables: {
-      page: '1,80',
+      page: '1,200',
       filter: graphQueryFilter,
       sort: 'blockNo',
     },
@@ -52,7 +52,6 @@ export default function Chart() {
           key="hashRate"
           title="Hashrate"
           chart={{
-            categories: blocks!.blocks!.map((item) => `${item?.blockNo}`).reverse(),
             series: [
               {
                 name: 'Hashrate',
@@ -61,6 +60,17 @@ export default function Chart() {
                   .reverse(),
               },
             ],
+            options: {
+              xaxis: {
+                tooltip: {
+                  formatter(value, opts) {
+                    return `${value}`;
+                  },
+                },
+                tickAmount: 30,
+                categories: blocks!.blocks!.map((item) => `${item?.blockNo}`).reverse(),
+              },
+            },
           }}
         />
       </Grid>
@@ -77,6 +87,17 @@ export default function Chart() {
                 data: blocks!.blocks!.map((item) => Math.floor(item?.difficulty!)).reverse(),
               },
             ],
+            options: {
+              xaxis: {
+                tooltip: {
+                  formatter(value, opts) {
+                    return `${value}`;
+                  },
+                },
+                tickAmount: 30,
+                categories: blocks!.blocks!.map((item) => `${item?.blockNo}`).reverse(),
+              },
+            },
           }}
         />
       </Grid>
