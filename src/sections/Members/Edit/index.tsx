@@ -22,12 +22,12 @@ import MemberGeneral from './General';
 import { FETCH_MEMBER } from '../query';
 
 const TABS = [
-  { value: 'edit', label: 'Edit', icon: <Iconify icon="solar:pen-2-bold" width={24} /> },
   {
     value: 'history',
     label: 'History',
     icon: <Iconify icon="carbon:analytics" width={24} />,
   },
+  { value: 'edit', label: 'Edit', icon: <Iconify icon="solar:pen-2-bold" width={24} /> },
 ];
 
 // ----------------------------------------------------------------------
@@ -35,7 +35,7 @@ export default function MemberEditView() {
   // Loading state including first initial render
   const [isLoading, setIsLoading] = useState(true);
 
-  const tabs = useTabs('edit');
+  const tabs = useTabs('history');
 
   const params = useParams();
 
