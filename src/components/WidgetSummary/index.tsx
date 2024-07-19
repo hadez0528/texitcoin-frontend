@@ -3,6 +3,7 @@ import type { ChartOptions } from 'src/components/chart';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
+import Skeleton from '@mui/material/Skeleton';
 import { useTheme } from '@mui/material/styles';
 
 import { fNumber } from 'src/utils/formatNumber';
@@ -13,6 +14,7 @@ import { Chart, useChart } from 'src/components/chart';
 // ----------------------------------------------------------------------
 
 type Props = CardProps & {
+  loading: boolean;
   title: string;
   total: number;
   meta: number;
@@ -26,6 +28,7 @@ type Props = CardProps & {
 };
 
 export default function WidgetSummary({
+  loading,
   title,
   meta,
   metaText,
@@ -92,28 +95,39 @@ export default function WidgetSummary({
   );
 
   return (
-    <Card
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        p: 3,
-        ...sx,
-      }}
-      {...other}
-    >
-      <Box sx={{ flexGrow: 1 }}>
-        <Box sx={{ typography: 'subtitle2' }}>{title}</Box>
-        <Box sx={{ mt: 1.5, mb: 1, typography: 'h3' }}>{fNumber(total)}</Box>
-        {renderTrending}
-      </Box>
+    <>
+      {loading ? (
+        <Card sx={{ p: 3, ...sx }}>
+          <Skeleton variant="text" sx={{ fontSize: 20 }} />
+          <Skeleton variant="text" sx={{ fontSize: 20 }} />
+          <Skeleton variant="text" sx={{ fontSize: 20 }} />
+          <Skeleton variant="text" sx={{ fontSize: 20 }} />
+        </Card>
+      ) : (
+        <Card
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            p: 3,
+            ...sx,
+          }}
+          {...other}
+        >
+          <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ typography: 'subtitle2' }}>{title}</Box>
+            <Box sx={{ mt: 1.5, mb: 1, typography: 'h3' }}>{fNumber(total)}</Box>
+            {renderTrending}
+          </Box>
 
-      <Chart
-        type="bar"
-        series={[{ data: chart.series }]}
-        options={chartOptions}
-        width={60}
-        height={40}
-      />
-    </Card>
+          <Chart
+            type="bar"
+            series={[{ data: chart.series }]}
+            options={chartOptions}
+            width={60}
+            height={40}
+          />
+        </Card>
+      )}
+    </>
   );
 }

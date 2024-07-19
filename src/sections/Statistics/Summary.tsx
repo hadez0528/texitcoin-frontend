@@ -10,7 +10,7 @@ import { GENERAL_QUERY } from './query';
 export default function Summary() {
   const theme = useTheme();
 
-  const { data } = useGraphQuery(GENERAL_QUERY, {
+  const { loading, data } = useGraphQuery(GENERAL_QUERY, {
     variables: { data: { pastDays: 7 } },
   });
 
@@ -22,6 +22,7 @@ export default function Summary() {
     <Grid container spacing={3}>
       <Grid xs={12} md={4}>
         <WidgetSummary
+          loading={loading}
           title="Total blocks"
           meta={liveBlockStats.meta ?? 0}
           metaText="blocks than yesterday"
@@ -35,6 +36,7 @@ export default function Summary() {
       </Grid>
       <Grid xs={12} md={4}>
         <WidgetSummary
+          loading={loading}
           title="New blocks since last reward"
           meta={
             liveBlockStats.dailyData.length
@@ -53,6 +55,7 @@ export default function Summary() {
       </Grid>
       <Grid xs={12} md={4}>
         <WidgetSummary
+          loading={loading}
           title="Members"
           meta={liveUserStats.meta ?? 0}
           metaText="users this month"
