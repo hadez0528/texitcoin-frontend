@@ -83,7 +83,13 @@ export default function SaleListView() {
   const graphQueryFilter = useMemo(() => {
     const filterObj: ISalePrismaFilter = {};
     if (filter.search) {
-      filterObj.OR = [];
+      filterObj.OR = [
+        { paymentMethod: { contains: filter.search, mode: 'insensitive' } },
+        { member: { username: { contains: filter.search, mode: 'insensitive' } } },
+        { member: { email: { contains: filter.search, mode: 'insensitive' } } },
+        { member: { mobile: { contains: filter.search, mode: 'insensitive' } } },
+        { package: { productName: { contains: filter.search, mode: 'insensitive' } } },
+      ];
     }
 
     if (filter.status === 'inactive') {
@@ -231,12 +237,7 @@ export default function SaleListView() {
               ) : (
                 <TableBody>
                   {tableData!.sales!.map((row) => (
-                    <SaleTableRow
-                      key={row!.id}
-                      row={row!}
-                      // onDeleteRow={() => handleDeleteRow(row.id)}
-                      // onEditRow={() => handleEditRow(row.id)}
-                    />
+                    <SaleTableRow key={row!.id} row={row!} />
                   ))}
 
                   <TableNoData notFound={notFound} />

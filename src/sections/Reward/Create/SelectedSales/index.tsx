@@ -42,10 +42,6 @@ export default function SelectedSales({
   const { data: salesData } = useGraphQuery(FETCH_SALES_QUERY);
 
   const [createStatistics, { loading }] = useMutation(CREATE_STATISTICS);
-  // const [createMemberStatistics, { loading }] = useMutation(CREATE_MANY_MEMBER_STATISTICS);
-
-  // const [updateStatistics] = useMutation(UPDATE_STATISTICS);
-  // const [removeMemberStatistics] = useMutation(REMOVE_MEMBER_STATISTICS);
 
   const data = salesData?.sales?.sales ?? [];
 

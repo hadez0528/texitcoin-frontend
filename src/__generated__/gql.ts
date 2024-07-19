@@ -27,7 +27,7 @@ const documents = {
     "\n  mutation CreateStatistics($data: CreateStatisticsInput!) {\n    createStatistics(data: $data) {\n      id\n      newBlocks\n    }\n  }\n": types.CreateStatisticsDocument,
     "\n  mutation CreateManyMemberStatistics($data: CreateManyMemberStatisticsInput!) {\n    createManyMemberStatistics(data: $data) {\n      count\n    }\n  }\n": types.CreateManyMemberStatisticsDocument,
     "\n  mutation UpdateStatistics($data: UpdateStatisticsInput!) {\n    updateStatistics(data: $data) {\n      status\n      txcShared\n    }\n  }\n": types.UpdateStatisticsDocument,
-    "\n  mutation RemoveMemberStatisticsByStaitisId($data: StatisticIDInput!) {\n    removeMemberStatisticsByStaitisId(data: $data) {\n      count\n    }\n  }\n": types.RemoveMemberStatisticsByStaitisIdDocument,
+    "\n  mutation RemoveMemberStatisticsByStaitisId($data: IDInput!) {\n    removeMemberStatisticsByStaitisId(data: $data) {\n      count\n    }\n  }\n": types.RemoveMemberStatisticsByStaitisIdDocument,
     "\n  query FetchSales($sort: String, $page: String, $filter: JSONObject) {\n    sales(sort: $sort, page: $page, filter: $filter) {\n      sales {\n        id\n        invoiceNo\n        memberId\n        packageId\n        member {\n          id\n          username\n          fullName\n          email\n          mobile\n          assetId\n          address\n          payoutId\n          payout {\n            id\n            name\n            status\n            method\n            display\n          }\n          wallet\n        }\n        package {\n          id\n          productName\n          amount\n          date\n          token\n          status\n        }\n        paymentMethod\n        orderedAt\n        status\n      }\n      total\n    }\n  }\n": types.FetchSalesDocument,
     "\n  query FetchSaleStats($inactiveFilter: JSONObject) {\n    all: sales {\n      total\n    }\n    inactive: sales(filter: $inactiveFilter) {\n      total\n    }\n  }\n": types.FetchSaleStatsDocument,
     "\n  mutation CreateSale($data: CreateSaleInput!) {\n    createSale(data: $data) {\n      invoiceNo\n      orderedAt\n      memberId\n      paymentMethod\n      packageId\n      status\n    }\n  }\n": types.CreateSaleDocument,
@@ -120,7 +120,7 @@ export function gql(source: "\n  mutation UpdateStatistics($data: UpdateStatisti
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation RemoveMemberStatisticsByStaitisId($data: StatisticIDInput!) {\n    removeMemberStatisticsByStaitisId(data: $data) {\n      count\n    }\n  }\n"): (typeof documents)["\n  mutation RemoveMemberStatisticsByStaitisId($data: StatisticIDInput!) {\n    removeMemberStatisticsByStaitisId(data: $data) {\n      count\n    }\n  }\n"];
+export function gql(source: "\n  mutation RemoveMemberStatisticsByStaitisId($data: IDInput!) {\n    removeMemberStatisticsByStaitisId(data: $data) {\n      count\n    }\n  }\n"): (typeof documents)["\n  mutation RemoveMemberStatisticsByStaitisId($data: IDInput!) {\n    removeMemberStatisticsByStaitisId(data: $data) {\n      count\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

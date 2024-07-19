@@ -84,8 +84,12 @@ export default function MemberListView() {
     const filterObj: IMemberPrismaFilter = {};
     if (filter.search) {
       filterObj.OR = [
-        { username: { contains: filter.search } },
         { email: { contains: filter.search } },
+        { wallet: { contains: filter.search } },
+        { mobile: { contains: filter.search } },
+        { address: { contains: filter.search } },
+        { username: { contains: filter.search } },
+        { fullName: { contains: filter.search } },
       ];
     }
 

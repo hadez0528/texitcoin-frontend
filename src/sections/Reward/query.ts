@@ -108,7 +108,7 @@ export const UPDATE_STATISTICS = gql(/* GraphQL */ `
 `);
 
 export const REMOVE_MEMBER_STATISTICS = gql(/* GraphQL */ `
-  mutation RemoveMemberStatisticsByStaitisId($data: StatisticIDInput!) {
+  mutation RemoveMemberStatisticsByStaitisId($data: IDInput!) {
     removeMemberStatisticsByStaitisId(data: $data) {
       count
     }
