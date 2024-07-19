@@ -30,7 +30,7 @@ import { CREATE_SALE, FETCH_SALES_QUERY, FETCH_PACKAGES_QUERY } from '../query';
 export type NewSaleSchemaType = zod.infer<typeof NewSaleSchema>;
 
 const NewSaleSchema = zod.object({
-  orderedAt: zod.date({ required_error: 'Ordered At is required' }),
+  orderedAt: zod.string({ required_error: 'Ordered At is required' }),
   paymentMethod: zod.string({ required_error: 'Payment Method is required' }),
   status: zod.number({ required_error: 'Status is required' }).default(1),
 });
@@ -44,7 +44,7 @@ export default function SaleCreateForm() {
   const defaultValues = useMemo(
     () => ({
       packageId: '',
-      orderedAt: new Date(today()),
+      orderedAt: `${new Date(today())}`,
       paymentMethod: '',
       status: 1,
     }),
@@ -76,6 +76,7 @@ export default function SaleCreateForm() {
 
   const onSubmit = handleSubmit(async ({ status, ...data }) => {
     try {
+      console.log('data => ', data);
       await submit({
         variables: {
           data: {
@@ -116,79 +117,70 @@ export default function SaleCreateForm() {
   }, [fetchMembers, fetchPackages]);
 
   return (
-    <>
-      <Form methods={methods} onSubmit={onSubmit}>
-        <Grid container spacing={3}>
-          <Grid xl={12}>
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={1} sx={{ mb: 3 }}>
-                <Grid container xl={12}>
-                  <Grid xl={6}>
-                    <Typography variant="subtitle1">Sale</Typography>
-                  </Grid>
-                  <Grid xl={6} justifyContent="flex-end" display="flex" gap={2}>
-                    <Typography variant="subtitle1">Invoice No:</Typography>
-                    <Typography>{(sales[0]?.invoiceNo ?? 0) + 1}</Typography>
-                  </Grid>
+    <Form methods={methods} onSubmit={onSubmit}>
+      <Grid container spacing={3}>
+        <Grid xl={12}>
+          <Card sx={{ p: 3 }}>
+            <Stack spacing={1} sx={{ mb: 3 }}>
+              <Grid container xl={12}>
+                <Grid xl={6}>
+                  <Typography variant="subtitle1">Sale</Typography>
                 </Grid>
-              </Stack>
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                <Autocomplete
-                  fullWidth
-                  options={members}
-                  getOptionLabel={(option) => option!.username}
-                  renderInput={(params) => <TextField {...params} label="Member" margin="none" />}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option!.username}>
-                      {option!.username}
-                    </li>
-                  )}
-                  onChange={(_, newValue) => setMemberId(newValue?.id!)}
-                />
-                <Autocomplete
-                  fullWidth
-                  options={packages}
-                  getOptionLabel={(option) => option!.productName}
-                  renderInput={(params) => <TextField {...params} label="Package" margin="none" />}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option!.productName}>
-                      {option!.productName}
-                    </li>
-                  )}
-                  onChange={(_, newValue) => setPackageId(newValue?.id!)}
-                />
-                <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
-                <Field.Text name="paymentMethod" label="Payment Method" />
-                <Field.Select name="status" label="Status">
-                  <MenuItem value={1}>Active</MenuItem>
-                  <MenuItem value={0}>Inactive</MenuItem>
-                </Field.Select>
-              </Box>
+                <Grid xl={6} justifyContent="flex-end" display="flex" gap={2}>
+                  <Typography variant="subtitle1">Invoice No:</Typography>
+                  <Typography>{(sales[0]?.invoiceNo ?? 0) + 1}</Typography>
+                </Grid>
+              </Grid>
+            </Stack>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              <Autocomplete
+                fullWidth
+                options={members}
+                getOptionLabel={(option) => option!.username}
+                renderInput={(params) => <TextField {...params} label="Member" margin="none" />}
+                renderOption={(props, option) => (
+                  <li {...props} key={option!.username}>
+                    {option!.username}
+                  </li>
+                )}
+                onChange={(_, newValue) => setMemberId(newValue?.id!)}
+              />
+              <Autocomplete
+                fullWidth
+                options={packages}
+                getOptionLabel={(option) => option!.productName}
+                renderInput={(params) => <TextField {...params} label="Package" margin="none" />}
+                renderOption={(props, option) => (
+                  <li {...props} key={option!.productName}>
+                    {option!.productName}
+                  </li>
+                )}
+                onChange={(_, newValue) => setPackageId(newValue?.id!)}
+              />
+              <Field.DatePicker name="orderedAt" label="Ordered At" format="YYYY-MM-DD" />
+              <Field.Text name="paymentMethod" label="Payment Method" />
+              <Field.Select name="status" label="Status">
+                <MenuItem value={1}>Active</MenuItem>
+                <MenuItem value={0}>Inactive</MenuItem>
+              </Field.Select>
+            </Box>
 
-              <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-                <LoadingButton type="submit" variant="contained" loading={loading}>
-                  Create Sale
-                </LoadingButton>
-              </Stack>
-            </Card>
-          </Grid>
+            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+              <LoadingButton type="submit" variant="contained" loading={loading}>
+                Create Sale
+              </LoadingButton>
+            </Stack>
+          </Card>
         </Grid>
-      </Form>
-      {/* {isMemberOpen && (
-        <MemberListDraw
-          isOpen={isMemberOpen}
-          changeStatus={setIsMemberOpen}
-          selectedMembers={selectedMembers}
-        />
-      )} */}
-    </>
+      </Grid>
+    </Form>
   );
 }
