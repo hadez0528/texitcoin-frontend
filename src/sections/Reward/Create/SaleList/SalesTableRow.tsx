@@ -3,7 +3,6 @@ import type { Sale } from 'src/__generated__/graphql';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
-import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -32,8 +31,7 @@ export default function SalesTableRow({ row, selected, onSelectRow }: Props) {
 
       <TableCell
         sx={{
-          display: 'flex',
-          alignItems: 'center',
+          whiteSpace: 'nowrap',
           cursor: 'pointer',
           '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
         }}
@@ -41,15 +39,7 @@ export default function SalesTableRow({ row, selected, onSelectRow }: Props) {
           router.push(paths.dashboard.members.edit(id));
         }}
       >
-        <ListItemText
-          primary={member?.username}
-          secondary={member?.email}
-          primaryTypographyProps={{ typography: 'body2' }}
-          secondaryTypographyProps={{
-            component: 'span',
-            color: 'text.disabled',
-          }}
-        />
+        {member?.username}
       </TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{product?.productName}</TableCell>

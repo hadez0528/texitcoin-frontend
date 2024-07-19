@@ -35,8 +35,8 @@ export default function SalesList({ id, date, setDate, statistics, selectIds }: 
     disabledDates.some((disabledDate) => formatDate(disabledDate) === current.format('YYYY-MM-DD'));
 
   return (
-    <Card>
-      <Grid container sx={{ p: 2 }}>
+    <Card sx={{ pb: 3 }}>
+      <Grid container sx={{ p: 1, pl: 3 }}>
         <Grid xl={6} sx={{ pt: 2 }}>
           <Typography variant="h5">Sales</Typography>
         </Grid>

@@ -23,7 +23,7 @@ interface Props {
 
 const TABLE_HEAD = [
   { id: 'invoiceNo', label: 'Invoice No', width: 130, sortable: true },
-  { id: 'name', label: 'Name', sortable: true },
+  { id: 'username', label: 'Username', sortable: true },
   { id: 'productName', label: 'Product Name', width: 130, sortable: true },
   { id: 'paymentMethod', label: 'Payment Method', width: 300, sortable: true },
   { id: 'amount', label: 'Amount', width: 130, sortable: true },
@@ -60,12 +60,8 @@ export default function SalesTable({ id, date, selectIds }: Props) {
 
   useEffect(() => {
     if (tableData.length > 0) {
-      // const filteredIds = sales
-      //   .filter((item) => formatDate(item?.orderedAt) === formatDate(date))
-      //   .map((item) => item!.id);
       const ids = sales[0]?.map((item) => item?.saleId!);
-      // const ids = sales.map((item) => item?.saleId);
-      console.log('ids => ', ids);
+
       setSelectedIds(ids ?? []);
       table.setSelected(ids ?? []);
     }
@@ -77,7 +73,7 @@ export default function SalesTable({ id, date, selectIds }: Props) {
   }, [table, selectIds]);
 
   return (
-    <Stack>
+    <Stack sx={{ height: 430, overflowY: 'auto' }}>
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
         <TableSelectedAction
           dense={table.dense}
