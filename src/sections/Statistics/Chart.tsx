@@ -35,7 +35,7 @@ export default function Chart() {
     return filterObj;
   }, [filter]);
 
-  const { data: blocksData } = useGraphQuery(FETCH_BLOCKS_QUERY, {
+  const { loading, data: blocksData } = useGraphQuery(FETCH_BLOCKS_QUERY, {
     variables: {
       page: '1,200',
       filter: graphQueryFilter,
@@ -49,6 +49,7 @@ export default function Chart() {
     <Grid container spacing={3}>
       <Grid xs={12} md={6}>
         <ChartWidget
+          loading={loading}
           key="hashRate"
           title="Hashrate"
           chart={{
@@ -72,6 +73,7 @@ export default function Chart() {
       </Grid>
       <Grid xs={12} md={6}>
         <ChartWidget
+          loading={loading}
           key="difficulty"
           title="Network Difficulty"
           chart={{

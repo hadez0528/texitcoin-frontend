@@ -20,7 +20,7 @@ export const Reward = () => {
 
   const { page = { page: 1, pageSize: 10 } } = query;
 
-  const { data } = useGraphQuery(FETCH_MEMBER_STATISTICS, {
+  const { loading, data } = useGraphQuery(FETCH_MEMBER_STATISTICS, {
     variables: {
       page: page && `${page.page},${page.pageSize}`,
       filter: { memberId: id },
@@ -35,6 +35,7 @@ export const Reward = () => {
       <Card>
         <CardHeader title="Reward" />
         <ChartWidget
+          loading={loading}
           chart={{
             categories: memberStatistics.map((item) => `${formatDate(item?.issuedAt!)}`).reverse(),
             series: [

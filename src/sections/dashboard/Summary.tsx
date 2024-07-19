@@ -10,19 +10,20 @@ import { FETCH_STATISTICS_QUERY } from './query';
 export default function Summary() {
   const theme = useTheme();
 
-  const { data: statisticsData } = useGraphQuery(FETCH_STATISTICS_QUERY, {
+  const { loading, data } = useGraphQuery(FETCH_STATISTICS_QUERY, {
     variables: {
       page: '1,30',
       sort: 'issuedAt',
     },
   });
 
-  const statistics = statisticsData?.statistics ?? { statistics: [], total: 0 };
+  const statistics = data?.statistics ?? { statistics: [], total: 0 };
 
   return (
     <Grid container spacing={3}>
       <Grid xs={12} md={6}>
         <ChartWidget
+          loading={loading}
           title="Daily"
           chart={{
             categories: statistics
@@ -48,6 +49,7 @@ export default function Summary() {
       </Grid>
       <Grid xs={12} md={6}>
         <ChartWidget
+          loading={loading}
           title="TXC Shared"
           chart={{
             series: [

@@ -2,6 +2,8 @@ import type { CardProps } from '@mui/material/Card';
 import type { ChartOptions } from 'src/components/chart';
 
 import Card from '@mui/material/Card';
+import Paper from '@mui/material/Paper';
+import Skeleton from '@mui/material/Skeleton';
 import { useTheme } from '@mui/material/styles';
 import CardHeader from '@mui/material/CardHeader';
 
@@ -10,6 +12,7 @@ import { Chart, useChart } from 'src/components/chart';
 // ----------------------------------------------------------------------
 
 type Props = CardProps & {
+  loading: boolean;
   title?: string;
   subheader?: string;
   chart: {
@@ -43,6 +46,7 @@ type Props = CardProps & {
 };
 
 export default function ChartWidget({
+  loading,
   title,
   subheader,
   chart,
@@ -81,9 +85,18 @@ export default function ChartWidget({
 
   const currentSeries = chart.series;
 
-  return (
+  const chartRender = (
     <>
-      {card ? (
+      {loading ? (
+        <Paper sx={{ p: 3 }}>
+          <Skeleton variant="text" sx={{ fontSize: 24 }} />
+          <Skeleton variant="text" sx={{ fontSize: 24 }} />
+          <Skeleton variant="text" sx={{ fontSize: 24 }} />
+          <Skeleton variant="text" sx={{ fontSize: 24 }} />
+          <Skeleton variant="text" sx={{ fontSize: 24 }} />
+          <Skeleton variant="text" sx={{ fontSize: 24 }} />
+        </Paper>
+      ) : (
         <Chart
           type={type ?? 'area'}
           series={currentSeries}
@@ -91,17 +104,19 @@ export default function ChartWidget({
           height={height ?? 320}
           sx={{ py: 2.5, pl: 1, pr: 2.5 }}
         />
+      )}
+    </>
+  );
+
+  return (
+    <>
+      {card ? (
+        <>{chartRender}</>
       ) : (
         <Card {...other}>
           <CardHeader title={title} subheader={subheader} />
 
-          <Chart
-            type={type ?? 'area'}
-            series={currentSeries}
-            options={chartOptions}
-            height={height ?? 320}
-            sx={{ py: 2.5, pl: 1, pr: 2.5 }}
-          />
+          {chartRender}
         </Card>
       )}
     </>
