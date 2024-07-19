@@ -2,6 +2,8 @@ export * from './useQuery';
 
 export * from './useActiveLink';
 
+export * from './useDataGridQuery';
+
 export { useParams } from './use-params';
 
 export { useRouter } from './use-router';

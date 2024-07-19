@@ -1,66 +1,175 @@
-import type { IStatisticsTableFilters } from 'src/sections/Reward/List/types';
+import type {
+  GridSlots,
+  GridColDef,
+  GridSortModel,
+  GridFilterModel,
+  GridColumnVisibilityModel,
+} from '@mui/x-data-grid';
 
-import { useMemo } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { useQuery as useGraphQuery } from '@apollo/client';
 
 import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
 import Grid from '@mui/material/Unstable_Grid2';
-import TableBody from '@mui/material/TableBody';
-import CardHeader from '@mui/material/CardHeader';
-import TableContainer from '@mui/material/TableContainer';
+import ListItemText from '@mui/material/ListItemText';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
-import { useQuery, type SortOrder } from 'src/routes/hooks';
+import { paths } from 'src/routes/paths';
+import { useDataGridQuery } from 'src/routes/hooks';
 
-import { ScrollBar } from 'src/components/ScrollBar';
-import { LoadingScreen } from 'src/components/loading-screen';
-import { useTable, TableHeadCustom, TablePaginationCustom } from 'src/components/Table';
+import { debounce } from 'src/utils/debounce';
+import { parseFilter } from 'src/utils/parseFilter';
+import { fDate, fTime, formatDate } from 'src/utils/format-time';
 
+import { Label } from 'src/components/Label';
+import { EmptyContent } from 'src/components/EmptyContent';
+import { DataGridSkeleton, DataGridPagination } from 'src/components/DataGrid';
+
+import { TableToolBar } from './TableToolBar';
 import { FETCH_STATISTICS_QUERY } from './query';
-import StatisticsTableRow from './StatisticsTableRow';
-
-const TABLE_HEAD = [
-  { id: 'issuedAt', label: 'Date', sortable: true },
-  { id: 'newBlocks', label: 'New Blocks', sortable: true },
-  { id: 'totalBlocks', label: 'Total Blocks', sortable: true },
-  { id: 'totalHashPower', label: 'Total Hash Power', sortable: true },
-  { id: 'totalMembers', label: 'Total Members', sortable: true },
-  { id: 'txcShared', label: 'TXC Shared', sortable: true },
-  { id: 'diff', label: 'Diff', sortable: true },
-  { id: 'from', label: 'From', sortable: true },
-  { id: 'to', label: 'To', sortable: true },
-  { id: 'status', label: 'Status', sortable: true },
-];
 
 interface Props {
   status?: boolean;
 }
 
 export default function StatisticsTable({ status = false }: Props) {
-  const table = useTable({ defaultDense: true, defaultRowsPerPage: 5 });
+  const columns: GridColDef[] = useMemo(
+    () => [
+      {
+        field: 'issuedAt',
+        headerName: 'Date',
+        width: 150,
+        renderCell: (params) => formatDate(params.row.issuedAt),
+      },
+      { field: 'newBlocks', headerName: 'New Blocks', width: 150 },
+      { field: 'totalBlocks', headerName: 'Total Blocks', width: 150 },
+      { field: 'totalHashPower', headerName: 'Total HashPower', width: 200 },
+      { field: 'totalMembers', headerName: 'Total Members', width: 180 },
+      { field: 'txcShared', headerName: 'TXC Shared', flex: 1 },
+      {
+        field: 'diff',
+        headerName: 'Diff',
+        width: 100,
+        sortable: false,
+        filterable: false,
+        renderCell: (params) => params.row.newBlocks * 254 - params.row.txcShared,
+      },
+      {
+        field: 'from',
+        headerName: 'From',
+        width: 150,
+        renderCell: (params) => (
+          <ListItemText
+            primary={fDate(params.row.from)}
+            secondary={fTime(params.row.from)}
+            primaryTypographyProps={{ typography: 'caption', noWrap: true }}
+            secondaryTypographyProps={{
+              component: 'span',
+              typography: 'caption',
+            }}
+          />
+        ),
+      },
+      {
+        field: 'to',
+        headerName: 'To',
+        width: 150,
+        renderCell: (params) => (
+          <ListItemText
+            primary={fDate(params.row.to)}
+            secondary={fTime(params.row.to)}
+            primaryTypographyProps={{ typography: 'caption', noWrap: true }}
+            secondaryTypographyProps={{
+              component: 'span',
+              typography: 'caption',
+            }}
+          />
+        ),
+      },
+      {
+        field: 'status',
+        headerName: 'Status',
+        width: 100,
+        sortable: false,
+        filterable: false,
+        renderCell: (params) => (
+          <>
+            {params.row.status ? (
+              <Label variant="soft" color="success">
+                Confirmed
+              </Label>
+            ) : (
+              <Label variant="soft" color="error">
+                Pending
+              </Label>
+            )}
+          </>
+        ),
+      },
+    ],
+    []
+  );
 
-  const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
-    useQuery<IStatisticsTableFilters>();
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>();
 
-  const { page = { page: 1, pageSize: 5 }, sort = { issuedAt: 'asc' } } = query;
+  const [query, { setPage, setPageSize, setSort, setFilter }] = useDataGridQuery<GridFilterModel>();
+
+  const {
+    page = { page: 1, pageSize: 10 },
+    sort = [{ field: 'issuedAt', sort: 'asc' }],
+    filter,
+  } = query;
+
+  const graphQueryFilter = useMemo(
+    () => parseFilter({ ...filter, ...(status && { status: false }) }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [filter]
+  );
 
   const graphQuerySort = useMemo(() => {
     if (!sort) return undefined;
 
-    return Object.entries(sort)
-      .map(([key, value]) => `${value === 'asc' ? '' : '-'}${key}`)
-      .join(',');
+    return sort.map(({ field, sort: order }) => `${order === 'asc' ? '' : '-'}${field}`).join(',');
   }, [sort]);
 
   const { loading, data } = useGraphQuery(FETCH_STATISTICS_QUERY, {
     variables: {
       page: page && `${page.page},${page.pageSize}`,
-      filter: { ...(status && { status: true }) },
+      filter: graphQueryFilter,
       sort: graphQuerySort,
     },
   });
 
   const statistics = data?.statistics.statistics ?? [];
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedFilterChange = useCallback(
+    debounce((value) => {
+      setFilter(value);
+    }, 500),
+    [setFilter]
+  );
+
+  const onFilterChange = useCallback(
+    (filterModel: GridFilterModel) => {
+      debouncedFilterChange(
+        ['isEmpty', 'isNotEmpty'].includes(filterModel.items?.[0]?.operator) ||
+          filterModel.items?.[0]?.value !== undefined
+          ? filterModel
+          : {}
+      );
+    },
+    [debouncedFilterChange]
+  );
+
+  const onSortChange = useCallback(
+    (newSortModel: GridSortModel) => {
+      setSort(newSortModel);
+    },
+    [setSort]
+  );
+
+  const paginationModel = useMemo(() => ({ page: page.page - 1, pageSize: page.pageSize }), [page]);
 
   return (
     <Grid container spacing={1}>
@@ -72,48 +181,42 @@ export default function StatisticsTable({ status = false }: Props) {
           borderRadius: 1.5,
         }}
       >
-        <CardHeader title="Reward" sx={{ mb: 3 }} />
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <ScrollBar>
-            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={sort && sort[Object.keys(sort)[0]]}
-                orderBy={sort && Object.keys(sort)[0]}
-                headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : statistics!.length}
-                onSort={(id) => {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
-                }}
-              />
-
-              {loading ? (
-                <LoadingScreen />
-              ) : (
-                <TableBody>
-                  {statistics!.map((row) => (
-                    <StatisticsTableRow key={row!.id} row={row!} />
-                  ))}
-                </TableBody>
-              )}
-            </Table>
-          </ScrollBar>
-        </TableContainer>
-
-        <TablePaginationCustom
-          count={loading ? 0 : data?.statistics!.total!}
-          page={loading ? 0 : page!.page - 1}
-          rowsPerPage={page?.pageSize}
-          onPageChange={(_, curPage) => {
-            setPage(curPage + 1);
+        <DataGrid
+          loading={loading}
+          rows={statistics}
+          columns={columns}
+          density="compact"
+          filterMode="server"
+          onFilterModelChange={onFilterChange}
+          initialState={{ filter: { filterModel: filter } }}
+          sortModel={sort.map((item) => ({ ...item, sort: item.sort === 'asc' ? 'desc' : 'asc' }))}
+          onSortModelChange={onSortChange}
+          rowCount={data?.statistics.total!}
+          paginationMode="server"
+          pageSizeOptions={[10, 25, 50, 100]}
+          paginationModel={paginationModel}
+          onRowClick={(params) => window.open(paths.dashboard.reward.detail(params.row.id))}
+          onPaginationModelChange={({ page: newPage, pageSize }) => {
+            if (newPage + 1 !== page.page) {
+              setPage(newPage + 1);
+            }
+            if (pageSize !== page.pageSize) {
+              setPageSize(pageSize);
+            }
           }}
-          onRowsPerPageChange={(event) => {
-            setPageSize(parseInt(event.target.value, 10));
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
+          slots={{
+            toolbar: TableToolBar as GridSlots['toolbar'],
+            noRowsOverlay: () => <EmptyContent />,
+            noResultsOverlay: () => <EmptyContent title="No statistics found" />,
+            loadingOverlay: DataGridSkeleton,
+            pagination: DataGridPagination,
           }}
-          //
-          dense={table.dense}
-          onChangeDense={table.onChangeDense}
+          sx={{
+            [`& .${gridClasses.cell}`]: { alignItems: 'center', display: 'inline-flex' },
+            cursor: 'pointer',
+          }}
         />
       </Card>
     </Grid>
