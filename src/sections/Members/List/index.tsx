@@ -84,12 +84,12 @@ export default function MemberListView() {
     const filterObj: IMemberPrismaFilter = {};
     if (filter.search) {
       filterObj.OR = [
-        { email: { contains: filter.search } },
-        { wallet: { contains: filter.search } },
-        { mobile: { contains: filter.search } },
-        { address: { contains: filter.search } },
-        { username: { contains: filter.search } },
-        { fullName: { contains: filter.search } },
+        { email: { contains: filter.search, mode: 'insensitive' } },
+        { wallet: { contains: filter.search, mode: 'insensitive' } },
+        { mobile: { contains: filter.search, mode: 'insensitive' } },
+        { address: { contains: filter.search, mode: 'insensitive' } },
+        { username: { contains: filter.search, mode: 'insensitive' } },
+        { fullName: { contains: filter.search, mode: 'insensitive' } },
       ];
     }
 
