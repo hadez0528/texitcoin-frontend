@@ -121,7 +121,7 @@ export default function StatisticsTable({ status = false }: Props) {
   } = query;
 
   const graphQueryFilter = useMemo(
-    () => parseFilter({ ...filter, ...(status && { status: false }) }),
+    () => parseFilter({ ...filter, ...(status && { status: true }) }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [filter]
   );

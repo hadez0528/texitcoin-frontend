@@ -13,12 +13,14 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
-import { fDate } from 'src/utils/format-time';
+import { fDate, formatDate } from 'src/utils/format-time';
 
 import { varAlpha } from 'src/theme/styles';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+
+import { FETCH_BLOCKS_QUERY } from 'src/sections/Statistics/query';
 
 import SendMany from './Send';
 import SalesList from './SaleList';
@@ -32,27 +34,30 @@ export default function RewardCreateView() {
   const params = useParams();
   const [activeStep, setActiveStep] = useState(0);
   const [ids, setIds] = useState<string[]>([]);
-
-  const { id } = params;
-
-  const { data } = useGraphQuery(FETCH_STATISTICS_QUERY, {
-    variables: { sort: 'createdAt' },
-  });
-
-  const statistics = data?.statistics?.statistics ?? [];
-
   const [date, setDate] = useState(new Date());
   const [blocks, setBlocks] = useState<number>(0);
 
-  useEffect(() => {
-    if (id && statistics.length) {
-      const current = statistics.filter((item) => item?.id === id);
+  const { id } = params;
 
-      setDate(current[0]?.issuedAt);
-      setBlocks(current[0]?.newBlocks ?? 0);
+  const { data } = useGraphQuery(FETCH_BLOCKS_QUERY, {
+    variables: { filter: { issuedAt: `${formatDate(date)}T00:00:00.000Z` } },
+  });
+
+  const { data: statisticsData } = useGraphQuery(FETCH_STATISTICS_QUERY, {
+    variables: { sort: 'createdAt' },
+  });
+
+  const blocksData = data?.blocks?.blocks ?? [];
+
+  useEffect(() => {
+    if (blocksData.length) {
+      if (id) {
+        setDate(blocksData[0]?.issuedAt);
+      }
+      setBlocks(blocksData.length);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statistics]);
+  }, [data]);
 
   const [skipped, setSkipped] = useState(new Set<number>());
 
@@ -86,7 +91,7 @@ export default function RewardCreateView() {
       id={id}
       date={date}
       setDate={setDate}
-      statistics={statistics}
+      statistics={statisticsData?.statistics.statistics ?? []}
       selectIds={selectIds}
     />,
     <SelectedSales
