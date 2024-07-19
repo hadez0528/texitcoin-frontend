@@ -38,7 +38,8 @@ export default function Summary() {
           title="New blocks since last reward"
           meta={
             liveBlockStats.dailyData.length
-              ? liveBlockStats.dailyData[0].count - liveBlockStats.dailyData[1].count
+              ? liveBlockStats.dailyData[0].count -
+                (liveBlockStats.dailyData.length === 1 ? 0 : liveBlockStats.dailyData[1].count)
               : 0
           }
           metaText="seconds took than previous block"

@@ -249,8 +249,6 @@ export default function MemberListView() {
                       row={row!}
                       selected={table.selected.includes(row!.id)}
                       onSelectRow={() => table.onSelectRow(row!.id)}
-                      // onDeleteRow={() => handleDeleteRow(row.id)}
-                      // onEditRow={() => handleEditRow(row.id)}
                     />
                   ))}
 
