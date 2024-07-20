@@ -12,7 +12,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { formatDate } from 'src/utils/format-time';
+import { customizeDate } from 'src/utils/format-time';
 
 import ComponentBlock from 'src/components/Component-Block';
 import { ConfirmDialog } from 'src/components/custom-dialog';
@@ -30,7 +30,7 @@ export default function SendMany({ date, handleBack }: Props) {
   const confirm = useBoolean();
 
   const [fetchMemberStatistics, { data }] = useLazyQuery(FETCH_MEMBERSTATISTICS_QUERY, {
-    variables: { filter: { issuedAt: `${formatDate(date)}T00:00:00Z` } },
+    variables: { filter: { issuedAt: customizeDate(date) } },
   });
 
   const [updateStatistics] = useMutation(UPDATE_STATISTICS);

@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
-import { fDate, formatDate } from 'src/utils/format-time';
+import { fDate, customizeDate } from 'src/utils/format-time';
 
 import { varAlpha } from 'src/theme/styles';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -40,7 +40,7 @@ export default function RewardCreateView() {
   const { id } = params;
 
   const { data } = useGraphQuery(FETCH_BLOCKS_QUERY, {
-    variables: { filter: { issuedAt: `${formatDate(date)}T00:00:00.000Z` } },
+    variables: { filter: { issuedAt: customizeDate(date) } },
   });
 
   const { data: statisticsData } = useGraphQuery(FETCH_STATISTICS_QUERY, {

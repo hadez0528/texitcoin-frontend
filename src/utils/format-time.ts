@@ -271,3 +271,7 @@ export function fSub({
 export function formatDate(date: string | Date) {
   return new Date(date).toISOString().split('T')[0];
 }
+
+export function customizeDate(date: string | Date) {
+  return `${formatDate(date)}T00:00:00Z`;
+}

@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
-import { formatDate } from 'src/utils/format-time';
+import { customizeDate } from 'src/utils/format-time';
 
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
@@ -71,7 +71,7 @@ export default function SelectedSales({
                   wallet,
                   status,
                   memberId: id,
-                  issuedAt: `${formatDate(date)}T00:00:00Z`,
+                  issuedAt: customizeDate(date),
                 },
               };
             },
@@ -99,7 +99,7 @@ export default function SelectedSales({
             totalMembers: mutation.length,
             totalHashPower,
             txcShared,
-            issuedAt: `${formatDate(date)}T00:00:00Z`,
+            issuedAt: customizeDate(date),
           },
         },
       });
