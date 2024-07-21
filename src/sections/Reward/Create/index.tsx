@@ -1,6 +1,7 @@
+import { isEmpty } from 'lodash';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery as useGraphQuery } from '@apollo/client';
+import { useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Step from '@mui/material/Step';
@@ -13,7 +14,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 
-import { fDate, customizeDate } from 'src/utils/format-time';
+import { fDate, formatDate, customizeDate } from 'src/utils/format-time';
 
 import { varAlpha } from 'src/theme/styles';
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -39,25 +40,43 @@ export default function RewardCreateView() {
 
   const { id } = params;
 
-  const { data } = useGraphQuery(FETCH_BLOCKS_QUERY, {
+  const [fetchBlocks, { data: blocksData }] = useLazyQuery(FETCH_BLOCKS_QUERY, {
     variables: { filter: { issuedAt: customizeDate(date) } },
   });
 
-  const { data: statisticsData } = useGraphQuery(FETCH_STATISTICS_QUERY, {
+  const { data } = useGraphQuery(FETCH_STATISTICS_QUERY, {
     variables: { sort: 'createdAt' },
   });
 
-  const blocksData = data?.blocks?.blocks ?? [];
+  const statistics = data?.statistics.statistics ?? [];
+
+  const statisticsData: any = statistics!.reduce(
+    (prev, item) => ({
+      ...prev,
+      [item!.id]: item!.issuedAt,
+      [formatDate(item!.issuedAt)]: item!.status,
+    }),
+    {}
+  );
 
   useEffect(() => {
-    if (blocksData.length) {
-      if (id) {
-        setDate(blocksData[0]?.issuedAt);
-      }
-      setBlocks(blocksData.length);
+    const temp = blocksData?.blocks?.blocks ?? [];
+
+    setBlocks(temp.length);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blocksData]);
+
+  useEffect(() => {
+    if (id && !isEmpty(statisticsData)) {
+      setDate(statisticsData[id]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [id, statisticsData]);
+
+  useEffect(() => {
+    fetchBlocks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [date]);
 
   const [skipped, setSkipped] = useState(new Set<number>());
 
@@ -91,7 +110,8 @@ export default function RewardCreateView() {
       id={id}
       date={date}
       setDate={setDate}
-      statistics={statisticsData?.statistics.statistics ?? []}
+      statistics={statistics}
+      statisticsData={statisticsData}
       selectIds={selectIds}
     />,
     <SelectedSales

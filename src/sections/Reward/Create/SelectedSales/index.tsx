@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { customizeDate } from 'src/utils/format-time';
+import { fLimitDigits } from 'src/utils/formatNumber';
 
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
@@ -67,7 +68,7 @@ export default function SelectedSales({
                   email,
                   hashPower,
                   percent: Number((percent * 100).toFixed(2)),
-                  txcShared: Number((blocks * 254 * percent).toFixed(8)),
+                  txcShared: fLimitDigits(blocks * 254 * percent, 8),
                   wallet,
                   status,
                   memberId: id,

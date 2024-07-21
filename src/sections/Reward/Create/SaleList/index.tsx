@@ -15,20 +15,19 @@ interface Props {
   date: Date;
   // Todo: Update type to Statistics[]
   statistics: any[];
+  statisticsData: any;
   setDate: Function;
   selectIds: Function;
 }
 
-export default function SalesList({ id, date, setDate, statistics, selectIds }: Props) {
-  const statisticsData = statistics.reduce(
-    (prev, item) => ({
-      ...prev,
-      [item.id]: item.issuedAt,
-      [formatDate(item.issuedAt)]: item.status,
-    }),
-    {}
-  );
-
+export default function SalesList({
+  id,
+  date,
+  setDate,
+  selectIds,
+  statistics,
+  statisticsData,
+}: Props) {
   const disabledDates = statistics.map((item) => item.issuedAt);
 
   const shouldDisableDate = (current: Dayjs) =>
