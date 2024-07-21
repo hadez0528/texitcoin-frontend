@@ -67,7 +67,7 @@ export default function SelectedSales({
                   email,
                   hashPower,
                   percent: Number((percent * 100).toFixed(2)),
-                  txcShared: blocks * 254 * percent,
+                  txcShared: Number((blocks * 254 * percent).toFixed(8)),
                   wallet,
                   status,
                   memberId: id,
