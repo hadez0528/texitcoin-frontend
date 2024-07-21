@@ -17,7 +17,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { today } from 'src/utils/format-time';
+import { today, customizeDate } from 'src/utils/format-time';
 
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
@@ -74,14 +74,14 @@ export default function SaleCreateForm() {
 
   const { reset, setError, handleSubmit } = methods;
 
-  const onSubmit = handleSubmit(async ({ status, ...data }) => {
+  const onSubmit = handleSubmit(async ({ status, orderedAt, ...data }) => {
     try {
-      console.log('data => ', data);
       await submit({
         variables: {
           data: {
             ...data,
             status: !!status,
+            orderedAt: customizeDate(orderedAt),
             invoiceNo: (sales[0]?.invoiceNo ?? 0) + 1,
             memberId,
             packageId,
