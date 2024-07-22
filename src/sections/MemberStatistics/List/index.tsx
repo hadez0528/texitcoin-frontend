@@ -31,11 +31,10 @@ import MemberStatisticsTableFiltersResult from './MemberStatisticsTableFiltersRe
 import type { IMemberStatisticsPrismaFilter, IMemberStatisticsTableFilters } from './types';
 
 const TABLE_HEAD = [
-  { id: 'issuedAt', label: 'Date', width: 200, sortable: true },
-  { id: 'username', label: 'Username', width: 200, sortable: true },
+  { id: 'issuedAt', label: 'Date', width: 250, sortable: true },
   { id: 'txcCold', label: 'TXC Cold', sortable: true },
   { id: 'hashPower', label: 'Hash Power', width: 200, sortable: true },
-  { id: 'reward', label: 'Rewarded TXC', width: 200, sortable: true },
+  { id: 'reward', label: 'Rewarded TXC', width: 300, sortable: true },
   { id: 'percent', label: 'Percent', width: 130, sortable: true },
 ];
 
@@ -46,7 +45,7 @@ const defaultFilter: IMemberStatisticsTableFilters = {
 export default function MemberStatistics() {
   const { id: statisticsId } = useParams();
 
-  const table = useTable();
+  const table = useTable({ defaultDense: true });
 
   const [query, { setQueryParams: setQuery, setPage, setPageSize }] =
     useQuery<IMemberStatisticsTableFilters>();
@@ -60,7 +59,7 @@ export default function MemberStatistics() {
   const graphQueryFilter = useMemo(() => {
     const filterObj: IMemberStatisticsPrismaFilter = {};
     if (filter.search) {
-      filterObj.OR = [];
+      filterObj.OR = [{ member: { wallet: { contains: filter.search, mode: 'insensitive' } } }];
     }
 
     filterObj.statisticsId = statisticsId;
@@ -131,8 +130,6 @@ export default function MemberStatistics() {
                       key={row!.id}
                       row={row!}
                       selected={table.selected.includes(row!.id)}
-                      // onDeleteRow={() => handleDeleteRow(row.id)}
-                      // onEditRow={() => handleEditRow(row.id)}
                     />
                   ))}
 
