@@ -1,47 +1,42 @@
 import type { LabelColor } from 'src/components/Label';
-import type { SortOrder } from 'src/routes/hooks/useQuery';
+import type {
+  GridColDef,
+  GridSortModel,
+  GridFilterModel,
+  GridColumnVisibilityModel,
+} from '@mui/x-data-grid';
 
-import { useMemo, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { useQuery as useGraphQuery } from '@apollo/client';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
-import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
-import TableContainer from '@mui/material/TableContainer';
+import ListItemText from '@mui/material/ListItemText';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
 import { paths } from 'src/routes/paths';
-import { useQuery } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
+import { useRouter, useDataGridQuery } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/useBoolean';
+import { debounce } from 'src/utils/debounce';
+import { parseFilter } from 'src/utils/parseFilter';
+import { fDate, fTime } from 'src/utils/format-time';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/Label';
 import { Iconify } from 'src/components/Iconify';
-import { ScrollBar } from 'src/components/ScrollBar';
-import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { LoadingScreen } from 'src/components/loading-screen';
-import {
-  useTable,
-  TableNoData,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from 'src/components/Table';
+import { EmptyContent } from 'src/components/EmptyContent';
+import { DataGridSkeleton, DataGridPagination } from 'src/components/DataGrid';
 
-import SaleTableRow from './SaleTableRow';
-import SaleTableFiltersResult from './SaleTableFiltersResult';
 import { FETCH_SALES_QUERY, FETCH_SALES_STATS_QUERY } from '../query';
 
-import type { SaleRole, ISalePrismaFilter, ISaleTableFilters } from './types';
+import type { SaleRole } from './types';
 
 // ----------------------------------------------------------------------
 
@@ -50,68 +45,148 @@ const STATUS_OPTIONS: { value: SaleRole; label: string; color: LabelColor }[] = 
   { value: 'inactive', label: 'Inactive', color: 'error' },
 ];
 
-const TABLE_HEAD = [
-  { id: 'invoiceNo', label: 'Invoice No', sortable: true },
-  { id: 'name', label: 'Name', width: 130, sortable: true },
-  { id: 'mobile', label: 'Mobile', width: 130, sortable: true },
-  { id: 'assetId', label: 'Asset ID', width: 130, sortable: true },
-  { id: 'productName', label: 'Product Name', width: 200, sortable: true },
-  { id: 'paymentMethod', label: 'Payment Method', width: 130, sortable: true },
-  { id: 'amount', label: 'Amount', width: 140, sortable: true },
-  { id: 'hashPower', label: 'Hash Power', width: 95, sortable: true },
-  { id: 'orderedAt', label: 'Ordered At', width: 95, sortable: true },
-  { id: 'status', label: 'Status', width: 95, sortable: true },
-  { id: 'action', label: 'Action', width: 70, sortable: true },
-];
-
-const defaultFilter: ISaleTableFilters = {
-  search: '',
-  status: 'all',
-};
+// const defaultFilter: ISaleTableFilters = {
+//   search: '',
+//   status: 'all',
+// };
 
 export default function SaleListView() {
-  const table = useTable({ defaultDense: true });
+  const router = useRouter();
+  const [status, setStatus] = useState('all');
 
-  const [query, { setQueryParams: setQuery, setPage, setPageSize }] = useQuery<ISaleTableFilters>();
+  const columns: GridColDef[] = useMemo(
+    () => [
+      { field: 'invoiceNo', headerName: 'No', width: 100 },
+      {
+        field: 'username',
+        headerName: 'Username',
+        flex: 1,
+        renderCell: (params) => (
+          <ListItemText
+            primary={params.row.member?.username}
+            secondary={params.row.member?.email}
+            primaryTypographyProps={{ typography: 'body2' }}
+            secondaryTypographyProps={{
+              component: 'span',
+              color: 'text.disabled',
+            }}
+          />
+        ),
+      },
+      {
+        field: 'mobile',
+        headerName: 'Mobile',
+        width: 130,
+        renderCell: (params) => params.row.member?.mobile,
+      },
+      {
+        field: 'assetId',
+        headerName: 'Asset ID',
+        width: 130,
+        renderCell: (params) => params.row.member?.assetId,
+      },
+      {
+        field: 'productName',
+        headerName: 'Product Name',
+        width: 200,
+        renderCell: (params) => params.row.package?.productName,
+      },
+      { field: 'paymentMethod', headerName: 'Payment Method', flex: 1 },
+      {
+        field: 'amount',
+        headerName: 'Amount',
+        width: 140,
+        renderCell: (params) => params.row.package?.amount,
+      },
+      {
+        field: 'hashPower',
+        headerName: 'Hash Power',
+        width: 95,
+        renderCell: (params) => params.row.package?.token,
+      },
+      {
+        field: 'orderedAt',
+        headerName: 'Ordered At',
+        width: 95,
+        renderCell: (params) => (
+          <ListItemText
+            primary={fDate(params.row.orderedAt)}
+            secondary={fTime(params.row.orderedAt)}
+            primaryTypographyProps={{ typography: 'caption', noWrap: true }}
+            secondaryTypographyProps={{
+              component: 'span',
+              typography: 'caption',
+            }}
+          />
+        ),
+      },
+      {
+        field: 'status',
+        headerName: 'Status',
+        width: 95,
+        renderCell: (params) => (
+          <>
+            {params.row.status ? (
+              <Label variant="soft" color="success">
+                active
+              </Label>
+            ) : (
+              <Label variant="soft" color="error">
+                inactive
+              </Label>
+            )}
+          </>
+        ),
+      },
+      {
+        field: 'action',
+        headerName: 'Action',
+        width: 70,
+        renderCell: (params) => (
+          <IconButton
+            onClick={() => {
+              router.push(`${paths.dashboard.sales.edit(params.row.id)}`);
+            }}
+          >
+            <Iconify icon="solar:pen-2-bold" />
+          </IconButton>
+        ),
+      },
+    ],
+    [router]
+  );
+
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState<GridColumnVisibilityModel>();
+
+  const [query, { setPage, setPageSize, setSort, setFilter }] = useDataGridQuery<GridFilterModel>();
 
   const {
     page = { page: 1, pageSize: 10 },
-    sort = { invoiceNo: 'asc' },
-    filter = defaultFilter,
+    sort = [{ field: 'invoiceNo', sort: 'asc' }],
+    filter,
   } = query;
 
-  const graphQueryFilter = useMemo(() => {
-    const filterObj: ISalePrismaFilter = {};
-    if (filter.search) {
-      filterObj.OR = [
-        { paymentMethod: { contains: filter.search, mode: 'insensitive' } },
-        { member: { username: { contains: filter.search, mode: 'insensitive' } } },
-        { member: { email: { contains: filter.search, mode: 'insensitive' } } },
-        { member: { mobile: { contains: filter.search, mode: 'insensitive' } } },
-        { package: { productName: { contains: filter.search, mode: 'insensitive' } } },
-      ];
-    }
-
-    if (filter.status === 'inactive') {
-      filterObj.status = false;
-    } else {
-      filterObj.status = true;
-    }
-
-    return filterObj;
-  }, [filter]);
+  const graphQueryFilter = useMemo(
+    // () => parseFilter({ paymentMethod: { contains: filter.search, mode: 'insensitive' } }, filter),
+    () =>
+      parseFilter(
+        {
+          status: status === 'all',
+          OR: filter?.items.map((item) => ({
+            [item.field]: { [item.operator]: item.value, mode: 'insensitive' },
+          })),
+        },
+        filter
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [status, filter]
+  );
 
   const graphQuerySort = useMemo(() => {
     if (!sort) return undefined;
 
-    return Object.entries(sort)
-      .map(([key, value]) => `${value === 'asc' ? '' : '-'}${key}`)
-      .join(',');
+    return sort.map(({ field, sort: order }) => `${order === 'asc' ? '' : '-'}${field}`).join(',');
   }, [sort]);
-
-  const confirm = useBoolean();
-
-  const canReset = !!filter.search;
 
   const { data: statsData } = useGraphQuery(FETCH_SALES_STATS_QUERY, {
     variables: {
@@ -126,24 +201,47 @@ export default function SaleListView() {
       sort: graphQuerySort,
     },
   });
-  const tableData = data?.sales;
-
-  const notFound = (canReset && !tableData?.sales?.length) || !tableData?.sales?.length;
+  const tableData = data?.sales.sales ?? [];
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: SaleRole) => {
-    setQuery({
-      ...query,
-      filter: { ...filter, status: newValue },
-      page: { page: 1, pageSize: query.page?.pageSize ?? 10 },
-    });
+    // setQuery({
+    //   ...query,
+    //   filter: { ...filter, status: newValue },
+    //   page: { page: 1, pageSize: query.page?.pageSize ?? 10 },
+    // });
+    setStatus(newValue);
+    setPage(1);
+    setPageSize(query.page?.pageSize ?? 10);
   };
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setQuery({ ...query, filter: { ...filter, search: value } });
-    },
-    [setQuery, query, filter]
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedFilterChange = useCallback(
+    debounce((value) => {
+      setFilter(value);
+    }, 500),
+    [setFilter]
   );
+
+  const onFilterChange = useCallback(
+    (filterModel: GridFilterModel) => {
+      debouncedFilterChange(
+        ['isEmpty', 'isNotEmpty'].includes(filterModel.items?.[0]?.operator) ||
+          filterModel.items?.[0]?.value !== undefined
+          ? filterModel
+          : {}
+      );
+    },
+    [debouncedFilterChange]
+  );
+
+  const onSortChange = useCallback(
+    (newSortModel: GridSortModel) => {
+      setSort(newSortModel);
+    },
+    [setSort]
+  );
+
+  const paginationModel = useMemo(() => ({ page: page.page - 1, pageSize: page.pageSize }), [page]);
 
   return (
     <DashboardContent>
@@ -167,7 +265,7 @@ export default function SaleListView() {
 
       <Card>
         <Tabs
-          value={filter.status}
+          value={status}
           onChange={handleTabChange}
           sx={{
             px: 2.5,
@@ -181,85 +279,48 @@ export default function SaleListView() {
               value={tab.value}
               label={tab.label}
               icon={
-                <Label
-                  variant={(tab.value === filter.status && 'filled') || 'soft'}
-                  color={tab.color}
-                >
+                <Label variant={(tab.value === 'all' && 'filled') || 'soft'} color={tab.color}>
                   {statsData ? statsData[tab.value].total! : 0}
                 </Label>
               }
             />
           ))}
         </Tabs>
-
-        <SearchInput search={filter.search} onSearchChange={handleSearchChange} />
-
-        {canReset && !loading && (
-          <SaleTableFiltersResult results={tableData!.total!} sx={{ p: 2.5, pt: 0 }} />
-        )}
-
-        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
-            dense={table.dense}
-            numSelected={table.selected.length}
-            rowCount={loading ? 0 : tableData!.sales!.length}
-            onSelectAllRows={(checked) =>
-              table.onSelectAllRows(
-                checked,
-                tableData!.sales!.map((row) => row!.id)
-              )
+        <DataGrid
+          loading={loading}
+          rows={tableData}
+          columns={columns}
+          density="standard"
+          filterMode="server"
+          onFilterModelChange={onFilterChange}
+          initialState={{ filter: { filterModel: filter } }}
+          sortModel={sort.map((item) => ({ ...item, sort: item.sort === 'asc' ? 'desc' : 'asc' }))}
+          onSortModelChange={onSortChange}
+          rowCount={data?.sales.total!}
+          paginationMode="server"
+          pageSizeOptions={[10, 25, 50, 100]}
+          paginationModel={paginationModel}
+          onRowClick={(params) => window.open(paths.dashboard.reward.detail(params.row.id))}
+          onPaginationModelChange={({ page: newPage, pageSize }) => {
+            if (newPage + 1 !== page.page) {
+              setPage(newPage + 1);
             }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={confirm.onTrue}>
-                  <Iconify icon="solar:trash-bin-trash-bold" />
-                </IconButton>
-              </Tooltip>
+            if (pageSize !== page.pageSize) {
+              setPageSize(pageSize);
             }
-          />
-
-          <ScrollBar>
-            <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={sort && sort[Object.keys(sort)[0]]}
-                orderBy={sort && Object.keys(sort)[0]}
-                headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : tableData!.sales!.length}
-                onSort={(id) => {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
-                }}
-              />
-
-              {loading ? (
-                <LoadingScreen />
-              ) : (
-                <TableBody>
-                  {tableData!.sales!.map((row) => (
-                    <SaleTableRow key={row!.id} row={row!} />
-                  ))}
-
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              )}
-            </Table>
-          </ScrollBar>
-        </TableContainer>
-
-        <TablePaginationCustom
-          count={loading ? 0 : tableData!.total!}
-          page={loading ? 0 : page!.page - 1}
-          rowsPerPage={page?.pageSize}
-          onPageChange={(_, curPage) => {
-            setPage(curPage + 1);
           }}
-          onRowsPerPageChange={(event) => {
-            setPageSize(parseInt(event.target.value, 10));
+          columnVisibilityModel={columnVisibilityModel}
+          onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
+          slots={{
+            noRowsOverlay: () => <EmptyContent />,
+            noResultsOverlay: () => <EmptyContent title="No statistics found" />,
+            loadingOverlay: DataGridSkeleton,
+            pagination: DataGridPagination,
           }}
-          //
-          dense={table.dense}
-          onChangeDense={table.onChangeDense}
+          sx={{
+            [`& .${gridClasses.cell}`]: { alignItems: 'center', display: 'inline-flex' },
+            cursor: 'pointer',
+          }}
         />
       </Card>
     </DashboardContent>
