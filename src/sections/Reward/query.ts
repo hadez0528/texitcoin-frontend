@@ -50,6 +50,7 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
           mobile
           assetId
           payoutId
+          isAdmin
           payout {
             id
             name

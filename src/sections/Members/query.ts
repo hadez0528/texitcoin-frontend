@@ -23,6 +23,7 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         assetId
         mobile
         payoutId
+        isAdmin
         payout {
           id
           name
@@ -68,6 +69,7 @@ export const FETCH_MEMBER = gql(/* GraphQL */ `
         assetId
         wallet
         payoutId
+        isAdmin
         payout {
           id
           name

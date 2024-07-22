@@ -55,7 +55,6 @@ const TABLE_HEAD = [
   { id: 'fullName', label: 'Full Name', width: 130, sortable: true },
   { id: 'mobile', label: 'Mobile', width: 130, sortable: true },
   { id: 'address', label: 'Address', width: 130, sortable: true },
-  { id: 'assetId', label: 'AssetID', width: 130, sortable: true },
   { id: 'txcPayout', label: 'TXC Payout', width: 200, sortable: true },
   { id: 'txcCold', label: 'TXC Cold', width: 130, sortable: true },
   { id: 'createdAt', label: 'Created At', width: 140, sortable: true },

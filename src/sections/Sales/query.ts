@@ -17,6 +17,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           assetId
           address
           payoutId
+          isAdmin
           payout {
             id
             name

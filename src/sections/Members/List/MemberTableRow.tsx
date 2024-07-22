@@ -27,19 +27,8 @@ type Props = {
 export default function MemberTableRow({ row, selected, action = true, onSelectRow }: Props) {
   const router = useRouter();
 
-  const {
-    id,
-    username,
-    email,
-    mobile,
-    address,
-    assetId,
-    fullName,
-    payout,
-    wallet,
-    createdAt,
-    deletedAt,
-  } = row;
+  const { id, username, email, mobile, address, fullName, payout, wallet, createdAt, deletedAt } =
+    row;
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -73,8 +62,6 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{mobile}</TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{address}</TableCell>
-
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{assetId}</TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{payout.display}</TableCell>
 
