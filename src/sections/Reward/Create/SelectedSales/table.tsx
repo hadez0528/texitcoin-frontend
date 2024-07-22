@@ -82,7 +82,7 @@ export default function MemberStatisticsTable({
   const [totalTXC, setTotalTXC] = useState<number>(0);
 
   const estimated = blocks * 254;
-  const diff = estimated - totalTXC;
+  const diff = (estimated - totalTXC).toFixed(8);
 
   const memberStatisticsData = data?.reduce(
     (prev, { memberId, ...rest }) => ({ ...prev, [memberId]: { memberId, ...rest } }),
@@ -139,7 +139,7 @@ export default function MemberStatisticsTable({
             <Typography sx={{ mr: 5 }}>{totalTXC}</Typography>
 
             <Typography color="grey">Diff:</Typography>
-            <Typography sx={{ mr: 20 }} color={diff > 0 ? 'blue' : 'red'}>
+            <Typography sx={{ mr: 20 }} color={Number(diff) > 0 ? 'blue' : 'red'}>
               {diff}
             </Typography>
           </Stack>
