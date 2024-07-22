@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -72,7 +71,12 @@ export default function SendMany({ date, handleBack }: Props) {
           {sendmany.length === 1 ? (
             <LoadingScreen />
           ) : (
-            sendmany.map((item) => <Typography variant="body1">{item}</Typography>)
+            sendmany.map((item) => (
+              <>
+                {item}
+                <br />
+              </>
+            ))
           )}
         </ComponentBlock>
       </Paper>

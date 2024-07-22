@@ -7,7 +7,6 @@ import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ListItemText from '@mui/material/ListItemText';
 
@@ -171,7 +170,12 @@ export default function StatisticsTableRow({
             {sendmany.length === 1 ? (
               <LoadingScreen />
             ) : (
-              sendmany.map((item) => <Typography variant="body1">{item}</Typography>)
+              sendmany.map((item) => (
+                <>
+                  {item}
+                  <br />
+                </>
+              ))
             )}
           </ComponentBlock>
           <Paper sx={{ textAlign: 'right' }}>
