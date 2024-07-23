@@ -7,8 +7,10 @@ import { useMemo, useState, useEffect } from 'react';
 import { useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import Card from '@mui/material/Card';
+import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
+import Skeleton from '@mui/material/Skeleton';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
 import CardHeader from '@mui/material/CardHeader';
@@ -21,7 +23,6 @@ import { useBoolean } from 'src/hooks/useBoolean';
 import { toast } from 'src/components/SnackBar';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
@@ -142,7 +143,13 @@ export default function StatisticsTable() {
             <ScrollBar>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 {loading ? (
-                  <LoadingScreen />
+                  <Paper sx={{ display: 'block', width: '95%', margin: 'auto' }}>
+                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                    <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  </Paper>
                 ) : (
                   <>
                     <TableHeadCustom
