@@ -5,6 +5,7 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -13,7 +14,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/useBoolean';
+import { useBoolean, type UseBooleanReturn } from 'src/hooks/useBoolean';
 
 import { fDate, fTime, formatDate } from 'src/utils/format-time';
 
@@ -28,16 +29,24 @@ import { LoadingScreen } from 'src/components/loading-screen';
 type Props = {
   // Todo: Update type to Statistics
   row: any;
+  confirm: UseBooleanReturn;
+  selected: boolean;
   memberStatistics: any[];
   statisticsId: string;
+  setSelected: Function;
+  onSelectRow: VoidFunction;
   setStatisticsId: Function;
   updateStatistics: Function;
 };
 
 export default function StatisticsTableRow({
   row,
+  confirm: removeConfirm,
+  selected,
   statisticsId,
   setStatisticsId,
+  setSelected,
+  onSelectRow,
   memberStatistics,
   updateStatistics,
 }: Props) {
@@ -71,7 +80,10 @@ export default function StatisticsTableRow({
 
   return (
     <>
-      <TableRow hover sx={{ cursor: 'pointer' }}>
+      <TableRow hover selected={selected} sx={{ cursor: 'pointer' }}>
+        <TableCell padding="checkbox">
+          <Checkbox checked={selected} onClick={onSelectRow} />
+        </TableCell>
         <TableCell>{formatDate(issuedAt)}</TableCell>
         <TableCell>{newBlocks}</TableCell>
         <TableCell>{totalBlocks}</TableCell>
@@ -115,7 +127,7 @@ export default function StatisticsTableRow({
             </Label>
           )}
         </TableCell>
-        <TableCell>
+        <TableCell align="center">
           {status ? (
             <Tooltip title="View" placement="top" arrow>
               <IconButton
@@ -145,6 +157,18 @@ export default function StatisticsTableRow({
               }}
             >
               <Iconify icon="bxs:check-circle" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Confirm" placement="top" arrow>
+            <IconButton
+              color="error"
+              disabled={status}
+              onClick={() => {
+                removeConfirm.onTrue();
+                setSelected([id]);
+              }}
+            >
+              <Iconify icon="bxs:coffee-togo" />
             </IconButton>
           </Tooltip>
         </TableCell>

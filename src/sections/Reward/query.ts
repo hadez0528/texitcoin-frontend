@@ -114,3 +114,11 @@ export const REMOVE_MEMBER_STATISTICS = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const REMOVE_STATISTICS = gql(/* GraphQL */ `
+  mutation RemoveManyStatistics($data: IDsInput!) {
+    removeManyStatistics(data: $data) {
+      count
+    }
+  }
+`);
