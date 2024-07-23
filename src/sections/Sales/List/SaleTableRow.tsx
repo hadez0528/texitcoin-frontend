@@ -2,14 +2,11 @@ import type { Sale } from 'src/__generated__/graphql';
 
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
-import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import { fDate, fTime } from 'src/utils/format-time';
 
 import { Label } from 'src/components/Label';
-import { Iconify } from 'src/components/Iconify';
 
 // ----------------------------------------------------------------------
 
@@ -18,32 +15,11 @@ type Props = {
 };
 
 export default function SaleTableRow({ row }: Props) {
-  const router = useRouter();
-
-  const { id, invoiceNo, member, package: product, payment, orderedAt, status } = row;
+  const { invoiceNo, member, package: product, payment, orderedAt, status } = row;
 
   return (
     <TableRow hover>
       <TableCell>{invoiceNo}</TableCell>
-      <TableCell
-        align="left"
-        sx={{
-          px: 1,
-          whiteSpace: 'nowrap',
-          cursor: 'pointer',
-          '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
-        }}
-      >
-        <ListItemText
-          primary={member?.username}
-          secondary={member?.email}
-          primaryTypographyProps={{ typography: 'body2' }}
-          secondaryTypographyProps={{
-            component: 'span',
-            color: 'text.disabled',
-          }}
-        />
-      </TableCell>
       <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         {member?.mobile}
       </TableCell>
@@ -63,7 +39,15 @@ export default function SaleTableRow({ row }: Props) {
         {product?.token}
       </TableCell>
       <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        {orderedAt}
+        <ListItemText
+          primary={fDate(orderedAt)}
+          secondary={fTime(orderedAt)}
+          primaryTypographyProps={{ typography: 'caption', noWrap: true }}
+          secondaryTypographyProps={{
+            component: 'span',
+            typography: 'caption',
+          }}
+        />
       </TableCell>
       <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         {status ? (
@@ -75,15 +59,6 @@ export default function SaleTableRow({ row }: Props) {
             inactive
           </Label>
         )}
-      </TableCell>
-      <TableCell>
-        <IconButton
-          onClick={() => {
-            router.push(`${paths.dashboard.sales.edit(id)}`);
-          }}
-        >
-          <Iconify icon="solar:pen-2-bold" />
-        </IconButton>
       </TableCell>
     </TableRow>
   );

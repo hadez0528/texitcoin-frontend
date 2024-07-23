@@ -8,9 +8,11 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
+import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
+import Skeleton from '@mui/material/Skeleton';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -28,7 +30,6 @@ import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { SearchInput } from 'src/components/SearchInput';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
-import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
   TableNoData,
@@ -51,17 +52,15 @@ const STATUS_OPTIONS: { value: SaleRole; label: string; color: LabelColor }[] = 
 ];
 
 const TABLE_HEAD = [
-  { id: 'invoiceNo', label: 'Invoice No', sortable: true },
-  { id: 'name', label: 'Name', width: 130, sortable: true },
+  { id: 'invoiceNo', label: 'Invoice No', width: 130, sortable: true },
   { id: 'mobile', label: 'Mobile', width: 130, sortable: true },
   { id: 'assetId', label: 'Asset ID', width: 130, sortable: true },
-  { id: 'productName', label: 'Product Name', width: 200, sortable: true },
-  { id: 'paymentMethod', label: 'Payment Method', width: 130, sortable: true },
+  { id: 'productName', label: 'Product Name', sortable: true },
+  { id: 'paymentMethod', label: 'Payment Method', sortable: true },
   { id: 'amount', label: 'Amount', width: 140, sortable: true },
-  { id: 'hashPower', label: 'Hash Power', width: 95, sortable: true },
-  { id: 'orderedAt', label: 'Ordered At', width: 95, sortable: true },
+  { id: 'hashPower', label: 'Hash Power', width: 130, sortable: true },
+  { id: 'orderedAt', label: 'Ordered At', width: 130, sortable: true },
   { id: 'status', label: 'Status', width: 95, sortable: true },
-  { id: 'action', label: 'Action', width: 70, sortable: true },
 ];
 
 const defaultFilter: ISaleTableFilters = {
@@ -220,28 +219,35 @@ export default function SaleListView() {
 
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-              <TableHeadCustom
-                order={sort && sort[Object.keys(sort)[0]]}
-                orderBy={sort && Object.keys(sort)[0]}
-                headLabel={TABLE_HEAD}
-                rowCount={loading ? 0 : tableData!.sales!.length}
-                onSort={(id) => {
-                  const isAsc = sort && sort[id] === 'asc';
-                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                  setQuery({ ...query, sort: newSort });
-                }}
-              />
-
               {loading ? (
-                <LoadingScreen />
+                <Paper sx={{ display: 'block', width: '95%', margin: 'auto' }}>
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
+                </Paper>
               ) : (
-                <TableBody>
-                  {tableData!.sales!.map((row) => (
-                    <SaleTableRow key={row!.id} row={row!} />
-                  ))}
+                <>
+                  <TableHeadCustom
+                    order={sort && sort[Object.keys(sort)[0]]}
+                    orderBy={sort && Object.keys(sort)[0]}
+                    headLabel={TABLE_HEAD}
+                    rowCount={loading ? 0 : tableData!.sales!.length}
+                    onSort={(id) => {
+                      const isAsc = sort && sort[id] === 'asc';
+                      const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                      setQuery({ ...query, sort: newSort });
+                    }}
+                  />
+                  <TableBody>
+                    {tableData!.sales!.map((row) => (
+                      <SaleTableRow key={row!.id} row={row!} />
+                    ))}
 
-                  <TableNoData notFound={notFound} />
-                </TableBody>
+                    <TableNoData notFound={notFound} />
+                  </TableBody>
+                </>
               )}
             </Table>
           </ScrollBar>

@@ -8,6 +8,9 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
         invoiceNo
         memberId
         packageId
+        paymentId
+        orderedAt
+        status
         member {
           id
           username
@@ -35,9 +38,11 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           token
           status
         }
-        paymentId
-        orderedAt
-        status
+        payment {
+          id
+          name
+          status
+        }
       }
       total
     }

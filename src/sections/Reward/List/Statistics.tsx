@@ -27,6 +27,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { LoadingScreen } from 'src/components/loading-screen';
 import {
   useTable,
+  TableNoData,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -127,6 +128,8 @@ export default function StatisticsTable() {
 
   const memberStatistics = sendmanyData?.memberStatistics.memberStatistics ?? [];
 
+  const notFound = !statistics?.length;
+
   return (
     <>
       <Grid container spacing={1}>
@@ -198,6 +201,8 @@ export default function StatisticsTable() {
                           updateStatistics={updateStatistics}
                         />
                       ))}
+
+                      <TableNoData notFound={notFound} />
                     </TableBody>
                   </>
                 )}
