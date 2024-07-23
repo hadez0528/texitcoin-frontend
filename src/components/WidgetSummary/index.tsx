@@ -69,65 +69,65 @@ export default function WidgetSummary({
 
   const renderTrending = (
     <Box sx={{ gap: 0.5, display: 'flex', alignItems: 'center' }}>
-      <Iconify
-        width={24}
-        icon={
-          meta < 0
-            ? 'solar:double-alt-arrow-down-bold-duotone'
-            : 'solar:double-alt-arrow-up-bold-duotone'
-        }
-        sx={{ flexShrink: 0, color: 'success.main', ...(meta < 0 && { color: 'error.main' }) }}
-      />
+      {loading ? (
+        <Skeleton variant="text" sx={{ width: '100%', height: 30 }} />
+      ) : (
+        <>
+          <Iconify
+            width={24}
+            icon={
+              meta < 0
+                ? 'solar:double-alt-arrow-down-bold-duotone'
+                : 'solar:double-alt-arrow-up-bold-duotone'
+            }
+            sx={{ flexShrink: 0, color: 'success.main', ...(meta < 0 && { color: 'error.main' }) }}
+          />
+          <Box component="span" sx={{ typography: 'subtitle2' }}>
+            {meta > 0 && '+'}
 
-      <Box component="span" sx={{ typography: 'subtitle2' }}>
-        {meta > 0 && '+'}
+            {meta}
 
-        {meta}
-
-        <Box component="span" sx={{ color: 'text.secondary', typography: 'body2', pl: 1 }}>
-          {metaText}
-        </Box>
-      </Box>
-      <Box component="span" sx={{ typography: 'body2', color: 'text.secondary' }}>
-        last 7 days
-      </Box>
+            <Box component="span" sx={{ color: 'text.secondary', typography: 'body2', pl: 1 }}>
+              {metaText}
+            </Box>
+          </Box>
+          <Box component="span" sx={{ typography: 'body2', color: 'text.secondary' }}>
+            last 7 days
+          </Box>
+        </>
+      )}
     </Box>
   );
 
   return (
-    <>
-      {loading ? (
-        <Card sx={{ p: 3, ...sx }}>
-          <Skeleton variant="text" sx={{ fontSize: 20 }} />
-          <Skeleton variant="text" sx={{ fontSize: 20 }} />
-          <Skeleton variant="text" sx={{ fontSize: 20 }} />
-          <Skeleton variant="text" sx={{ fontSize: 20 }} />
-        </Card>
-      ) : (
-        <Card
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            p: 3,
-            ...sx,
-          }}
-          {...other}
-        >
-          <Box sx={{ flexGrow: 1 }}>
-            <Box sx={{ typography: 'subtitle2' }}>{title}</Box>
-            <Box sx={{ mt: 1.5, mb: 1, typography: 'h3' }}>{fNumber(total)}</Box>
-            {renderTrending}
-          </Box>
+    <Card
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        p: 3,
+        ...sx,
+      }}
+      {...other}
+    >
+      <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ typography: 'subtitle2' }}>{title}</Box>
+        <Box sx={{ mt: 1.5, mb: 1, typography: 'h3' }}>
+          {loading ? <Skeleton variant="text" sx={{ width: '40%', height: 60 }} /> : fNumber(total)}
+        </Box>
+        {renderTrending}
+      </Box>
 
-          <Chart
-            type="bar"
-            series={[{ data: chart.series }]}
-            options={chartOptions}
-            width={60}
-            height={40}
-          />
-        </Card>
+      {loading ? (
+        <Skeleton variant="text" sx={{ width: 100, height: 60 }} />
+      ) : (
+        <Chart
+          type="bar"
+          series={[{ data: chart.series }]}
+          options={chartOptions}
+          width={60}
+          height={40}
+        />
       )}
-    </>
+    </Card>
   );
 }
