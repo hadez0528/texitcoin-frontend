@@ -32,7 +32,7 @@ const NewMemberSchema = zod.object({
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
   mobile: zod.string({ required_error: 'Mobile is required' }),
-  address: zod.string({ required_error: 'Address is required' }),
+  primaryAddress: zod.string({ required_error: 'Address is required' }),
   payoutId: zod.string({ required_error: 'TXC Payout is required' }),
   wallet: zod.string({ required_error: 'TXC Cold is required' }),
 });
@@ -128,7 +128,7 @@ export default function MemberCreateForm() {
               <Field.Text name="firstName" label="First Name" />
               <Field.Text name="lastName" label="Last Name" />
               <Field.Phone name="mobile" label="Mobile" />
-              <Field.Text name="address" label="Address" />
+              <Field.Text name="primaryAddress" label="Address" />
               {/* <Field.Text name="txcPayout" label="TXC Payout" /> */}
               <Autocomplete
                 fullWidth

@@ -19,7 +19,8 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         username
         fullName
         email
-        address
+        primaryAddress
+        secondaryAddress
         assetId
         mobile
         payoutId
@@ -47,7 +48,8 @@ export const CREATE_MEMBER = gql(/* GraphQL */ `
       fullName
       email
       mobile
-      address
+      primaryAddress
+      secondaryAddress
       assetId
       wallet
       payoutId
@@ -64,7 +66,8 @@ export const FETCH_MEMBER = gql(/* GraphQL */ `
         fullName
         email
         mobile
-        address
+        primaryAddress
+        secondaryAddress
         assetId
         wallet
         payoutId
@@ -86,7 +89,8 @@ export const UPDATE_MEMBER = gql(/* GraphQL */ `
     updateMember(data: $data) {
       id
       mobile
-      address
+      primaryAddress
+      secondaryAddress
       payout {
         method
         display

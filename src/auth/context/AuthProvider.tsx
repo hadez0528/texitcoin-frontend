@@ -23,12 +23,33 @@ type Props = {
 // ----------------------------------------------------------------------
 const FETCH_ME_QUERY = gql(/* GraphQL */ `
   query FetchMe {
-    me {
+    memberMe {
       id
-      avatar
       username
+      fullName
       email
-      isAdmin
+      mobile
+      assetId
+      payoutId
+      wallet
+      primaryAddress
+      secondaryAddress
+      city
+      state
+      zipCode
+      payout {
+        createdAt
+        updatedAt
+        deletedAt
+        id
+        method
+        status
+        name
+        display
+      }
+      createdAt
+      updatedAt
+      deletedAt
     }
   }
 `);
@@ -76,7 +97,7 @@ export function AuthProvider({ children }: Props) {
     router.push(paths.statistics.root);
   }, [router]);
 
-  const user = data?.me;
+  const user = data?.memberMe;
 
   const memoizedValue: AuthContextValue = useMemo(
     () => ({ user, token, isAuthenticated: !!token, loading, signIn, signOut }),

@@ -4,8 +4,8 @@ import { gql } from 'src/__generated__/gql';
 // ----------------------------------------------------------------------
 
 const LOGIN_MUTATION = gql(/* GraphQL */ `
-  mutation Login($data: LoginInput!) {
-    login(data: $data) {
+  mutation Login($data: MemberLoginInput!) {
+    memberLogin(data: $data) {
       accessToken
     }
   }

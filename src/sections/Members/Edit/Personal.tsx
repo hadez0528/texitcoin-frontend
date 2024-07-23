@@ -47,7 +47,7 @@ export const Personal = () => {
             Address:
           </Stack>
           <Stack width={1}>
-            <Typography variant="body2">{member?.address}</Typography>
+            <Typography variant="body2">{member?.primaryAddress}</Typography>
           </Stack>
         </Stack>
         <Stack direction="row" spacing={2} sx={{ pb: 1 }}>

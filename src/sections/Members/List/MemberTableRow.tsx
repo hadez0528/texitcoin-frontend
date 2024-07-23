@@ -32,7 +32,7 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
     username,
     email,
     mobile,
-    address,
+    primaryAddress,
     assetId,
     fullName,
     payout,
@@ -72,7 +72,7 @@ export default function MemberTableRow({ row, selected, action = true, onSelectR
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{mobile}</TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{address}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{primaryAddress}</TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{assetId}</TableCell>
 

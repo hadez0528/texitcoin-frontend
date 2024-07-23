@@ -85,6 +85,7 @@ export default function SaleCreateForm() {
             invoiceNo: (sales[0]?.invoiceNo ?? 0) + 1,
             memberId,
             packageId,
+            paymentId: '',
           },
         },
       });

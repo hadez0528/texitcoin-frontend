@@ -20,7 +20,7 @@ type Props = {
 export default function SaleTableRow({ row }: Props) {
   const router = useRouter();
 
-  const { id, invoiceNo, member, package: product, paymentMethod, orderedAt, status } = row;
+  const { id, invoiceNo, member, package: product, payment, orderedAt, status } = row;
 
   return (
     <TableRow hover>
@@ -57,7 +57,7 @@ export default function SaleTableRow({ row }: Props) {
         {product?.productName}
       </TableCell>
       <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        {paymentMethod}
+        {payment?.name}
       </TableCell>
       <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
         {product?.amount}

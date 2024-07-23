@@ -15,7 +15,8 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           email
           mobile
           assetId
-          address
+          primaryAddress
+          secondaryAddress
           payoutId
           payout {
             id
@@ -34,7 +35,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           token
           status
         }
-        paymentMethod
+        paymentId
         orderedAt
         status
       }
@@ -60,7 +61,7 @@ export const CREATE_SALE = gql(/* GraphQL */ `
       invoiceNo
       orderedAt
       memberId
-      paymentMethod
+      paymentId
       packageId
       status
     }
@@ -80,9 +81,17 @@ export const FETCH_PACKAGES_QUERY = gql(/* GraphQL */ `
   query Packages($sort: String, $page: String, $filter: JSONObject) {
     packages(sort: $sort, page: $page, filter: $filter) {
       packages {
+        createdAt
+        updatedAt
+        deletedAt
         id
         productName
+        amount
+        status
+        date
+        token
       }
+      total
     }
   }
 `);

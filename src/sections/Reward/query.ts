@@ -58,7 +58,8 @@ export const FETCH_MEMBERSTATISTICS_QUERY = gql(/* GraphQL */ `
             display
           }
           wallet
-          address
+          primaryAddress
+          secondaryAddress
         }
         statistics {
           createdAt

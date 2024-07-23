@@ -59,7 +59,7 @@ export function SignInView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const response = await submitLogin({ variables: { data } });
-      const token = response.data?.login.accessToken ?? '';
+      const token = response.data?.memberLogin.accessToken ?? '';
       signIn(token);
     } catch (error) {
       console.error(error);
