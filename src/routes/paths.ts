@@ -7,7 +7,6 @@ const ROOTS = {
   SALES: '/sales',
   MEMBERS: '/members',
   REWARD: '/reward',
-  USERS: '/users',
 };
 
 // ----------------------------------------------------------------------
@@ -22,11 +21,6 @@ export const paths = {
   // DASHBOARD
   dashboard: {
     root: '/',
-    user: {
-      root: ROOTS.USERS,
-      edit: (id: string) => `${ROOTS.USERS}/${id}`,
-      new: `${ROOTS.USERS}/new`,
-    },
     history: {
       root: ROOTS.DASHBOARD,
     },
