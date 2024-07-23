@@ -4,9 +4,6 @@ import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
-
 import { Label } from 'src/components/Label';
 
 // ----------------------------------------------------------------------
@@ -18,9 +15,7 @@ type Props = {
 };
 
 export default function SalesTableRow({ row, selected, onSelectRow }: Props) {
-  const router = useRouter();
-
-  const { id, invoiceNo, member, package: product, payment, status } = row;
+  const { invoiceNo, member, package: product, payment, status } = row;
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -34,9 +29,6 @@ export default function SalesTableRow({ row, selected, onSelectRow }: Props) {
           whiteSpace: 'nowrap',
           cursor: 'pointer',
           '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
-        }}
-        onClick={() => {
-          router.push(paths.dashboard.members.edit(id));
         }}
       >
         {member?.username}

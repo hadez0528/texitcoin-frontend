@@ -33,9 +33,6 @@ export default function SaleTableRow({ row }: Props) {
           cursor: 'pointer',
           '&:hover': { bgcolor: (theme) => theme.vars.palette.action.hover },
         }}
-        onClick={() => {
-          router.push(paths.dashboard.members.edit(member?.id ?? ''));
-        }}
       >
         <ListItemText
           primary={member?.username}

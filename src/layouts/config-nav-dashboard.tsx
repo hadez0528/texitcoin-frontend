@@ -48,7 +48,6 @@ export const navData = [
     subheader: 'Texitcoin Administration',
     items: [
       { title: 'Dashboard', path: paths.dashboard.history.root, icon: ICONS.analytics },
-      { title: 'Member', path: paths.dashboard.members.root, icon: ICONS.user },
       { title: 'Sale', path: paths.dashboard.sales.root, icon: ICONS.invoice },
       { title: 'Reward', path: paths.dashboard.reward.root, icon: ICONS.label },
     ],

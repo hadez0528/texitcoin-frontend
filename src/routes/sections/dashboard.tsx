@@ -10,15 +10,7 @@ import { AuthGuard } from 'src/auth/guard';
 import { paths } from '../paths';
 
 // ----------------------------------------------------------------------
-const MemberListPage = lazy(() => import('src/pages/Member/List'));
-const MemberCreatePage = lazy(() => import('src/pages/Member/Create'));
-const MemberEditPage = lazy(() => import('src/pages/Member/Edit'));
-// ----------------------------------------------------------------------
-
-// ----------------------------------------------------------------------
 const SaleListPage = lazy(() => import('src/pages/Sale/List'));
-const SaleCreatePage = lazy(() => import('src/pages/Sale/Create'));
-const SaleEditPage = lazy(() => import('src/pages/Sale/Edit'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
@@ -52,20 +44,8 @@ export const dashboardRoutes = [
         children: [{ index: true, element: <DashboardPage /> }],
       },
       {
-        path: 'members',
-        children: [
-          { index: true, element: <MemberListPage /> },
-          { path: 'new', element: <MemberCreatePage /> },
-          { path: ':id', element: <MemberEditPage /> },
-        ],
-      },
-      {
         path: 'sales',
-        children: [
-          { index: true, element: <SaleListPage /> },
-          { path: 'new', element: <SaleCreatePage /> },
-          { path: ':id', element: <SaleEditPage /> },
-        ],
+        children: [{ index: true, element: <SaleListPage /> }],
       },
       {
         path: 'reward',

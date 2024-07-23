@@ -15,7 +15,7 @@ export default function RewardListView() {
     <DashboardContent>
       <Breadcrumbs
         heading="Reward"
-        links={[{ name: 'Reward', href: paths.dashboard.members.root }, { name: 'List' }]}
+        links={[{ name: 'Reward', href: '#' }, { name: 'List' }]}
         action={
           <Button
             component={RouterLink}
