@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function SalesTableRow({ row, selected, onSelectRow }: Props) {
-  const { invoiceNo, member, package: product, payment, status } = row;
+  const { invoiceNo, member, package: product, paymentMethod, status } = row;
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
@@ -36,7 +36,7 @@ export default function SalesTableRow({ row, selected, onSelectRow }: Props) {
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{product?.productName}</TableCell>
 
-      <TableCell sx={{ whiteSpace: 'nowrap' }}>{payment?.name}</TableCell>
+      <TableCell sx={{ whiteSpace: 'nowrap' }}>{paymentMethod}</TableCell>
 
       <TableCell sx={{ whiteSpace: 'nowrap' }}>{product?.amount}</TableCell>
 

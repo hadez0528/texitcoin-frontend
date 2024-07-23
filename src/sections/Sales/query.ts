@@ -8,7 +8,6 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
         invoiceNo
         memberId
         packageId
-        paymentId
         orderedAt
         status
         member {
@@ -38,11 +37,7 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           token
           status
         }
-        payment {
-          id
-          name
-          status
-        }
+        paymentMethod
       }
       total
     }
@@ -66,7 +61,7 @@ export const CREATE_SALE = gql(/* GraphQL */ `
       invoiceNo
       orderedAt
       memberId
-      paymentId
+      paymentMethod
       packageId
       status
     }
