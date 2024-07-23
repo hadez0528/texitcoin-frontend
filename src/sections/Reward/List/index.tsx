@@ -1,11 +1,5 @@
-import Button from '@mui/material/Button';
-
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
-
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
 
 import StatisticsTable from './Statistics';
@@ -16,16 +10,6 @@ export default function RewardListView() {
       <Breadcrumbs
         heading="Reward"
         links={[{ name: 'Reward', href: '#' }, { name: 'List' }]}
-        action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.reward.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            New Reward
-          </Button>
-        }
         sx={{
           mb: { xs: 1, md: 2 },
         }}

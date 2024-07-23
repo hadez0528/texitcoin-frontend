@@ -9,10 +9,8 @@ import { useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/cl
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
 import Grid from '@mui/material/Unstable_Grid2';
 import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
 import CardHeader from '@mui/material/CardHeader';
 import TableContainer from '@mui/material/TableContainer';
 
@@ -21,7 +19,6 @@ import { useQuery, type SortOrder } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/useBoolean';
 
 import { toast } from 'src/components/SnackBar';
-import { Iconify } from 'src/components/Iconify';
 import { ScrollBar } from 'src/components/ScrollBar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { LoadingScreen } from 'src/components/loading-screen';
@@ -29,7 +26,6 @@ import {
   useTable,
   TableNoData,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/Table';
 
@@ -143,25 +139,6 @@ export default function StatisticsTable() {
         >
           <CardHeader title="Reward" sx={{ mb: 3 }} />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={table.dense}
-              numSelected={table.selected.length}
-              rowCount={loading ? 0 : memberStatistics!.length}
-              onSelectAllRows={(checked) =>
-                table.onSelectAllRows(
-                  checked,
-                  memberStatistics!.map((row) => row!.id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={confirm.onTrue}>
-                    <Iconify icon="solar:trash-bin-trash-bold" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-
             <ScrollBar>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 {loading ? (
@@ -179,12 +156,6 @@ export default function StatisticsTable() {
                         const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
                         setQuery({ ...query, sort: newSort });
                       }}
-                      onSelectAllRows={(checked) =>
-                        table.onSelectAllRows(
-                          checked,
-                          memberStatistics!.map((row) => row!.id)
-                        )
-                      }
                     />
                     <TableBody>
                       {statistics!.map((row) => (

@@ -5,7 +5,6 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -81,9 +80,6 @@ export default function StatisticsTableRow({
   return (
     <>
       <TableRow hover selected={selected} sx={{ cursor: 'pointer' }}>
-        <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
         <TableCell>{formatDate(issuedAt)}</TableCell>
         <TableCell>{newBlocks}</TableCell>
         <TableCell>{totalBlocks}</TableCell>
@@ -128,7 +124,7 @@ export default function StatisticsTableRow({
           )}
         </TableCell>
         <TableCell align="center">
-          {status ? (
+          {status && (
             <Tooltip title="View" placement="top" arrow>
               <IconButton
                 color="success"
@@ -137,40 +133,7 @@ export default function StatisticsTableRow({
                 <Iconify icon="solar:eye-bold" />
               </IconButton>
             </Tooltip>
-          ) : (
-            <Tooltip title="Edit" placement="top" arrow>
-              <IconButton
-                color="default"
-                onClick={() => router.push(paths.dashboard.reward.edit(id))}
-              >
-                <Iconify icon="solar:pen-2-bold" />
-              </IconButton>
-            </Tooltip>
           )}
-          <Tooltip title="Confirm" placement="top" arrow>
-            <IconButton
-              color="success"
-              disabled={status}
-              onClick={() => {
-                setStatisticsId(id);
-                setIsOpen(true);
-              }}
-            >
-              <Iconify icon="bxs:check-circle" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Confirm" placement="top" arrow>
-            <IconButton
-              color="error"
-              disabled={status}
-              onClick={() => {
-                removeConfirm.onTrue();
-                setSelected([id]);
-              }}
-            >
-              <Iconify icon="bxs:coffee-togo" />
-            </IconButton>
-          </Tooltip>
         </TableCell>
       </TableRow>
 
