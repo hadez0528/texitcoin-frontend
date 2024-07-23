@@ -96,7 +96,7 @@ export default function StatisticsTableRow({
           <ListItemText
             primary={fDate(from)}
             secondary={fTime(from)}
-            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
+            primaryTypographyProps={{ typography: 'caption', noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,
               component: 'span',
@@ -108,7 +108,7 @@ export default function StatisticsTableRow({
           <ListItemText
             primary={fDate(to)}
             secondary={fTime(to)}
-            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
+            primaryTypographyProps={{ typography: 'caption', noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,
               component: 'span',
