@@ -6,6 +6,7 @@ const ROOTS = {
   STATISTICS: '/statistics',
   SALES: '/sales',
   REWARD: '/reward',
+  PROFILE: '/profile',
 };
 
 // ----------------------------------------------------------------------
@@ -34,6 +35,9 @@ export const paths = {
       edit: (id: string) => `${ROOTS.REWARD}/new/${id}`,
       detail: (id: string) => `${ROOTS.REWARD}/${id}`,
       view: (id: string) => `${ROOTS.REWARD}/statistics/${id}`,
+    },
+    profile: {
+      root: ROOTS.PROFILE,
     },
   },
   notFound: '/404',

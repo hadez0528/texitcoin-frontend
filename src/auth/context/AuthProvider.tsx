@@ -4,10 +4,11 @@ import { useMemo, useEffect, useCallback } from 'react';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { gql } from 'src/__generated__/gql';
 import { STORAGE_TOKEN_KEY } from 'src/consts';
 
 import { toast } from 'src/components/SnackBar';
+
+import { FETCH_ME_QUERY } from 'src/sections/Profile/query';
 
 import { setSession } from '../utils';
 import { AuthContext } from './AuthContext';
@@ -19,42 +20,6 @@ import type { AuthContextValue } from '../types';
 type Props = {
   children: React.ReactNode;
 };
-
-// ----------------------------------------------------------------------
-const FETCH_ME_QUERY = gql(/* GraphQL */ `
-  query FetchMe {
-    memberMe {
-      id
-      username
-      fullName
-      email
-      mobile
-      assetId
-      payoutId
-      wallet
-      primaryAddress
-      secondaryAddress
-      city
-      state
-      zipCode
-      payout {
-        createdAt
-        updatedAt
-        deletedAt
-        id
-        method
-        status
-        name
-        display
-      }
-      createdAt
-      updatedAt
-      deletedAt
-    }
-  }
-`);
-
-// ----------------------------------------------------------------------
 
 export function AuthProvider({ children }: Props) {
   const token = localStorage.getItem(STORAGE_TOKEN_KEY);

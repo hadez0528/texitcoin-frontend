@@ -18,11 +18,14 @@ const DashboardPage = lazy(() => import('src/pages/Dashboard'));
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
+const ProfilePage = lazy(() => import('src/pages/Profile'));
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const RewardPage = lazy(() => import('src/pages/Reward/List'));
 const RewardCreatePage = lazy(() => import('src/pages/Reward/Create'));
 const RewardEditPage = lazy(() => import('src/pages/Reward/Edit'));
 const StatisticsDetailPage = lazy(() => import('src/pages/Reward/Statistics/Detail'));
-// const RewardDetailPage = lazy(() => import('src/pages/MemberStatistics/List'));
 // ----------------------------------------------------------------------
 
 export const dashboardRoutes = [
@@ -64,6 +67,7 @@ export const dashboardRoutes = [
           },
         ],
       },
+      { path: 'profile', element: <ProfilePage /> },
     ],
   },
 ];

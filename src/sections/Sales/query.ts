@@ -45,8 +45,8 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
 `);
 
 export const FETCH_SALES_STATS_QUERY = gql(/* GraphQL */ `
-  query FetchSaleStats($inactiveFilter: JSONObject) {
-    all: sales {
+  query FetchSaleStats($allFilter: JSONObject, $inactiveFilter: JSONObject) {
+    all: sales(filter: $allFilter) {
       total
     }
     inactive: sales(filter: $inactiveFilter) {
