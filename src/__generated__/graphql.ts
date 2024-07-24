@@ -281,6 +281,7 @@ export type Mutation = {
   removeManyStatistics: ManySuccessResponse;
   removeManyStatisticsSales: ManySuccessResponse;
   removeMemberStatisticsByStaitisId: ManySuccessResponse;
+  removeSale: SuccessResponse;
   removeStatisticsSalesByStaitisId: ManySuccessResponse;
   updateAdmin: Admin;
   updateMember: Member;
@@ -377,6 +378,11 @@ export type MutationRemoveManyStatisticsSalesArgs = {
 
 
 export type MutationRemoveMemberStatisticsByStaitisIdArgs = {
+  data: IdInput;
+};
+
+
+export type MutationRemoveSaleArgs = {
   data: IdInput;
 };
 
@@ -635,6 +641,11 @@ export type StatisticsSaleResponse = {
   __typename?: 'StatisticsSaleResponse';
   statisticsSales?: Maybe<Array<Maybe<StatisticsSale>>>;
   total?: Maybe<Scalars['Int']['output']>;
+};
+
+export type SuccessResponse = {
+  __typename?: 'SuccessResponse';
+  result: Scalars['String']['output'];
 };
 
 export type UpdateAdminInput = {

@@ -60,7 +60,6 @@ const TABLE_HEAD = [
   { id: 'amount', label: 'Amount', width: 140, sortable: true },
   { id: 'hashPower', label: 'Hash Power', width: 130, sortable: true },
   { id: 'orderedAt', label: 'Ordered At', width: 130, sortable: true },
-  { id: 'status', label: 'Status', width: 95, sortable: true },
 ];
 
 const defaultFilter: ISaleTableFilters = {

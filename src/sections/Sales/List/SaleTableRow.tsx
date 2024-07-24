@@ -6,8 +6,6 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { fDate, fTime } from 'src/utils/format-time';
 
-import { Label } from 'src/components/Label';
-
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -15,30 +13,30 @@ type Props = {
 };
 
 export default function SaleTableRow({ row }: Props) {
-  const { invoiceNo, member, package: product, paymentMethod, orderedAt, status } = row;
+  const { invoiceNo, member, package: product, paymentMethod, orderedAt } = row;
 
   return (
     <TableRow hover>
       <TableCell>{invoiceNo}</TableCell>
-      <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
         {member?.mobile}
       </TableCell>
-      <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
         {member?.assetId}
       </TableCell>
-      <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
         {product?.productName}
       </TableCell>
-      <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
         {paymentMethod}
       </TableCell>
-      <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
         {product?.amount}
       </TableCell>
-      <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
         {product?.token}
       </TableCell>
-      <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+      <TableCell align="left" sx={{ whiteSpace: 'nowrap' }}>
         <ListItemText
           primary={fDate(orderedAt)}
           secondary={fTime(orderedAt)}
@@ -48,17 +46,6 @@ export default function SaleTableRow({ row }: Props) {
             typography: 'caption',
           }}
         />
-      </TableCell>
-      <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        {status ? (
-          <Label variant="soft" color="success">
-            active
-          </Label>
-        ) : (
-          <Label variant="soft" color="error">
-            inactive
-          </Label>
-        )}
       </TableCell>
     </TableRow>
   );
