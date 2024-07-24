@@ -18,6 +18,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import { LoadingScreen } from 'src/components/loading-screen';
 
 import Sale from './Sale';
+import General from './General';
 import History from './History';
 import { FETCH_ME_QUERY } from './query';
 
@@ -27,6 +28,7 @@ const TABS = [
     label: 'History',
     icon: <Iconify icon="carbon:analytics" width={24} />,
   },
+  { value: 'edit', label: 'Edit', icon: <Iconify icon="solar:pen-2-bold" width={24} /> },
   { value: 'sale', label: 'Sale', icon: <Iconify icon="bi:currency-exchange" /> },
 ];
 
@@ -76,6 +78,8 @@ export default function Profile() {
             <Tab key={tab.value} label={tab.label} icon={tab.icon} value={tab.value} />
           ))}
         </Tabs>
+
+        {tabs.value === 'edit' && <General me={me} />}
 
         {tabs.value === 'history' && <History me={me} />}
 
