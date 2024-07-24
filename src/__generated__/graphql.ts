@@ -285,8 +285,10 @@ export type Mutation = {
   removeStatisticsSalesByStaitisId: ManySuccessResponse;
   updateAdmin: Admin;
   updateMember: Member;
-  updatePassword: Admin;
-  updatePasswordById: Member;
+  updatePasswordAdmin: SuccessResponse;
+  updatePasswordAdminById: Admin;
+  updatePasswordMember: SuccessResponse;
+  updatePasswordMemberById: Member;
   updateSale: Sale;
   updateStatistics: Statistics;
 };
@@ -402,12 +404,22 @@ export type MutationUpdateMemberArgs = {
 };
 
 
-export type MutationUpdatePasswordArgs = {
+export type MutationUpdatePasswordAdminArgs = {
   data: UpdateAdminPasswordInput;
 };
 
 
-export type MutationUpdatePasswordByIdArgs = {
+export type MutationUpdatePasswordAdminByIdArgs = {
+  data: UpdateAdminPasswordByIdInput;
+};
+
+
+export type MutationUpdatePasswordMemberArgs = {
+  data: UpdateMemberPasswordInput;
+};
+
+
+export type MutationUpdatePasswordMemberByIdArgs = {
   data: UpdateMemberPasswordInputById;
 };
 
@@ -645,6 +657,7 @@ export type StatisticsSaleResponse = {
 
 export type SuccessResponse = {
   __typename?: 'SuccessResponse';
+  message?: Maybe<Scalars['String']['output']>;
   result: Scalars['String']['output'];
 };
 
@@ -655,10 +668,14 @@ export type UpdateAdminInput = {
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateAdminPasswordInput = {
-  id?: InputMaybe<Scalars['ID']['input']>;
+export type UpdateAdminPasswordByIdInput = {
+  id: Scalars['ID']['input'];
   newPassword: Scalars['String']['input'];
-  oldPassword?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateAdminPasswordInput = {
+  newPassword: Scalars['String']['input'];
+  oldPassword: Scalars['String']['input'];
 };
 
 export type UpdateMemberInput = {
@@ -675,6 +692,11 @@ export type UpdateMemberInput = {
   username?: InputMaybe<Scalars['String']['input']>;
   wallet?: InputMaybe<Scalars['String']['input']>;
   zipCode?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateMemberPasswordInput = {
+  newPassword: Scalars['String']['input'];
+  oldPassword: Scalars['String']['input'];
 };
 
 export type UpdateMemberPasswordInputById = {

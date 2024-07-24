@@ -9,7 +9,6 @@ import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
 import Skeleton from '@mui/material/Skeleton';
@@ -19,7 +18,6 @@ import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
 import { useQuery } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/useBoolean';
 
@@ -53,13 +51,13 @@ const STATUS_OPTIONS: { value: SaleRole; label: string; color: LabelColor }[] = 
 
 const TABLE_HEAD = [
   { id: 'invoiceNo', label: 'Invoice No', width: 130, sortable: true },
-  { id: 'mobile', label: 'Mobile', width: 130, sortable: true },
-  { id: 'assetId', label: 'Asset ID', width: 130, sortable: true },
+  { id: 'mobile', label: 'Mobile', width: 150, sortable: true },
+  { id: 'assetId', label: 'Asset ID', width: 90, sortable: true },
   { id: 'productName', label: 'Product Name', sortable: true },
   { id: 'paymentMethod', label: 'Payment Method', sortable: true },
-  { id: 'amount', label: 'Amount', width: 140, sortable: true },
-  { id: 'hashPower', label: 'Hash Power', width: 130, sortable: true },
-  { id: 'orderedAt', label: 'Ordered At', width: 130, sortable: true },
+  { id: 'amount', label: 'Amount', width: 100, sortable: true },
+  { id: 'hashPower', label: 'Hash Power', width: 120, sortable: true },
+  { id: 'orderedAt', label: 'Ordered At', width: 150, sortable: true },
 ];
 
 const defaultFilter: ISaleTableFilters = {
@@ -148,16 +146,6 @@ export default function SaleListView() {
       <Breadcrumbs
         heading="Sale"
         links={[{ name: 'Sale', href: paths.dashboard.sales.root }, { name: 'List' }]}
-        action={
-          <Button
-            component={RouterLink}
-            href={paths.dashboard.sales.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            New Sale
-          </Button>
-        }
         sx={{
           mb: { xs: 1, md: 2 },
         }}
