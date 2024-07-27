@@ -69,7 +69,7 @@ export default function Personal({ me }: Props) {
             TXC Payout:
           </Stack>
           <Stack width={1}>
-            <Typography variant="body2">{me?.payout.method}</Typography>
+            <Typography variant="body2">{me?.payout?.method}</Typography>
           </Stack>
         </Stack>
         <Stack direction="row" spacing={2} sx={{ pb: 1 }}>

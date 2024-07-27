@@ -96,6 +96,7 @@ export type CreateMemberInput = {
   payoutId: Scalars['String']['input'];
   primaryAddress: Scalars['String']['input'];
   secondaryAddress?: InputMaybe<Scalars['String']['input']>;
+  sponsorId?: InputMaybe<Scalars['ID']['input']>;
   state?: InputMaybe<Scalars['String']['input']>;
   username: Scalars['String']['input'];
   wallet: Scalars['String']['input'];
@@ -198,12 +199,15 @@ export type Member = {
   email: Scalars['String']['output'];
   fullName: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  introduceMembers?: Maybe<Array<Maybe<Member>>>;
   mobile: Scalars['String']['output'];
-  payout: Payout;
+  payout?: Maybe<Payout>;
   payoutId: Scalars['ID']['output'];
   primaryAddress: Scalars['String']['output'];
   sales?: Maybe<Array<Maybe<Sale>>>;
   secondaryAddress?: Maybe<Scalars['String']['output']>;
+  sponsor?: Maybe<Member>;
+  sponsorId?: Maybe<Scalars['ID']['output']>;
   state?: Maybe<Scalars['String']['output']>;
   statistics?: Maybe<Array<Maybe<MemberStatistics>>>;
   updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
@@ -280,6 +284,7 @@ export type Mutation = {
   removeManyMemberStatistics: ManySuccessResponse;
   removeManyStatistics: ManySuccessResponse;
   removeManyStatisticsSales: ManySuccessResponse;
+  removeMember: SuccessResponse;
   removeMemberStatisticsByStaitisId: ManySuccessResponse;
   removeSale: SuccessResponse;
   removeStatisticsSalesByStaitisId: ManySuccessResponse;
@@ -376,6 +381,11 @@ export type MutationRemoveManyStatisticsArgs = {
 
 export type MutationRemoveManyStatisticsSalesArgs = {
   data: IDsInput;
+};
+
+
+export type MutationRemoveMemberArgs = {
+  data: IdInput;
 };
 
 
@@ -688,6 +698,7 @@ export type UpdateMemberInput = {
   payoutId?: InputMaybe<Scalars['String']['input']>;
   primaryAddress?: InputMaybe<Scalars['String']['input']>;
   secondaryAddress?: InputMaybe<Scalars['String']['input']>;
+  sponsorId?: InputMaybe<Scalars['ID']['input']>;
   state?: InputMaybe<Scalars['String']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
   wallet?: InputMaybe<Scalars['String']['input']>;
@@ -723,7 +734,7 @@ export type UpdateStatisticsInput = {
 export type FetchMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchMeQuery = { __typename?: 'Query', memberMe: { __typename?: 'Member', id: string, username: string, fullName: string, email: string, mobile: string, assetId: string, payoutId: string, wallet: string, primaryAddress: string, secondaryAddress?: string | null, city?: string | null, state?: string | null, zipCode?: string | null, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, payout: { __typename?: 'Payout', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, method: string, status: boolean, name: string, display: string } } };
+export type FetchMeQuery = { __typename?: 'Query', memberMe: { __typename?: 'Member', id: string, username: string, fullName: string, email: string, mobile: string, assetId: string, payoutId: string, wallet: string, primaryAddress: string, secondaryAddress?: string | null, city?: string | null, state?: string | null, zipCode?: string | null, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, payout?: { __typename?: 'Payout', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, method: string, status: boolean, name: string, display: string } | null } };
 
 export type FetchMemberStatsQueryVariables = Exact<{
   inactiveFilter?: InputMaybe<Scalars['JSONObject']['input']>;
@@ -739,7 +750,7 @@ export type FetchMembersQueryVariables = Exact<{
 }>;
 
 
-export type FetchMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersResponse', total?: number | null, members?: Array<{ __typename?: 'Member', id: string, username: string, fullName: string, email: string, primaryAddress: string, secondaryAddress?: string | null, assetId: string, mobile: string, payoutId: string, wallet: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, payout: { __typename?: 'Payout', id: string, name: string, status: boolean, method: string, display: string } } | null> | null } };
+export type FetchMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersResponse', total?: number | null, members?: Array<{ __typename?: 'Member', id: string, username: string, fullName: string, email: string, primaryAddress: string, secondaryAddress?: string | null, assetId: string, mobile: string, payoutId: string, wallet: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, payout?: { __typename?: 'Payout', id: string, name: string, status: boolean, method: string, display: string } | null } | null> | null } };
 
 export type CreateMemberMutationVariables = Exact<{
   data: CreateMemberInput;
@@ -753,14 +764,14 @@ export type FetchMemberQueryVariables = Exact<{
 }>;
 
 
-export type FetchMemberQuery = { __typename?: 'Query', members: { __typename?: 'MembersResponse', members?: Array<{ __typename?: 'Member', id: string, username: string, fullName: string, email: string, mobile: string, primaryAddress: string, secondaryAddress?: string | null, assetId: string, wallet: string, payoutId: string, deletedAt?: any | null, payout: { __typename?: 'Payout', id: string, name: string, status: boolean, method: string, display: string } } | null> | null } };
+export type FetchMemberQuery = { __typename?: 'Query', members: { __typename?: 'MembersResponse', members?: Array<{ __typename?: 'Member', id: string, username: string, fullName: string, email: string, mobile: string, primaryAddress: string, secondaryAddress?: string | null, assetId: string, wallet: string, payoutId: string, deletedAt?: any | null, payout?: { __typename?: 'Payout', id: string, name: string, status: boolean, method: string, display: string } | null } | null> | null } };
 
 export type UpdateMemberMutationVariables = Exact<{
   data: UpdateMemberInput;
 }>;
 
 
-export type UpdateMemberMutation = { __typename?: 'Mutation', updateMember: { __typename?: 'Member', id: string, mobile: string, primaryAddress: string, secondaryAddress?: string | null, wallet: string, assetId: string, payout: { __typename?: 'Payout', method: string, display: string } } };
+export type UpdateMemberMutation = { __typename?: 'Mutation', updateMember: { __typename?: 'Member', id: string, mobile: string, primaryAddress: string, secondaryAddress?: string | null, wallet: string, assetId: string, payout?: { __typename?: 'Payout', method: string, display: string } | null } };
 
 export type MemberOverviewQueryVariables = Exact<{
   data: MemberOverviewInput;
@@ -803,7 +814,7 @@ export type FetchMemberStatisticsQueryVariables = Exact<{
 }>;
 
 
-export type FetchMemberStatisticsQuery = { __typename?: 'Query', memberStatistics: { __typename?: 'MemberStatisticsResponse', total?: number | null, memberStatistics?: Array<{ __typename?: 'MemberStatistics', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, statisticsId: string, txcShared: number, hashPower: number, percent: number, issuedAt: any, member?: { __typename?: 'Member', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, username: string, fullName: string, email: string, mobile: string, assetId: string, payoutId: string, wallet: string, primaryAddress: string, secondaryAddress?: string | null, payout: { __typename?: 'Payout', id: string, name: string, status: boolean, method: string, display: string } } | null, statistics?: { __typename?: 'Statistics', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, newBlocks: number, totalBlocks: number, totalHashPower: number, totalMembers: number, status: boolean, txcShared: number, issuedAt: any, from: any, to: any } | null } | null> | null } };
+export type FetchMemberStatisticsQuery = { __typename?: 'Query', memberStatistics: { __typename?: 'MemberStatisticsResponse', total?: number | null, memberStatistics?: Array<{ __typename?: 'MemberStatistics', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, statisticsId: string, txcShared: number, hashPower: number, percent: number, issuedAt: any, member?: { __typename?: 'Member', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, username: string, fullName: string, email: string, mobile: string, assetId: string, payoutId: string, wallet: string, primaryAddress: string, secondaryAddress?: string | null, payout?: { __typename?: 'Payout', id: string, name: string, status: boolean, method: string, display: string } | null } | null, statistics?: { __typename?: 'Statistics', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, newBlocks: number, totalBlocks: number, totalHashPower: number, totalMembers: number, status: boolean, txcShared: number, issuedAt: any, from: any, to: any } | null } | null> | null } };
 
 export type CreateStatisticsMutationVariables = Exact<{
   data: CreateStatisticsInput;
@@ -847,7 +858,7 @@ export type FetchSalesQueryVariables = Exact<{
 }>;
 
 
-export type FetchSalesQuery = { __typename?: 'Query', sales: { __typename?: 'SalesResponse', total?: number | null, sales?: Array<{ __typename?: 'Sale', id: string, invoiceNo: number, memberId: string, packageId: string, orderedAt: any, status: boolean, paymentMethod: string, member?: { __typename?: 'Member', id: string, username: string, fullName: string, email: string, mobile: string, assetId: string, primaryAddress: string, secondaryAddress?: string | null, payoutId: string, wallet: string, payout: { __typename?: 'Payout', id: string, name: string, status: boolean, method: string, display: string } } | null, package?: { __typename?: 'Package', id: string, productName: string, amount: number, date: any, token: number, status: boolean } | null } | null> | null } };
+export type FetchSalesQuery = { __typename?: 'Query', sales: { __typename?: 'SalesResponse', total?: number | null, sales?: Array<{ __typename?: 'Sale', id: string, invoiceNo: number, memberId: string, packageId: string, orderedAt: any, status: boolean, paymentMethod: string, member?: { __typename?: 'Member', id: string, username: string, fullName: string, email: string, mobile: string, assetId: string, primaryAddress: string, secondaryAddress?: string | null, payoutId: string, wallet: string, payout?: { __typename?: 'Payout', id: string, name: string, status: boolean, method: string, display: string } | null } | null, package?: { __typename?: 'Package', id: string, productName: string, amount: number, date: any, token: number, status: boolean } | null } | null> | null } };
 
 export type FetchSaleStatsQueryVariables = Exact<{
   allFilter?: InputMaybe<Scalars['JSONObject']['input']>;
