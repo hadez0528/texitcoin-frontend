@@ -17,7 +17,7 @@ const TABS = [
     label: 'Daily',
     icon: <Iconify icon="carbon:analytics" width={24} />,
   },
-  { value: 'wallets', label: 'Wallets', icon: <Iconify icon="solar:pen-2-bold" width={24} /> },
+  { value: 'wallets', label: 'Wallets', icon: <Iconify icon="bxs:wallet" width={24} /> },
 ];
 
 export default function RewardListView() {
