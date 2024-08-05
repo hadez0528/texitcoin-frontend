@@ -7,24 +7,52 @@ export const FETCH_ME_QUERY = gql(/* GraphQL */ `
       username
       fullName
       email
-      mobile
-      assetId
-      payoutId
-      wallet
       primaryAddress
       secondaryAddress
+      assetId
+      mobile
       city
       state
       zipCode
-      payout {
+      sponsorId
+      sponsor {
+        id
+        username
+        fullName
+        email
+        primaryAddress
+        secondaryAddress
+        mobile
+        assetId
+      }
+      sales {
+        id
+        invoiceNo
+        memberId
+        packageId
+        paymentMethod
+        status
+        orderedAt
+      }
+      memberWallets {
         createdAt
         updatedAt
         deletedAt
         id
-        method
-        status
-        name
-        display
+        memberId
+        payoutId
+        address
+        percent
+        payout {
+          id
+          method
+          status
+          name
+          display
+          createdAt
+          updatedAt
+          deletedAt
+        }
       }
       createdAt
       updatedAt
@@ -56,15 +84,49 @@ export const FETCH_MEMBERS_QUERY = gql(/* GraphQL */ `
         secondaryAddress
         assetId
         mobile
-        payoutId
-        payout {
+        city
+        state
+        zipCode
+        sponsorId
+        sponsor {
           id
-          name
-          status
-          method
-          display
+          username
+          fullName
+          email
+          primaryAddress
+          secondaryAddress
+          mobile
+          assetId
         }
-        wallet
+        sales {
+          id
+          invoiceNo
+          memberId
+          packageId
+          paymentMethod
+          status
+          orderedAt
+        }
+        memberWallets {
+          createdAt
+          updatedAt
+          deletedAt
+          id
+          memberId
+          payoutId
+          address
+          percent
+          payout {
+            id
+            method
+            status
+            name
+            display
+            createdAt
+            updatedAt
+            deletedAt
+          }
+        }
         createdAt
         updatedAt
         deletedAt
@@ -84,8 +146,6 @@ export const CREATE_MEMBER = gql(/* GraphQL */ `
       primaryAddress
       secondaryAddress
       assetId
-      wallet
-      payoutId
     }
   }
 `);
@@ -102,14 +162,25 @@ export const FETCH_MEMBER = gql(/* GraphQL */ `
         primaryAddress
         secondaryAddress
         assetId
-        wallet
-        payoutId
-        payout {
+        memberWallets {
+          createdAt
+          updatedAt
+          deletedAt
           id
-          name
-          status
-          method
-          display
+          memberId
+          payoutId
+          address
+          percent
+          payout {
+            id
+            method
+            status
+            name
+            display
+            createdAt
+            updatedAt
+            deletedAt
+          }
         }
         deletedAt
       }
@@ -124,11 +195,20 @@ export const UPDATE_MEMBER = gql(/* GraphQL */ `
       mobile
       primaryAddress
       secondaryAddress
-      payout {
-        method
-        display
+      memberWallets {
+        createdAt
+        updatedAt
+        deletedAt
+        id
+        memberId
+        payoutId
+        address
+        percent
+        payout {
+          method
+          display
+        }
       }
-      wallet
       assetId
     }
   }

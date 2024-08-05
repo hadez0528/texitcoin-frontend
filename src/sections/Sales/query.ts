@@ -19,15 +19,26 @@ export const FETCH_SALES_QUERY = gql(/* GraphQL */ `
           assetId
           primaryAddress
           secondaryAddress
-          payoutId
-          payout {
+          memberWallets {
+            createdAt
+            updatedAt
+            deletedAt
             id
-            name
-            status
-            method
-            display
+            memberId
+            payoutId
+            address
+            percent
+            payout {
+              id
+              method
+              status
+              name
+              display
+              createdAt
+              updatedAt
+              deletedAt
+            }
           }
-          wallet
         }
         package {
           id
