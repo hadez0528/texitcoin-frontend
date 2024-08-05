@@ -2,18 +2,18 @@ import type { Member } from 'src/__generated__/graphql';
 
 import { z as zod } from 'zod';
 import isEqual from 'lodash/isEqual';
-import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMemo, useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ApolloError, useMutation, useQuery as useGraphQuery } from '@apollo/client';
+import { ApolloError, useMutation, useLazyQuery, useQuery as useGraphQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Autocomplete from '@mui/material/Autocomplete';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -21,13 +21,19 @@ import { useRouter } from 'src/routes/hooks';
 import { toast } from 'src/components/SnackBar';
 import { Form, Field } from 'src/components/Form';
 
-import { UPDATE_MEMBER, FETCH_PAYOUTS_QUERY } from '../query';
+import MemberWallets from './MemberWallets';
+import { UPDATE_MEMBER, FETCH_MEMBERS_QUERY, FETCH_PAYOUTS_QUERY } from '../query';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   me: Member;
 };
+
+interface Edit {
+  id: string;
+  username: string;
+}
 
 // ----------------------------------------------------------------------
 export type MemberGeneralSchemaType = zod.infer<typeof MemberGeneralSchema>;
@@ -39,9 +45,20 @@ const MemberGeneralSchema = zod.object({
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
   mobile: zod.string({ required_error: 'Mobile is required' }),
+  city: zod.string({ required_error: 'City is required' }),
+  zipCode: zod.string({ required_error: 'ZIPCode is required' }),
+  state: zod.string({ required_error: 'State is required' }),
   primaryAddress: zod.string({ required_error: 'Address is required' }),
-  payoutId: zod.string({ required_error: 'TXC Payout is required' }),
-  wallet: zod.string({ required_error: 'TXC Cold is required' }),
+  secondaryAddress: zod.string({ required_error: 'Address Line 2 is required' }),
+  sponsorId: zod.string().optional().nullable(),
+  assetId: zod.string({ required_error: 'AssetID is required' }),
+  memberWallets: zod.array(
+    zod.object({
+      payoutId: zod.string({ required_error: 'Payout is required' }),
+      address: zod.string({ required_error: 'Address is required' }),
+      percent: zod.number({ required_error: 'Percent is required' }),
+    })
+  ),
 });
 
 export default function MemberGeneral({ me }: Props) {
@@ -54,7 +71,13 @@ export default function MemberGeneral({ me }: Props) {
     variables: {},
   });
 
+  const [fetchMembers, { loading: memberLoading, data: memberData }] =
+    useLazyQuery(FETCH_MEMBERS_QUERY);
+
   const payouts = payoutsData?.payouts.payouts ?? [];
+  const members = memberData?.members.members ?? [];
+
+  const [member, setMember] = useState<Edit>();
 
   const [submit, { loading }] = useMutation(UPDATE_MEMBER);
 
@@ -81,23 +104,38 @@ export default function MemberGeneral({ me }: Props) {
         return;
       }
 
-      await submit({
-        variables: {
-          data: {
-            id: me.id,
-            username: newMember.username,
-            email: newMember.email,
-            fullName: `${firstName} ${lastName}`,
-            mobile: newMember.mobile,
-            primaryAddress: newMember.primaryAddress,
-            assetId: newMember.wallet.substring(1, 7),
+      const total = newMember.memberWallets.reduce(
+        (prev: number, save: any) => prev + save.percent,
+        0
+      );
+
+      if (total === 100) {
+        await submit({
+          variables: {
+            data: {
+              id: me.id,
+              username: newMember.username,
+              email: newMember.email,
+              fullName: `${firstName} ${lastName}`,
+              mobile: newMember.mobile,
+              primaryAddress: newMember.primaryAddress,
+              secondaryAddress: newMember.secondaryAddress,
+              sponsorId: member?.id,
+              assetId: newMember.assetId,
+              city: newMember.city,
+              state: newMember.state,
+              zipCode: newMember.zipCode,
+              wallets: newMember.memberWallets,
+            },
           },
-        },
-      });
+        });
 
-      toast.success('Update success!');
+        toast.success('Update success!');
 
-      router.push(paths.dashboard.profile.root);
+        router.push(paths.dashboard.profile.root);
+      } else {
+        toast.warning('Sum of percent muse be 100%');
+      }
     } catch (err) {
       if (err instanceof ApolloError) {
         const [error] = err.graphQLErrors;
@@ -109,17 +147,21 @@ export default function MemberGeneral({ me }: Props) {
     }
   });
 
+  useEffect(() => {
+    fetchMembers({
+      variables: {
+        page: '1,5',
+        filter: { OR: [{ username: { contains: member?.username ?? '', mode: 'insensitive' } }] },
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [member]);
+
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
-        <Grid md={12}>
+        <Grid md={12} xl={6}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="subtitle2">Personal Information</Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Personal information here.
-              </Typography>
-            </Stack>
             <Box
               rowGap={3}
               columnGap={2}
@@ -144,23 +186,44 @@ export default function MemberGeneral({ me }: Props) {
                 onChange={(e) => setLastName(e.target.value)}
               />
               <Field.Phone name="mobile" label="Mobile" />
-              <Field.Text name="primaryAddress" label="Primay Address" />
-              <Field.Select name="payoutId" label="TXC Payout">
-                {payouts.map((option) => (
-                  <MenuItem key={option?.id} value={option?.id}>
-                    {option?.method}
-                  </MenuItem>
-                ))}
-              </Field.Select>
-              <Field.Text name="wallet" />
+              <Autocomplete
+                fullWidth
+                options={members}
+                loading={memberLoading}
+                loadingText={<LoadingButton loading={memberLoading} />}
+                getOptionLabel={(option) => option!.username}
+                value={member ?? me!.sponsor}
+                renderInput={(params) => (
+                  <TextField {...params} label="Sponsor Name" margin="none" />
+                )}
+                renderOption={(props, option) => (
+                  <li {...props} key={option!.username}>
+                    {option!.username}
+                  </li>
+                )}
+                onInputChange={(_, username: string) => {
+                  setMember({ id: me?.sponsorId ?? '', username });
+                }}
+                onChange={(_, value) => {
+                  setMember({ id: value?.id ?? '', username: value?.username ?? '' });
+                }}
+              />
+              <Field.Text name="primaryAddress" label="Address" />
+              <Field.Text name="secondaryAddress" label="Address Line 2" />
+              <Field.Text name="city" label="City" />
+              <Field.Text name="state" label="State" />
+              <Field.Text name="zipCode" label="ZIP Code" />
+              <Field.Text name="assetId" label="Asset ID" />
             </Box>
-
-            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={loading}>
-                Save Changes
-              </LoadingButton>
-            </Stack>
           </Card>
+          <Stack alignItems="flex-start" sx={{ mt: 2 }}>
+            <LoadingButton type="submit" variant="contained" loading={loading}>
+              Save Changes
+            </LoadingButton>
+          </Stack>
+        </Grid>
+        <Grid md={12} xl={6}>
+          <MemberWallets payouts={payouts} wallets={me?.memberWallets ?? []} />
         </Grid>
       </Grid>
     </Form>
