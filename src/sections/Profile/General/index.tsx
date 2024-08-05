@@ -90,8 +90,6 @@ export default function MemberGeneral({ me }: Props) {
             fullName: `${firstName} ${lastName}`,
             mobile: newMember.mobile,
             primaryAddress: newMember.primaryAddress,
-            payoutId: newMember.payoutId,
-            wallet: newMember.wallet,
             assetId: newMember.wallet.substring(1, 7),
           },
         },

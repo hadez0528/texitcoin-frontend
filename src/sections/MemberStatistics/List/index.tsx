@@ -32,7 +32,6 @@ import type { IMemberStatisticsPrismaFilter, IMemberStatisticsTableFilters } fro
 
 const TABLE_HEAD = [
   { id: 'issuedAt', label: 'Date', width: 250, sortable: true },
-  { id: 'txcCold', label: 'TXC Cold', sortable: true },
   { id: 'hashPower', label: 'Hash Power', width: 200, sortable: true },
   { id: 'reward', label: 'Rewarded TXC', width: 300, sortable: true },
   { id: 'percent', label: 'Percent', width: 130, sortable: true },

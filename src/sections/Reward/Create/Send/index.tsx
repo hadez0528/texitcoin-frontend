@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useMutation, useLazyQuery } from '@apollo/client';
 
 import Box from '@mui/material/Box';
@@ -36,12 +36,43 @@ export default function SendMany({ date, handleBack }: Props) {
 
   const memberStatistics = data?.memberStatistics.memberStatistics ?? [];
 
+  const reward = useMemo(() => {
+    const rewardData = memberStatistics.reduce(
+      (prev: any, row) =>
+        row?.member?.memberWallets?.reduce(
+          (save: any, item) =>
+            save && save[item?.address ?? '']
+              ? {
+                  ...save,
+                  [item?.address ?? '']: {
+                    ...save[item?.address ?? ''],
+                    txcShared:
+                      save[item?.address ?? ''].txcShared +
+                      ((item?.percent ?? 0) * row.txcShared) / 100,
+                  },
+                }
+              : {
+                  ...save,
+                  [item?.address ?? '']: {
+                    address: item?.address,
+                    txcShared: ((item?.percent ?? 0) * row.txcShared) / 100,
+                  },
+                },
+          prev
+        ),
+      {}
+    );
+
+    return Object.values(rewardData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.memberStatistics]);
+
   const initial = ['sendmany "" "{'];
   const sendmany = [
     ...initial,
-    ...memberStatistics!.map(
-      (item, index) =>
-        `\\"${item?.member?.wallet}\\": ${item?.txcShared}${index === memberStatistics.length - 1 ? '}"' : ','}`
+    ...reward!.map(
+      (item: any, index) =>
+        `\\"${item?.address}\\": ${item?.txcShared}${index === reward.length - 1 ? '}"' : ','}`
     ),
   ];
 
