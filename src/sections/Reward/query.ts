@@ -134,3 +134,22 @@ export const REMOVE_STATISTICS = gql(/* GraphQL */ `
     }
   }
 `);
+
+export const REWARED_BY_WALLETS = gql(/* GraphQL */ `
+  query Rewards($from: DateTimeISO!, $to: DateTimeISO!) {
+    rewardsByWallets(from: $from, to: $to) {
+      rewards {
+        txc
+        wallet {
+          id
+          address
+          percent
+          payout {
+            name
+            method
+          }
+        }
+      }
+    }
+  }
+`);

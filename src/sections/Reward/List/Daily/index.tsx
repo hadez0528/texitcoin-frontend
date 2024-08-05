@@ -25,7 +25,7 @@ import {
   TablePaginationCustom,
 } from 'src/components/Table';
 
-import { FETCH_STATISTICS_QUERY } from '../query';
+import { FETCH_STATISTICS_QUERY } from '../../query';
 import StatisticsTableRow from './StatisticsTableRow';
 
 const TABLE_HEAD = [
