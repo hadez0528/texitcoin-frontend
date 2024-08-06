@@ -140,7 +140,7 @@ export default function StatisticsTableRow({ row, selected }: Props) {
                         <TableCell>{item?.memberWallet?.address}</TableCell>
                         <TableCell>{item?.memberStatistic?.hashPower}</TableCell>
                         <TableCell>{(item?.txc ?? 0) / 10 ** 8}</TableCell>
-                        <TableCell>{(item?.memberStatistic?.percent ?? 0) / 10 ** 8}</TableCell>
+                        <TableCell>{(item?.memberStatistic?.percent ?? 0) / 100}</TableCell>
                       </TableRow>
                     ))
                   )}

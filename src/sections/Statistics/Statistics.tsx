@@ -45,14 +45,19 @@ export default function StatisticsTable({ status = false }: Props) {
       { field: 'totalBlocks', headerName: 'Total Blocks', width: 150 },
       { field: 'totalHashPower', headerName: 'Total HashPower', width: 200 },
       { field: 'totalMembers', headerName: 'Total Members', width: 180 },
-      { field: 'txcShared', headerName: 'TXC Shared', flex: 1 },
+      {
+        field: 'txcShared',
+        headerName: 'TXC Shared',
+        flex: 1,
+        renderCell: (params) => params.row.txcShared / 10 ** 8,
+      },
       {
         field: 'diff',
         headerName: 'Diff',
         width: 100,
         sortable: false,
         filterable: false,
-        renderCell: (params) => params.row.newBlocks * 254 - params.row.txcShared,
+        renderCell: (params) => params.row.newBlocks * 254 - params.row.txcShared / 10 ** 8,
       },
       {
         field: 'from',

@@ -44,11 +44,11 @@ export default function Reward({ me }: Props) {
             series: [
               {
                 name: 'TXC Shared',
-                data: memberStatistics.map((item) => Number(item?.txcShared.toFixed(3))).reverse(),
+                data: memberStatistics.map((item) => (item?.txcShared ?? 0) / 10 ** 8).reverse(),
               },
               {
                 name: 'Hash Power',
-                data: memberStatistics.map((item) => Number(item?.hashPower.toFixed(3))).reverse(),
+                data: memberStatistics.map((item) => item?.hashPower ?? 0).reverse(),
               },
             ],
             options: {

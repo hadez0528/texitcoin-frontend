@@ -18,8 +18,8 @@ export default function MemberStatisticsTableRow({ row, selected }: Props) {
     <TableRow hover selected={selected}>
       <TableCell>{formatDate(issuedAt)}</TableCell>
       <TableCell>{hashPower}</TableCell>
-      <TableCell>{txcShared}</TableCell>
-      <TableCell>{percent.toFixed(2)} %</TableCell>
+      <TableCell>{txcShared / 10 ** 8}</TableCell>
+      <TableCell>{percent / 100} %</TableCell>
     </TableRow>
   );
 }

@@ -55,7 +55,9 @@ export default function Summary() {
             series: [
               {
                 name: 'Daily Reward',
-                data: statistics!.statistics!.map((item) => item!.txcShared).reverse(),
+                data: statistics!
+                  .statistics!.map((item) => (item!.txcShared ?? 0) / 10 ** 8)
+                  .reverse(),
               },
             ],
             options: {

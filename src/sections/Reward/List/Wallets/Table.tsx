@@ -31,6 +31,7 @@ export default function Table({ loading, data }: Props) {
         field: 'txc',
         headerName: 'TXC Shared',
         width: 500,
+        renderCell: (params) => params.row.txc / 10 ** 8,
       },
     ],
     []
@@ -45,7 +46,7 @@ export default function Table({ loading, data }: Props) {
       columns={columns}
       density="compact"
       filterMode="client"
-      getRowId={(params) => params.txc}
+      getRowId={(params) => params.wallet.id}
       columnVisibilityModel={columnVisibilityModel}
       onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
       rowSelection={false}
