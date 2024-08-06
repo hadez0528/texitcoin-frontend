@@ -30,7 +30,7 @@ import { FETCH_STATISTICS_QUERY } from '../../query';
 import StatisticsTableRow from './StatisticsTableRow';
 
 const TABLE_HEAD = [
-  { id: 'collapsible', label: '' },
+  { id: 'collapsible', label: '', width: 70 },
   { id: 'issuedAt', label: 'Date', sortable: true },
   { id: 'newBlocks', label: 'New Blocks', sortable: true },
   { id: 'totalHashPower', label: 'Total Hash', sortable: true },

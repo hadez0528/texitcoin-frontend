@@ -6,7 +6,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/config';
-import { varAlpha } from 'src/theme/styles';
 
 // ----------------------------------------------------------------------
 
@@ -34,22 +33,7 @@ export function EmptyContent({
   ...other
 }: EmptyContentProps) {
   return (
-    <Stack
-      flexGrow={1}
-      alignItems="center"
-      justifyContent="center"
-      sx={{
-        px: 3,
-        height: 1,
-        ...(filled && {
-          borderRadius: 2,
-          bgcolor: (theme) => varAlpha(theme.vars.palette.grey['500Channel'], 0.04),
-          border: (theme) => `dashed 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.08)}`,
-        }),
-        ...sx,
-      }}
-      {...other}
-    >
+    <Stack flexGrow={1} alignItems="center" justifyContent="center" {...other}>
       <Box
         component="img"
         alt="empty content"

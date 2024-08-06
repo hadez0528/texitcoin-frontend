@@ -14,6 +14,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  /** BigInt custom scalar type */
+  BigInt: { input: any; output: any; }
   /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format. */
   DateTimeISO: { input: any; output: any; }
   /** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
@@ -163,7 +165,7 @@ export type DailyReward = {
   __typename?: 'DailyReward';
   day: Scalars['DateTimeISO']['output'];
   rewardsByWallet: Array<RewardByWallet>;
-  totalTxc: Scalars['Float']['output'];
+  totalTxc: Scalars['BigInt']['output'];
 };
 
 export type DailyRewards = {
@@ -239,7 +241,7 @@ export type MemberOverview = {
   __typename?: 'MemberOverview';
   joinDate: Scalars['DateTimeISO']['output'];
   lastHashPower: Scalars['Float']['output'];
-  totalTXCShared: Scalars['Float']['output'];
+  totalTXCShared: Scalars['BigInt']['output'];
 };
 
 export type MemberOverviewInput = {
@@ -256,10 +258,10 @@ export type MemberStatistics = {
   member?: Maybe<Member>;
   memberId: Scalars['String']['output'];
   memberStatisticsWallets?: Maybe<Array<Maybe<MemberStatisticsWallet>>>;
-  percent: Scalars['Float']['output'];
+  percent: Scalars['BigInt']['output'];
   statistics?: Maybe<Statistics>;
   statisticsId: Scalars['String']['output'];
-  txcShared: Scalars['Float']['output'];
+  txcShared: Scalars['BigInt']['output'];
   updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
 };
 
@@ -279,7 +281,7 @@ export type MemberStatisticsWallet = {
   memberStatisticId: Scalars['String']['output'];
   memberWallet?: Maybe<MemberWallet>;
   memberWalletId: Scalars['String']['output'];
-  txc: Scalars['Float']['output'];
+  txc: Scalars['BigInt']['output'];
   updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
 };
 
@@ -300,7 +302,7 @@ export type MemberWallet = {
   memberStatisticsWallets?: Maybe<Array<Maybe<MemberStatisticsWallet>>>;
   payout?: Maybe<Payout>;
   payoutId: Scalars['ID']['output'];
-  percent: Scalars['Float']['output'];
+  percent: Scalars['BigInt']['output'];
   updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
 };
 
@@ -682,7 +684,7 @@ export type QueryStatisticsSalesArgs = {
 
 export type RewardByWallet = {
   __typename?: 'RewardByWallet';
-  txc: Scalars['Float']['output'];
+  txc: Scalars['BigInt']['output'];
   wallet: MemberWallet;
 };
 
@@ -729,7 +731,7 @@ export type Statistics = {
   totalBlocks: Scalars['Float']['output'];
   totalHashPower: Scalars['Float']['output'];
   totalMembers: Scalars['Float']['output'];
-  txcShared: Scalars['Float']['output'];
+  txcShared: Scalars['BigInt']['output'];
   updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
 };
 
@@ -831,7 +833,7 @@ export type UpdateStatisticsInput = {
 export type FetchMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchMeQuery = { __typename?: 'Query', memberMe: { __typename?: 'Member', id: string, username: string, fullName: string, email: string, primaryAddress: string, secondaryAddress?: string | null, assetId: string, mobile: string, city?: string | null, state?: string | null, zipCode?: string | null, sponsorId?: string | null, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, sponsor?: { __typename?: 'Member', id: string, username: string, fullName: string, email: string, primaryAddress: string, secondaryAddress?: string | null, mobile: string, assetId: string } | null, sales?: Array<{ __typename?: 'Sale', id: string, invoiceNo: number, memberId: string, packageId: string, paymentMethod: string, status: boolean, orderedAt: any } | null> | null, memberWallets?: Array<{ __typename?: 'MemberWallet', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, payoutId: string, address: string, percent: number, payout?: { __typename?: 'Payout', id: string, method: string, status: boolean, name: string, display: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null } | null> | null } };
+export type FetchMeQuery = { __typename?: 'Query', memberMe: { __typename?: 'Member', id: string, username: string, fullName: string, email: string, primaryAddress: string, secondaryAddress?: string | null, assetId: string, mobile: string, city?: string | null, state?: string | null, zipCode?: string | null, sponsorId?: string | null, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, sponsor?: { __typename?: 'Member', id: string, username: string, fullName: string, email: string, primaryAddress: string, secondaryAddress?: string | null, mobile: string, assetId: string } | null, sales?: Array<{ __typename?: 'Sale', id: string, invoiceNo: number, memberId: string, packageId: string, paymentMethod: string, status: boolean, orderedAt: any } | null> | null, memberWallets?: Array<{ __typename?: 'MemberWallet', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, payoutId: string, address: string, percent: any, payout?: { __typename?: 'Payout', id: string, method: string, status: boolean, name: string, display: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null } | null> | null } };
 
 export type FetchMemberStatsQueryVariables = Exact<{
   inactiveFilter?: InputMaybe<Scalars['JSONObject']['input']>;
@@ -847,7 +849,7 @@ export type FetchMembersQueryVariables = Exact<{
 }>;
 
 
-export type FetchMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersResponse', total?: number | null, members?: Array<{ __typename?: 'Member', id: string, username: string, fullName: string, email: string, primaryAddress: string, secondaryAddress?: string | null, assetId: string, mobile: string, city?: string | null, state?: string | null, zipCode?: string | null, sponsorId?: string | null, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, sponsor?: { __typename?: 'Member', id: string, username: string, fullName: string, email: string, primaryAddress: string, secondaryAddress?: string | null, mobile: string, assetId: string } | null, sales?: Array<{ __typename?: 'Sale', id: string, invoiceNo: number, memberId: string, packageId: string, paymentMethod: string, status: boolean, orderedAt: any } | null> | null, memberWallets?: Array<{ __typename?: 'MemberWallet', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, payoutId: string, address: string, percent: number, payout?: { __typename?: 'Payout', id: string, method: string, status: boolean, name: string, display: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null } | null> | null } | null> | null } };
+export type FetchMembersQuery = { __typename?: 'Query', members: { __typename?: 'MembersResponse', total?: number | null, members?: Array<{ __typename?: 'Member', id: string, username: string, fullName: string, email: string, primaryAddress: string, secondaryAddress?: string | null, assetId: string, mobile: string, city?: string | null, state?: string | null, zipCode?: string | null, sponsorId?: string | null, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, sponsor?: { __typename?: 'Member', id: string, username: string, fullName: string, email: string, primaryAddress: string, secondaryAddress?: string | null, mobile: string, assetId: string } | null, sales?: Array<{ __typename?: 'Sale', id: string, invoiceNo: number, memberId: string, packageId: string, paymentMethod: string, status: boolean, orderedAt: any } | null> | null, memberWallets?: Array<{ __typename?: 'MemberWallet', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, payoutId: string, address: string, percent: any, payout?: { __typename?: 'Payout', id: string, method: string, status: boolean, name: string, display: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null } | null> | null } | null> | null } };
 
 export type CreateMemberMutationVariables = Exact<{
   data: CreateMemberInput;
@@ -861,21 +863,21 @@ export type FetchMemberQueryVariables = Exact<{
 }>;
 
 
-export type FetchMemberQuery = { __typename?: 'Query', members: { __typename?: 'MembersResponse', members?: Array<{ __typename?: 'Member', id: string, username: string, fullName: string, email: string, mobile: string, primaryAddress: string, secondaryAddress?: string | null, assetId: string, deletedAt?: any | null, memberWallets?: Array<{ __typename?: 'MemberWallet', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, payoutId: string, address: string, percent: number, payout?: { __typename?: 'Payout', id: string, method: string, status: boolean, name: string, display: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null } | null> | null } | null> | null } };
+export type FetchMemberQuery = { __typename?: 'Query', members: { __typename?: 'MembersResponse', members?: Array<{ __typename?: 'Member', id: string, username: string, fullName: string, email: string, mobile: string, primaryAddress: string, secondaryAddress?: string | null, assetId: string, deletedAt?: any | null, memberWallets?: Array<{ __typename?: 'MemberWallet', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, payoutId: string, address: string, percent: any, payout?: { __typename?: 'Payout', id: string, method: string, status: boolean, name: string, display: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null } | null> | null } | null> | null } };
 
 export type UpdateMemberMutationVariables = Exact<{
   data: UpdateMemberInput;
 }>;
 
 
-export type UpdateMemberMutation = { __typename?: 'Mutation', updateMember: { __typename?: 'Member', id: string, mobile: string, primaryAddress: string, secondaryAddress?: string | null, assetId: string, memberWallets?: Array<{ __typename?: 'MemberWallet', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, payoutId: string, address: string, percent: number, payout?: { __typename?: 'Payout', method: string, display: string } | null } | null> | null } };
+export type UpdateMemberMutation = { __typename?: 'Mutation', updateMember: { __typename?: 'Member', id: string, mobile: string, primaryAddress: string, secondaryAddress?: string | null, assetId: string, memberWallets?: Array<{ __typename?: 'MemberWallet', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, payoutId: string, address: string, percent: any, payout?: { __typename?: 'Payout', method: string, display: string } | null } | null> | null } };
 
 export type MemberOverviewQueryVariables = Exact<{
   data: MemberOverviewInput;
 }>;
 
 
-export type MemberOverviewQuery = { __typename?: 'Query', memberOverview: { __typename?: 'MemberOverview', lastHashPower: number, totalTXCShared: number, joinDate: any } };
+export type MemberOverviewQuery = { __typename?: 'Query', memberOverview: { __typename?: 'MemberOverview', lastHashPower: number, totalTXCShared: any, joinDate: any } };
 
 export type MemberStatisticsQueryVariables = Exact<{
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -884,7 +886,7 @@ export type MemberStatisticsQueryVariables = Exact<{
 }>;
 
 
-export type MemberStatisticsQuery = { __typename?: 'Query', memberStatistics: { __typename?: 'MemberStatisticsResponse', total?: number | null, memberStatistics?: Array<{ __typename?: 'MemberStatistics', issuedAt: any, hashPower: number, txcShared: number } | null> | null } };
+export type MemberStatisticsQuery = { __typename?: 'Query', memberStatistics: { __typename?: 'MemberStatisticsResponse', total?: number | null, memberStatistics?: Array<{ __typename?: 'MemberStatistics', issuedAt: any, hashPower: number, txcShared: any } | null> | null } };
 
 export type PayoutsQueryVariables = Exact<{
   filter?: InputMaybe<Scalars['JSONObject']['input']>;
@@ -902,7 +904,7 @@ export type RewardQueryVariables = Exact<{
 }>;
 
 
-export type RewardQuery = { __typename?: 'Query', statistics: { __typename?: 'StatisticsResponse', total?: number | null, statistics?: Array<{ __typename?: 'Statistics', id: string, issuedAt: any, newBlocks: number, totalBlocks: number, totalHashPower: number, totalMembers: number, txcShared: number, from: any, to: any, status: boolean, statisticsSales?: Array<{ __typename?: 'StatisticsSale', id: string, saleId: string, issuedAt: any } | null> | null, memberStatistics?: Array<{ __typename?: 'MemberStatistics', txcShared: number, memberStatisticsWallets?: Array<{ __typename?: 'MemberStatisticsWallet', id: string } | null> | null } | null> | null } | null> | null } };
+export type RewardQuery = { __typename?: 'Query', statistics: { __typename?: 'StatisticsResponse', total?: number | null, statistics?: Array<{ __typename?: 'Statistics', id: string, issuedAt: any, newBlocks: number, totalBlocks: number, totalHashPower: number, totalMembers: number, txcShared: any, from: any, to: any, status: boolean, statisticsSales?: Array<{ __typename?: 'StatisticsSale', id: string, saleId: string, issuedAt: any } | null> | null, memberStatistics?: Array<{ __typename?: 'MemberStatistics', txcShared: any, memberStatisticsWallets?: Array<{ __typename?: 'MemberStatisticsWallet', id: string } | null> | null } | null> | null } | null> | null } };
 
 export type FetchMemberStatisticsQueryVariables = Exact<{
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -911,7 +913,7 @@ export type FetchMemberStatisticsQueryVariables = Exact<{
 }>;
 
 
-export type FetchMemberStatisticsQuery = { __typename?: 'Query', memberStatistics: { __typename?: 'MemberStatisticsResponse', total?: number | null, memberStatistics?: Array<{ __typename?: 'MemberStatistics', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, statisticsId: string, txcShared: number, hashPower: number, percent: number, issuedAt: any, member?: { __typename?: 'Member', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, username: string, fullName: string, email: string, mobile: string, assetId: string, primaryAddress: string, secondaryAddress?: string | null, memberWallets?: Array<{ __typename?: 'MemberWallet', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, payoutId: string, address: string, percent: number, payout?: { __typename?: 'Payout', id: string, method: string, status: boolean, name: string, display: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null } | null> | null } | null, statistics?: { __typename?: 'Statistics', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, newBlocks: number, totalBlocks: number, totalHashPower: number, totalMembers: number, status: boolean, txcShared: number, issuedAt: any, from: any, to: any } | null } | null> | null } };
+export type FetchMemberStatisticsQuery = { __typename?: 'Query', memberStatistics: { __typename?: 'MemberStatisticsResponse', total?: number | null, memberStatistics?: Array<{ __typename?: 'MemberStatistics', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, statisticsId: string, txcShared: any, hashPower: number, percent: any, issuedAt: any, member?: { __typename?: 'Member', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, username: string, fullName: string, email: string, mobile: string, assetId: string, primaryAddress: string, secondaryAddress?: string | null, memberWallets?: Array<{ __typename?: 'MemberWallet', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, payoutId: string, address: string, percent: any, payout?: { __typename?: 'Payout', id: string, method: string, status: boolean, name: string, display: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null } | null> | null } | null, statistics?: { __typename?: 'Statistics', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, newBlocks: number, totalBlocks: number, totalHashPower: number, totalMembers: number, status: boolean, txcShared: any, issuedAt: any, from: any, to: any } | null } | null> | null } };
 
 export type CreateStatisticsMutationVariables = Exact<{
   data: CreateStatisticsInput;
@@ -932,7 +934,7 @@ export type UpdateStatisticsMutationVariables = Exact<{
 }>;
 
 
-export type UpdateStatisticsMutation = { __typename?: 'Mutation', updateStatistics: { __typename?: 'Statistics', status: boolean, txcShared: number } };
+export type UpdateStatisticsMutation = { __typename?: 'Mutation', updateStatistics: { __typename?: 'Statistics', status: boolean, txcShared: any } };
 
 export type RemoveMemberStatisticsByStaitisIdMutationVariables = Exact<{
   data: IdInput;
@@ -954,7 +956,7 @@ export type RewardsQueryVariables = Exact<{
 }>;
 
 
-export type RewardsQuery = { __typename?: 'Query', rewardsByWallets: { __typename?: 'RewardsByWallets', rewards: Array<{ __typename?: 'RewardByWallet', txc: number, wallet: { __typename?: 'MemberWallet', id: string, address: string, percent: number, payout?: { __typename?: 'Payout', name: string, method: string } | null } }> } };
+export type RewardsQuery = { __typename?: 'Query', rewardsByWallets: { __typename?: 'RewardsByWallets', rewards: Array<{ __typename?: 'RewardByWallet', txc: any, wallet: { __typename?: 'MemberWallet', id: string, address: string, percent: any, payout?: { __typename?: 'Payout', name: string, method: string } | null } }> } };
 
 export type DailyRewardsQueryVariables = Exact<{
   from: Scalars['DateTimeISO']['input'];
@@ -962,7 +964,7 @@ export type DailyRewardsQueryVariables = Exact<{
 }>;
 
 
-export type DailyRewardsQuery = { __typename?: 'Query', dailyRewards: { __typename?: 'DailyRewards', rewards: Array<{ __typename?: 'DailyReward', day: any, totalTxc: number, rewardsByWallet: Array<{ __typename?: 'RewardByWallet', txc: number, wallet: { __typename?: 'MemberWallet', address: string, payout?: { __typename?: 'Payout', method: string } | null } }> }> } };
+export type DailyRewardsQuery = { __typename?: 'Query', dailyRewards: { __typename?: 'DailyRewards', rewards: Array<{ __typename?: 'DailyReward', day: any, totalTxc: any, rewardsByWallet: Array<{ __typename?: 'RewardByWallet', txc: any, wallet: { __typename?: 'MemberWallet', address: string, payout?: { __typename?: 'Payout', method: string } | null } }> }> } };
 
 export type MemberStatisticsWalletsQueryVariables = Exact<{
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -971,7 +973,7 @@ export type MemberStatisticsWalletsQueryVariables = Exact<{
 }>;
 
 
-export type MemberStatisticsWalletsQuery = { __typename?: 'Query', memberStatisticsWallets: { __typename?: 'MemberStatisticsWalletResponse', memberStatisticsWallets?: Array<{ __typename?: 'MemberStatisticsWallet', id: string, txc: number, issuedAt: any, memberWallet?: { __typename?: 'MemberWallet', address: string } | null, memberStatistic?: { __typename?: 'MemberStatistics', hashPower: number, percent: number, txcShared: number } | null } | null> | null } };
+export type MemberStatisticsWalletsQuery = { __typename?: 'Query', memberStatisticsWallets: { __typename?: 'MemberStatisticsWalletResponse', memberStatisticsWallets?: Array<{ __typename?: 'MemberStatisticsWallet', id: string, txc: any, issuedAt: any, memberWallet?: { __typename?: 'MemberWallet', address: string } | null, memberStatistic?: { __typename?: 'MemberStatistics', hashPower: number, percent: any, txcShared: any } | null } | null> | null } };
 
 export type FetchSalesQueryVariables = Exact<{
   sort?: InputMaybe<Scalars['String']['input']>;
@@ -980,7 +982,7 @@ export type FetchSalesQueryVariables = Exact<{
 }>;
 
 
-export type FetchSalesQuery = { __typename?: 'Query', sales: { __typename?: 'SalesResponse', total?: number | null, sales?: Array<{ __typename?: 'Sale', id: string, invoiceNo: number, memberId: string, packageId: string, orderedAt: any, status: boolean, paymentMethod: string, member?: { __typename?: 'Member', id: string, username: string, fullName: string, email: string, mobile: string, assetId: string, primaryAddress: string, secondaryAddress?: string | null, memberWallets?: Array<{ __typename?: 'MemberWallet', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, payoutId: string, address: string, percent: number, payout?: { __typename?: 'Payout', id: string, method: string, status: boolean, name: string, display: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null } | null> | null } | null, package?: { __typename?: 'Package', id: string, productName: string, amount: number, date: any, token: number, status: boolean } | null } | null> | null } };
+export type FetchSalesQuery = { __typename?: 'Query', sales: { __typename?: 'SalesResponse', total?: number | null, sales?: Array<{ __typename?: 'Sale', id: string, invoiceNo: number, memberId: string, packageId: string, orderedAt: any, status: boolean, paymentMethod: string, member?: { __typename?: 'Member', id: string, username: string, fullName: string, email: string, mobile: string, assetId: string, primaryAddress: string, secondaryAddress?: string | null, memberWallets?: Array<{ __typename?: 'MemberWallet', createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, id: string, memberId: string, payoutId: string, address: string, percent: any, payout?: { __typename?: 'Payout', id: string, method: string, status: boolean, name: string, display: string, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null } | null> | null } | null, package?: { __typename?: 'Package', id: string, productName: string, amount: number, date: any, token: number, status: boolean } | null } | null> | null } };
 
 export type FetchSaleStatsQueryVariables = Exact<{
   allFilter?: InputMaybe<Scalars['JSONObject']['input']>;
@@ -1043,7 +1045,7 @@ export type StatisticsQueryVariables = Exact<{
 }>;
 
 
-export type StatisticsQuery = { __typename?: 'Query', statistics: { __typename?: 'StatisticsResponse', total?: number | null, statistics?: Array<{ __typename?: 'Statistics', id: string, totalHashPower: number, newBlocks: number, totalBlocks: number, totalMembers: number, txcShared: number, issuedAt: any, from: any, to: any, status: boolean, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null> | null } };
+export type StatisticsQuery = { __typename?: 'Query', statistics: { __typename?: 'StatisticsResponse', total?: number | null, statistics?: Array<{ __typename?: 'Statistics', id: string, totalHashPower: number, newBlocks: number, totalBlocks: number, totalMembers: number, txcShared: any, issuedAt: any, from: any, to: any, status: boolean, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null> | null } };
 
 export type TxcMemberStatisticsQueryVariables = Exact<{
   page?: InputMaybe<Scalars['String']['input']>;
@@ -1052,7 +1054,7 @@ export type TxcMemberStatisticsQueryVariables = Exact<{
 }>;
 
 
-export type TxcMemberStatisticsQuery = { __typename?: 'Query', memberStatistics: { __typename?: 'MemberStatisticsResponse', total?: number | null, memberStatistics?: Array<{ __typename?: 'MemberStatistics', id: string, hashPower: number, txcShared: number, issuedAt: any, percent: number, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, member?: { __typename?: 'Member', username: string, email: string, assetId: string } | null, statistics?: { __typename?: 'Statistics', newBlocks: number, status: boolean } | null } | null> | null } };
+export type TxcMemberStatisticsQuery = { __typename?: 'Query', memberStatistics: { __typename?: 'MemberStatisticsResponse', total?: number | null, memberStatistics?: Array<{ __typename?: 'MemberStatistics', id: string, hashPower: number, txcShared: any, issuedAt: any, percent: any, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null, member?: { __typename?: 'Member', username: string, email: string, assetId: string } | null, statistics?: { __typename?: 'Statistics', newBlocks: number, status: boolean } | null } | null> | null } };
 
 export type HistoryStatisticsQueryVariables = Exact<{
   page?: InputMaybe<Scalars['String']['input']>;
@@ -1061,7 +1063,7 @@ export type HistoryStatisticsQueryVariables = Exact<{
 }>;
 
 
-export type HistoryStatisticsQuery = { __typename?: 'Query', statistics: { __typename?: 'StatisticsResponse', total?: number | null, statistics?: Array<{ __typename?: 'Statistics', id: string, totalHashPower: number, newBlocks: number, totalBlocks: number, totalMembers: number, txcShared: number, issuedAt: any, from: any, to: any, status: boolean, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null> | null } };
+export type HistoryStatisticsQuery = { __typename?: 'Query', statistics: { __typename?: 'StatisticsResponse', total?: number | null, statistics?: Array<{ __typename?: 'Statistics', id: string, totalHashPower: number, newBlocks: number, totalBlocks: number, totalMembers: number, txcShared: any, issuedAt: any, from: any, to: any, status: boolean, createdAt?: any | null, updatedAt?: any | null, deletedAt?: any | null } | null> | null } };
 
 
 export const FetchMeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"fetchMe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"memberMe"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"primaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"secondaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"assetId"}},{"kind":"Field","name":{"kind":"Name","value":"mobile"}},{"kind":"Field","name":{"kind":"Name","value":"city"}},{"kind":"Field","name":{"kind":"Name","value":"state"}},{"kind":"Field","name":{"kind":"Name","value":"zipCode"}},{"kind":"Field","name":{"kind":"Name","value":"sponsorId"}},{"kind":"Field","name":{"kind":"Name","value":"sponsor"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"primaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"secondaryAddress"}},{"kind":"Field","name":{"kind":"Name","value":"mobile"}},{"kind":"Field","name":{"kind":"Name","value":"assetId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"sales"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"invoiceNo"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"packageId"}},{"kind":"Field","name":{"kind":"Name","value":"paymentMethod"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"orderedAt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"memberWallets"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"payoutId"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"percent"}},{"kind":"Field","name":{"kind":"Name","value":"payout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"method"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"display"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"deletedAt"}}]}}]}}]} as unknown as DocumentNode<FetchMeQuery, FetchMeQueryVariables>;

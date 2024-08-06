@@ -83,8 +83,8 @@ export default function StatisticsTableRow({ row, selected }: Props) {
         <TableCell>{newBlocks}</TableCell>
         <TableCell>{totalHashPower}</TableCell>
         <TableCell>{totalMembers}</TableCell>
-        <TableCell>{txcShared}</TableCell>
-        <TableCell>{memberStatistics[0].txcShared}</TableCell>
+        <TableCell>{txcShared / 10 ** 8}</TableCell>
+        <TableCell>{memberStatistics[0].txcShared / 10 ** 8}</TableCell>
 
         <TableCell align="center">
           {status && (
@@ -130,7 +130,7 @@ export default function StatisticsTableRow({ row, selected }: Props) {
                   {loading ? (
                     <>
                       {new Array(wallets).fill('').map(() => (
-                        <TableSkeleton />
+                        <TableSkeleton height={7} />
                       ))}
                     </>
                   ) : (
@@ -139,8 +139,8 @@ export default function StatisticsTableRow({ row, selected }: Props) {
                         <TableCell>{formatDate(item?.issuedAt)}</TableCell>
                         <TableCell>{item?.memberWallet?.address}</TableCell>
                         <TableCell>{item?.memberStatistic?.hashPower}</TableCell>
-                        <TableCell>{item?.txc}</TableCell>
-                        <TableCell>{item?.memberStatistic?.percent}</TableCell>
+                        <TableCell>{(item?.txc ?? 0) / 10 ** 8}</TableCell>
+                        <TableCell>{(item?.memberStatistic?.percent ?? 0) / 10 ** 8}</TableCell>
                       </TableRow>
                     ))
                   )}

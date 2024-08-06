@@ -7,7 +7,11 @@ import TableCell from '@mui/material/TableCell';
 
 // ----------------------------------------------------------------------
 
-export function TableSkeleton({ ...other }: TableRowProps) {
+interface Props extends TableRowProps {
+  height?: number;
+}
+
+export function TableSkeleton({ height = 21, ...other }: Props) {
   return (
     <TableRow {...other}>
       <TableCell colSpan={12}>
@@ -15,16 +19,15 @@ export function TableSkeleton({ ...other }: TableRowProps) {
           <Skeleton
             sx={{
               borderRadius: 1.5,
-              width: 48,
-              height: 16,
-              flexShrink: 0,
+              width: 70,
+              height,
             }}
           />
-          <Skeleton sx={{ width: 1, height: 16 }} />
-          <Skeleton sx={{ width: 180, height: 16 }} />
-          <Skeleton sx={{ width: 160, height: 16 }} />
-          <Skeleton sx={{ width: 140, height: 16 }} />
-          <Skeleton sx={{ width: 120, height: 16 }} />
+          <Skeleton sx={{ width: 1, height }} />
+          <Skeleton sx={{ width: 180, height }} />
+          <Skeleton sx={{ width: 160, height }} />
+          <Skeleton sx={{ width: 140, height }} />
+          <Skeleton sx={{ width: 120, height }} />
         </Stack>
       </TableCell>
     </TableRow>
