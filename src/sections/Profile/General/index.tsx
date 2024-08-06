@@ -45,11 +45,11 @@ const MemberGeneralSchema = zod.object({
     .string({ required_error: 'Email is required' })
     .email({ message: 'Invalid email address is provided' }),
   mobile: zod.string({ required_error: 'Mobile is required' }),
-  city: zod.string({ required_error: 'City is required' }),
-  zipCode: zod.string({ required_error: 'ZIPCode is required' }),
-  state: zod.string({ required_error: 'State is required' }),
+  city: zod.string().optional().nullable(),
+  zipCode: zod.string().optional().nullable(),
+  state: zod.string().optional().nullable(),
   primaryAddress: zod.string({ required_error: 'Address is required' }),
-  secondaryAddress: zod.string({ required_error: 'Address Line 2 is required' }),
+  secondaryAddress: zod.string().optional().nullable(),
   sponsorId: zod.string().optional().nullable(),
   assetId: zod.string({ required_error: 'AssetID is required' }),
   memberWallets: zod.array(
@@ -125,7 +125,10 @@ export default function MemberGeneral({ me }: Props) {
               city: newMember.city,
               state: newMember.state,
               zipCode: newMember.zipCode,
-              wallets: newMember.memberWallets,
+              wallets: newMember.memberWallets.map(({ percent, ...rest }) => ({
+                percent: percent * 100,
+                ...rest,
+              })),
             },
           },
         });

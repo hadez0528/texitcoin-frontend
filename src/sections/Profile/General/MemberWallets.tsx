@@ -42,7 +42,7 @@ export default function MemberWallets({ payouts, wallets }: Props) {
     wallets.forEach(({ payoutId, address, percent }, index) => {
       setValue(`memberWallets[${index}].payoutId`, payoutId);
       setValue(`memberWallets[${index}].address`, address);
-      setValue(`memberWallets[${index}].percent`, percent);
+      setValue(`memberWallets[${index}].percent`, percent / 100);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallets]);
