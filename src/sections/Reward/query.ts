@@ -19,6 +19,12 @@ export const FETCH_STATISTICS_QUERY = gql(/* GraphQL */ `
           saleId
           issuedAt
         }
+        memberStatistics {
+          txcShared
+          memberStatisticsWallets {
+            id
+          }
+        }
       }
       total
     }
@@ -148,6 +154,46 @@ export const REWARED_BY_WALLETS = gql(/* GraphQL */ `
             name
             method
           }
+        }
+      }
+    }
+  }
+`);
+
+export const FETCH_DAILY_REWARD = gql(/* GraphQL */ `
+  query DailyRewards($from: DateTimeISO!, $to: DateTimeISO!) {
+    dailyRewards(from: $from, to: $to) {
+      rewards {
+        day
+        rewardsByWallet {
+          txc
+          wallet {
+            address
+            payout {
+              method
+            }
+          }
+        }
+        totalTxc
+      }
+    }
+  }
+`);
+
+export const FETCH_MEMBERSTATISTICS_WALLETS_QUERY = gql(/* GraphQL */ `
+  query MemberStatisticsWallets($sort: String, $page: String, $filter: JSONObject) {
+    memberStatisticsWallets(sort: $sort, page: $page, filter: $filter) {
+      memberStatisticsWallets {
+        id
+        txc
+        issuedAt
+        memberWallet {
+          address
+        }
+        memberStatistic {
+          hashPower
+          percent
+          txcShared
         }
       }
     }

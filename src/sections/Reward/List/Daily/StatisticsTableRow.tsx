@@ -1,16 +1,27 @@
+import { useLazyQuery } from '@apollo/client';
+
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
 import Tooltip from '@mui/material/Tooltip';
+import Collapse from '@mui/material/Collapse';
 import TableRow from '@mui/material/TableRow';
+import TableHead from '@mui/material/TableHead';
 import TableCell from '@mui/material/TableCell';
+import TableBody from '@mui/material/TableBody';
+import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import ListItemText from '@mui/material/ListItemText';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { fDate, fTime, formatDate } from 'src/utils/format-time';
+import { useBoolean } from 'src/hooks/useBoolean';
 
-import { Label } from 'src/components/Label';
+import { formatDate } from 'src/utils/format-time';
+
 import { Iconify } from 'src/components/Iconify';
+import { TableSkeleton } from 'src/components/Table';
+
+import { FETCH_MEMBERSTATISTICS_WALLETS_QUERY } from '../../query';
 
 // ----------------------------------------------------------------------
 
@@ -25,79 +36,120 @@ export default function StatisticsTableRow({ row, selected }: Props) {
     id,
     issuedAt,
     newBlocks,
-    totalBlocks,
     totalHashPower,
     totalMembers,
     txcShared,
-    from,
-    to,
     status,
+    memberStatistics,
   } = row;
 
   const router = useRouter();
 
-  return (
-    <TableRow
-      hover
-      selected={selected}
-      sx={{ cursor: 'pointer' }}
-      onClick={() => window.open(paths.dashboard.reward.detail(id))}
-    >
-      <TableCell>{formatDate(issuedAt)}</TableCell>
-      <TableCell>{newBlocks}</TableCell>
-      <TableCell>{totalBlocks}</TableCell>
-      <TableCell>{totalHashPower}</TableCell>
-      <TableCell>{totalMembers}</TableCell>
-      <TableCell>{txcShared}</TableCell>
-      <TableCell>{newBlocks * 254 - txcShared}</TableCell>
+  const collapsible = useBoolean();
 
-      <TableCell>
-        <ListItemText
-          primary={fDate(from)}
-          secondary={fTime(from)}
-          primaryTypographyProps={{ typography: 'caption', noWrap: true }}
-          secondaryTypographyProps={{
-            mt: 0.5,
-            component: 'span',
-            typography: 'caption',
-          }}
-        />
-      </TableCell>
-      <TableCell>
-        <ListItemText
-          primary={fDate(to)}
-          secondary={fTime(to)}
-          primaryTypographyProps={{ typography: 'caption', noWrap: true }}
-          secondaryTypographyProps={{
-            mt: 0.5,
-            component: 'span',
-            typography: 'caption',
-          }}
-        />
-      </TableCell>
-      <TableCell align="left" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-        {status ? (
-          <Label variant="soft" color="success">
-            Confirmed
-          </Label>
-        ) : (
-          <Label variant="soft" color="error">
-            Pending
-          </Label>
-        )}
-      </TableCell>
-      <TableCell align="center">
-        {status && (
-          <Tooltip title="View" placement="top" arrow>
-            <IconButton
-              color="success"
-              onClick={() => router.push(paths.dashboard.reward.view(id))}
+  const [fetchMemberStatistics, { loading, data }] = useLazyQuery(
+    FETCH_MEMBERSTATISTICS_WALLETS_QUERY,
+    {
+      variables: { filter: { issuedAt } },
+    }
+  );
+
+  const reward = data?.memberStatisticsWallets.memberStatisticsWallets ?? [];
+
+  const wallets = memberStatistics[0].memberStatisticsWallets.length;
+
+  return (
+    <>
+      <TableRow
+        selected={selected}
+        onClick={() => {
+          if (!collapsible.value) {
+            fetchMemberStatistics();
+          }
+        }}
+      >
+        <TableCell>
+          <IconButton
+            size="small"
+            color={collapsible.value ? 'inherit' : 'default'}
+            onClick={collapsible.onToggle}
+          >
+            <Iconify
+              icon={collapsible.value ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
+            />
+          </IconButton>
+        </TableCell>
+        <TableCell>{formatDate(issuedAt)}</TableCell>
+        <TableCell>{newBlocks}</TableCell>
+        <TableCell>{totalHashPower}</TableCell>
+        <TableCell>{totalMembers}</TableCell>
+        <TableCell>{txcShared}</TableCell>
+        <TableCell>{memberStatistics[0].txcShared}</TableCell>
+
+        <TableCell align="center">
+          {status && (
+            <Tooltip title="View" placement="top" arrow>
+              <IconButton
+                color="success"
+                onClick={() => router.push(paths.dashboard.reward.view(id))}
+              >
+                <Iconify icon="solar:eye-bold" />
+              </IconButton>
+            </Tooltip>
+          )}
+        </TableCell>
+      </TableRow>
+
+      <TableRow>
+        <TableCell sx={{ py: 0 }} colSpan={12}>
+          <Collapse in={collapsible.value} timeout="auto" unmountOnExit>
+            <Paper
+              variant="outlined"
+              sx={{
+                py: 1,
+                mb: 2,
+                borderRadius: 1.5,
+                ...(collapsible.value && { boxShadow: (theme) => theme.customShadows.z20 }),
+              }}
             >
-              <Iconify icon="solar:eye-bold" />
-            </IconButton>
-          </Tooltip>
-        )}
-      </TableCell>
-    </TableRow>
+              <Typography variant="h6" component="div" sx={{ p: 2 }}>
+                Wallets
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>date</TableCell>
+                    <TableCell>address</TableCell>
+                    <TableCell>hashPower</TableCell>
+                    <TableCell>txc</TableCell>
+                    <TableCell>percent</TableCell>
+                  </TableRow>
+                </TableHead>
+
+                <TableBody>
+                  {loading ? (
+                    <>
+                      {new Array(wallets).fill('').map(() => (
+                        <TableSkeleton />
+                      ))}
+                    </>
+                  ) : (
+                    reward?.map((item) => (
+                      <TableRow key={item?.id}>
+                        <TableCell>{formatDate(item?.issuedAt)}</TableCell>
+                        <TableCell>{item?.memberWallet?.address}</TableCell>
+                        <TableCell>{item?.memberStatistic?.hashPower}</TableCell>
+                        <TableCell>{item?.txc}</TableCell>
+                        <TableCell>{item?.memberStatistic?.percent}</TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </Paper>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
   );
 }

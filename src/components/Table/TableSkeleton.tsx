@@ -11,20 +11,20 @@ export function TableSkeleton({ ...other }: TableRowProps) {
   return (
     <TableRow {...other}>
       <TableCell colSpan={12}>
-        <Stack spacing={3} direction="row" alignItems="center">
+        <Stack spacing={3} direction="row" alignItems="center" sx={{ my: 1 }}>
           <Skeleton
             sx={{
               borderRadius: 1.5,
               width: 48,
-              height: 48,
+              height: 16,
               flexShrink: 0,
             }}
           />
-          <Skeleton sx={{ width: 1, height: 12 }} />
-          <Skeleton sx={{ width: 180, height: 12 }} />
-          <Skeleton sx={{ width: 160, height: 12 }} />
-          <Skeleton sx={{ width: 140, height: 12 }} />
-          <Skeleton sx={{ width: 120, height: 12 }} />
+          <Skeleton sx={{ width: 1, height: 16 }} />
+          <Skeleton sx={{ width: 180, height: 16 }} />
+          <Skeleton sx={{ width: 160, height: 16 }} />
+          <Skeleton sx={{ width: 140, height: 16 }} />
+          <Skeleton sx={{ width: 120, height: 16 }} />
         </Stack>
       </TableCell>
     </TableRow>

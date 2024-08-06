@@ -18,7 +18,7 @@ export default function Table({ loading, data }: Props) {
       {
         field: 'method',
         headerName: 'Method',
-        width: 200,
+        width: 300,
         renderCell: (params) => params.row.wallet.payout.method,
       },
       {
@@ -30,7 +30,7 @@ export default function Table({ loading, data }: Props) {
       {
         field: 'txc',
         headerName: 'TXC Shared',
-        width: 200,
+        width: 500,
       },
     ],
     []

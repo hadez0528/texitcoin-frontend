@@ -4,7 +4,6 @@ import { useLazyQuery } from '@apollo/client';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 import { fDateTime } from 'src/utils/format-time';
@@ -24,10 +23,7 @@ export default function Wallets() {
   }, [from, to]);
 
   const renderHeader = (
-    <Stack direction="row" justifyContent="space-between">
-      <Stack sx={{ p: 2 }}>
-        <Typography variant="h6">Reward</Typography>
-      </Stack>
+    <Stack direction="row" justifyContent="flex-end">
       <Stack direction="row" gap={2}>
         <DesktopDatePicker
           label="Start Date"

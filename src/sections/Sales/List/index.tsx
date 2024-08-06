@@ -8,10 +8,8 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
-import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
-import Skeleton from '@mui/material/Skeleton';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -31,6 +29,7 @@ import { Breadcrumbs } from 'src/components/Breadcrumbs';
 import {
   useTable,
   TableNoData,
+  TableSkeleton,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -206,35 +205,33 @@ export default function SaleListView() {
 
           <ScrollBar>
             <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <TableHeadCustom
+                order={sort && sort[Object.keys(sort)[0]]}
+                orderBy={sort && Object.keys(sort)[0]}
+                headLabel={TABLE_HEAD}
+                rowCount={loading ? 0 : tableData!.sales!.length}
+                onSort={(id) => {
+                  const isAsc = sort && sort[id] === 'asc';
+                  const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
+                  setQuery({ ...query, sort: newSort });
+                }}
+              />
               {loading ? (
-                <Paper sx={{ display: 'block', width: '95%', margin: 'auto' }}>
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                  <Skeleton variant="text" sx={{ width: '100%', height: 60 }} />
-                </Paper>
-              ) : (
                 <>
-                  <TableHeadCustom
-                    order={sort && sort[Object.keys(sort)[0]]}
-                    orderBy={sort && Object.keys(sort)[0]}
-                    headLabel={TABLE_HEAD}
-                    rowCount={loading ? 0 : tableData!.sales!.length}
-                    onSort={(id) => {
-                      const isAsc = sort && sort[id] === 'asc';
-                      const newSort = { [id]: isAsc ? 'desc' : ('asc' as SortOrder) };
-                      setQuery({ ...query, sort: newSort });
-                    }}
-                  />
-                  <TableBody>
-                    {tableData!.sales!.map((row) => (
-                      <SaleTableRow key={row!.id} row={row!} />
-                    ))}
-
-                    <TableNoData notFound={notFound} />
-                  </TableBody>
+                  <TableSkeleton />
+                  <TableSkeleton />
+                  <TableSkeleton />
+                  <TableSkeleton />
+                  <TableSkeleton />
                 </>
+              ) : (
+                <TableBody>
+                  {tableData!.sales!.map((row) => (
+                    <SaleTableRow key={row!.id} row={row!} />
+                  ))}
+
+                  <TableNoData notFound={notFound} />
+                </TableBody>
               )}
             </Table>
           </ScrollBar>
