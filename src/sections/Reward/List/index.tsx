@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { useLazyQuery } from '@apollo/client';
+
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 
@@ -7,6 +10,8 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/Iconify';
 import { Breadcrumbs } from 'src/components/Breadcrumbs';
+
+import { FETCH_ME_QUERY } from 'src/sections/Profile/query';
 
 import Wallets from './Wallets';
 import StatisticsTable from './Daily';
@@ -22,6 +27,14 @@ const TABS = [
 
 export default function RewardListView() {
   const tabs = useTabs('daily');
+
+  const [fetchMe, { data }] = useLazyQuery(FETCH_ME_QUERY);
+
+  useEffect(() => {
+    fetchMe();
+  }, [fetchMe]);
+
+  const me = data?.memberMe;
 
   return (
     <DashboardContent>
@@ -39,7 +52,7 @@ export default function RewardListView() {
         ))}
       </Tabs>
 
-      {tabs.value === 'daily' && <StatisticsTable />}
+      {tabs.value === 'daily' && <StatisticsTable me={me!} />}
 
       {tabs.value === 'wallets' && <Wallets />}
     </DashboardContent>

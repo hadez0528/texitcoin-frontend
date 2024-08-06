@@ -1,3 +1,4 @@
+import type { Member } from 'src/__generated__/graphql';
 import type {
   IStatisticsTableFilters,
   IStatisticsPrismaFilter,
@@ -16,6 +17,8 @@ import TableContainer from '@mui/material/TableContainer';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 import { useQuery, type SortOrder } from 'src/routes/hooks';
+
+import { customizeDate } from 'src/utils/format-time';
 
 import { ScrollBar } from 'src/components/ScrollBar';
 import {
@@ -44,7 +47,11 @@ const defaultFilter: IStatisticsTableFilters = {
   search: '',
 };
 
-export default function StatisticsTable() {
+interface Props {
+  me: Member;
+}
+
+export default function StatisticsTable({ me }: Props) {
   const [from, setFrom] = useState<any>(dayjs('2024-04-01'));
   const [to, setTo] = useState<any>(dayjs());
 
@@ -65,7 +72,7 @@ export default function StatisticsTable() {
       filterObj.OR = [];
     }
 
-    filterObj.issuedAt = { gte: from, lte: to };
+    filterObj.issuedAt = { gte: customizeDate(from), lte: customizeDate(to) };
 
     return filterObj;
   }, [filter, from, to]);
